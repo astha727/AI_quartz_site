@@ -7,7 +7,7 @@ configuration:
   analytics:
     provider: plausible
   locale: en-US
-  baseUrl: AI_quartz_site
+  baseUrl: astha727.github.io/AI_quartz_site
   ignorePatterns:
     - private
     - templates
