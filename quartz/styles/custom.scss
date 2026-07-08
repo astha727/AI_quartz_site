@@ -1,3 +1,345 @@
 @use "./variables.scss" as *;
 
-// put your custom CSS here!
+/* ==========================================================
+   AI Notes Theme
+   Clean Documentation Theme for Quartz
+   ========================================================== */
+
+/* ==========================================================
+   Color Palette
+   ========================================================== */
+
+:root[saved-theme="dark"] {
+
+  --light: #111111;
+  --lightgray: #1b1b1b;
+  --gray: #626262;
+
+  --darkgray: #e3e3e3;
+  --dark: #ffffff;
+
+  --secondary: #88c0d0;
+  --tertiary: #81a1c1;
+
+  --highlight: rgba(136,192,208,.18);
+  --textHighlight: rgba(136,192,208,.35);
+
+}
+
+:root[saved-theme="light"] {
+
+  --light: #fafafa;
+  --lightgray: #efefef;
+  --gray: #b8b8b8;
+
+  --darkgray: #3f3f3f;
+  --dark: #222222;
+
+  --secondary: #5e81ac;
+  --tertiary: #81a1c1;
+
+}
+
+/* ==========================================================
+   Fonts
+   ========================================================== */
+
+:root {
+
+  --bodyFont: "Inter";
+  --headerFont: "IBM Plex Sans";
+  --codeFont: "IBM Plex Mono";
+
+}
+
+/* ==========================================================
+   Layout
+   ========================================================== */
+
+.center {
+  max-width: 900px;
+}
+
+body {
+  font-size: 18px;
+  line-height: 1.85;
+}
+
+/* ==========================================================
+   Graph Paper
+   ========================================================== */
+
+.page>#quartz-body,
+.page>#quartz-body .center {
+
+  background: var(--light);
+
+  background-image:
+
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.05) 1px,
+      transparent 1px
+    );
+
+  background-size:24px 24px;
+
+}
+
+/* ==========================================================
+   Typography
+   ========================================================== */
+
+body {
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+h1 {
+  font-size: 2.3rem;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  color: #f2f2f2;
+
+  margin: .4rem 0 .8rem;
+}
+
+h2 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #88c0d0;
+
+  margin: 2rem 0 .6rem;
+  padding-bottom: .3rem;
+
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+h3 {
+  font-size: 1.3rem;
+  font-weight: 650;
+  color: #b48ead;
+
+  margin: 1.5rem 0 .45rem;
+}
+
+h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #a3be8c;
+
+  margin: 1.2rem 0 .4rem;
+}
+
+p {
+  margin: .7rem 0;
+}
+
+/* ==========================================================
+   Lists
+   ========================================================== */
+
+ul,
+ol {
+  margin: .6rem 0;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin: .22rem 0;
+  line-height: 1.6;
+}
+
+li > p {
+  margin: .15rem 0;
+}
+
+/* ==========================================================
+   Links
+   ========================================================== */
+
+a.internal,
+a.external {
+  text-decoration: none;
+  border-bottom: 1px solid rgba(136,192,208,.25);
+  transition: .2s;
+}
+
+a.internal:hover,
+a.external:hover {
+  border-bottom-color: #88c0d0;
+}
+
+/* ==========================================================
+   Highlight
+   ========================================================== */
+
+mark {
+  background: #5e81ac;
+  color: white;
+  padding: .12rem .35rem;
+  border-radius: 4px;
+}
+
+::selection {
+  background: #5e81ac;
+  color: white;
+}
+
+/* ==========================================================
+   Tables
+   ========================================================== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+thead {
+  background: rgba(255,255,255,.04);
+}
+
+th,
+td {
+  padding: 10px 14px;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255,255,255,.025);
+}
+
+/* ==========================================================
+   Code
+   ========================================================== */
+
+pre {
+  background: #171717;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.08);
+  padding: 1rem;
+}
+
+code {
+  border-radius: 4px;
+}
+
+/* ==========================================================
+   Blockquotes
+   ========================================================== */
+
+blockquote {
+  background: rgba(255,255,255,.03);
+  border-left: 4px solid var(--secondary);
+  border-radius: 8px;
+  padding: .9rem 1.1rem;
+  margin: 1rem 0;
+}
+
+/* ==========================================================
+   Callouts
+   ========================================================== */
+
+.callout {
+  margin: 1rem 0;
+  border-radius: 10px;
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.callout-title {
+  padding: .65rem 1rem;
+  font-weight: 700;
+  font-size: .98rem;
+}
+
+.callout-content {
+  padding: .35rem 1rem .8rem;
+  line-height: 1.65;
+}
+
+.callout-content p:first-child {
+  margin-top: 0;
+}
+
+.callout-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================
+   Insight
+   ========================================================== */
+
+.callout[data-callout="insight"] {
+  --callout-color: 255,183,3;
+   /* --callout-icon: lucide-lightbulb; */
+
+  background: rgba(255,183,3,.10);
+  border-left: 4px solid rgb(255,183,3);
+}
+
+.callout[data-callout="insight"] .callout-title,
+.callout[data-callout="insight"] .callout-icon {
+  color: rgb(255,183,3);
+}
+
+/* ==========================================================
+   AI
+   ========================================================== */
+
+.callout[data-callout="ai"] {
+  --callout-color: 80,180,255;
+  
+  background: rgba(80,180,255,.10);
+  border-left: 4px solid rgb(80,180,255);
+}
+
+.callout[data-callout="ai"] .callout-title,
+.callout[data-callout="ai"] .callout-icon {
+  color: rgb(80,180,255);
+}
+
+/* ==========================================================
+   Definition
+   ========================================================== */
+
+.callout[data-callout="definition"] {
+  --callout-color: 170,120,255;
+  
+  background: rgba(170,120,255,.10);
+  border-left: 4px solid rgb(170,120,255);
+}
+
+.callout[data-callout="definition"] .callout-title,
+.callout[data-callout="definition"] .callout-icon {
+  color: rgb(170,120,255);
+}
+
+/* ==========================================================
+   Historical Context
+   ========================================================== */
+
+.callout[data-callout="historical-context"] {
+  --callout-color: 255,145,60;
+  
+  background: rgba(255,145,60,.10);
+  border-left: 4px solid rgb(255,145,60);
+}
+
+.callout[data-callout="historical-context"] .callout-title,
+.callout[data-callout="historical-context"] .callout-icon {
+  color: rgb(255,145,60);
+}
+
+/* ==========================================================
+   Bold Text (Things-style)
+   ========================================================== */
+
+strong,
+b {
+  color: #ff82b2;
+  font-weight: 650;
+}
