@@ -1,4 +1,4 @@
-Refer: [[0 - Data Structures]]
+
 
 > [!insight]  
 > These notes cover foundational ideas behind Artificial Intelligence, including rational agents, philosophy, logic, probability, neuroscience, psychology, and value alignment.
@@ -62,7 +62,6 @@ These two dimensions give **four approaches** to AI:
 > [!important]  
 > Modern AI primarily focuses on the rational agent approach.
 
----
 
 # 3) The Four Approaches to AI
 
@@ -100,7 +99,6 @@ These two dimensions give **four approaches** to AI:
 > [!note]  
 > The Turing Test evaluates observable behavior rather than internal cognition.
 
----
 
 ## 3.2 Thinking Humanly: The Cognitive Modeling Approach
 
@@ -181,7 +179,6 @@ These two dimensions give **four approaches** to AI:
 > [!warning]  
 > Pure symbolic logic struggles in uncertain and noisy environments.
 
----
 
 ## 3.4 Acting Rationally: The Rational Agent Approach
 
@@ -319,8 +316,6 @@ So a real objective must balance:
 > Misaligned objectives can produce harmful unintended behavior.
 
 
----
-
 # 5) Foundations of AI: Philosophy
 
 The chapter then explains the philosophical roots of AI.
@@ -336,7 +331,6 @@ The chapter then explains the philosophical roots of AI.
 - How does knowledge lead to action?
     
 
----
 
 ## 5.1 Aristotle and logic
 
@@ -346,8 +340,6 @@ The chapter then explains the philosophical roots of AI.
     
 - This was an early foundation for logic-based AI.
     
-
----
 
 ## 5.2 Mechanical reasoning and early machines
 
@@ -371,7 +363,6 @@ Several thinkers tried to build machines that could reason or compute:
 - These thinkers helped establish the idea that thinking might be mechanized.
     
 
----
 
 ## 5.3 Descartes: mind and matter
 
@@ -461,12 +452,9 @@ The chapter frames this through three questions:
 3. **How do we reason under uncertainty?**
     
 
----
-
 > [!important] Why Mathematics Matters for AI  
 > Mathematics is not just a supporting tool for AI — it defines the limits, capabilities, and structure of intelligence itself. Logic enables reasoning, probability enables uncertainty handling, statistics enables learning from data, and computation theory defines what can or cannot be solved.
 
----
 
 # A) Formal Logic
 
@@ -498,7 +486,6 @@ First-order logic became central in early AI reasoning systems because it allowe
 > [!important] Historical Shift  
 > Early AI strongly believed intelligence could emerge entirely from symbolic manipulation and formal logic. This eventually evolved into symbolic AI systems and theorem provers.
 
----
 
 # B) Probability
 
@@ -508,13 +495,9 @@ Pure logic assumes certainty.
 
 Real-world AI rarely has certainty because sensors are noisy, knowledge is incomplete, and environments constantly change. Probability therefore generalizes logic for uncertain situations.
 
----
-
 ## Historical Development
 
 Gerolamo Cardano introduced early mathematical treatments of probability through gambling problems. Pascal and Fermat later developed methods for analyzing uncertain outcomes in unfinished games, while Jacob Bernoulli and Laplace transformed probability into a rigorous mathematical discipline.
-
----
 
 ## Bayes’ Rule
 
@@ -536,12 +519,6 @@ Example:
 
 This became foundational for Bayesian inference, probabilistic AI, machine learning, and diagnostic systems.
 
-## Sources
-
-- [Stanford Encyclopedia of Philosophy – Bayesian Epistemology](https://plato.stanford.edu/entries/epistemology-bayesian/?utm_source=chatgpt.com)
-    
-- [Britannica – George Boole](https://www.britannica.com/biography/George-Boole?utm_source=chatgpt.com)
-    
 
 # C) Statistics
 
@@ -589,7 +566,6 @@ His work heavily influenced machine learning, scientific experimentation, and AI
 > 
 > Modern machine learning largely emerged from this statistical transition.
 
----
 
 # D) Algorithms and Computation
 
@@ -599,7 +575,6 @@ His work heavily influenced machine learning, scientific experimentation, and AI
 
 One of the earliest known algorithms computes greatest common divisors.
 
----
 
 ### Origin of the Word “Algorithm”
 
@@ -615,7 +590,6 @@ The word derives from **Muhammad ibn Musa al-Khwarizmi**, a 9th-century mathemat
 > - systematic search and optimization.
 >     
 
----
 
 # E) Computability
 
@@ -641,7 +615,6 @@ This shattered the hope that all mathematics could be mechanically derived.
 > - limits of AI.
 >     
 
----
 
 ## Alan Turing and Computability
 
@@ -649,21 +622,15 @@ This shattered the hope that all mathematics could be mechanically derived.
 
 Turing attempted to define exactly what it means for something to be computable.
 
----
-
 ## Turing Machine
 
 A Turing Machine is an abstract machine model capable of symbolic computation.
-
----
 
 ## Church–Turing Thesis
 
 The Church–Turing Thesis states that anything computable by an effective procedure can be computed by a Turing machine.
 
 This forms the theoretical basis of computer science.
-
----
 
 ## Uncomputable Problems
 
@@ -683,16 +650,6 @@ No general algorithm can always determine whether:
 > 
 > Some problems are fundamentally unsolvable regardless of computational power.
 
----
-
-## Sources
-
-- [Stanford Encyclopedia of Philosophy – Kurt Gödel](https://plato.stanford.edu/entries/goedel/?utm_source=chatgpt.com)
-    
-- [Stanford Encyclopedia of Philosophy – Alan Turing](https://plato.stanford.edu/entries/turing/?utm_source=chatgpt.com)
-    
-
----
 
 # F) Tractability and Complexity
 
@@ -702,19 +659,13 @@ A problem may be computable in theory but impossible in practice.
 
 This distinction becomes central to AI.
 
----
-
 ## Tractable Problems
 
 Tractable problems are usually solvable efficiently using polynomial-time complexity.
 
----
-
 ## Intractable Problems
 
 Intractable problems require exponentially growing time as problem size increases, making even moderate inputs impractical.
-
----
 
 ## NP-Completeness
 
@@ -789,7 +740,6 @@ This influenced AI ideas about:
 
 Expected monetary value alone could not explain real human choices.
 
----
 
 ## Daniel Bernoulli
 
@@ -894,7 +844,7 @@ This idea of satisficing strongly influenced:
 ---
 # 1.3.3 — A Dose of Reality (1966–1973)
 
-> [!abstract] Historical Turning Point
+> [!insight] Historical Turning Point
 > This section is one of the most important transitions in the history of AI because it shows **why early symbolic AI struggled**, how **expert systems temporarily revived the field**, and why **modern AI shifted toward machine learning, probability, and deep learning**.
 
 Early AI researchers became extremely optimistic because small demo systems worked surprisingly well. Herbert Simon predicted that within 10 years computers would become chess champions and machines would prove major mathematical theorems. Those achievements eventually happened, but decades later.
@@ -902,8 +852,6 @@ Early AI researchers became extremely optimistic because small demo systems work
 The central lesson was:
 
 > solving tiny toy problems is very different from solving real-world intelligence.
-
----
 
 # Why early AI failed
 

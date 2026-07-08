@@ -11,7 +11,7 @@ Instead of reacting instantly to the current environment, the agent internally s
 > Chapter 3 introduces one of the foundational ideas in artificial intelligence: intelligent behavior often requires searching through possible future states before acting. Rather than reacting reflexively, problem-solving agents internally model environments, simulate future action sequences, evaluate costs, and select pathways that maximize goal achievement. The chapter formalizes concepts such as state spaces, abstraction, search problems, and path optimization, while also revealing the computational challenges created by combinatorial explosion. This framework becomes deeply important for understanding planning, reinforcement learning, robotics, optimization, and probabilistic cognition.
 
 ---
-
+Refer: [[Lecture 3 - Game Playing]], [[MIT 6.034 Lecture 4 - Search - Hill Climbing, Depth - First, Beam]] 
 # 3.1 Problem-Solving Agents
 
 A problem-solving agent operates in environments where:

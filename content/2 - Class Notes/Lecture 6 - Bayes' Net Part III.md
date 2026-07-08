@@ -5,6 +5,7 @@
 > - [[4 - Conditional Porbability]]
 > - [[6 - Bayes' Theorem]]
 > - [[Lecture 6 - Bayes' Net Part I]]
+> - [[Lecture 6 - Bayes' Net Part III]]
 
 # Enumeration
 

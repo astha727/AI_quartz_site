@@ -39,4 +39,3 @@ Russell, S. J., & Norvig, P. *Artificial Intelligence: A Modern Approach* (4th E
 
 ---
 
-*Additional chapters will be added as the notes expand.*

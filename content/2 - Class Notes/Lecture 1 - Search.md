@@ -1,3 +1,4 @@
+Refer: [[Chapter 3 - Solving Problems by Searching]], [[MIT 6.034 Lecture 4 - Search - Hill Climbing, Depth - First, Beam]]
 ## Search as Problem Solving
 
 > [!abstract]+ Core Idea  

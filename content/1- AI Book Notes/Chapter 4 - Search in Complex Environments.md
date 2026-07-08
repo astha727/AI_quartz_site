@@ -1,3 +1,5 @@
+Refer: [[Lecture 4 - Constraint Satisfaction]]
+
 >[!insight]
 >[[Chapter 3 - Solving Problems by Searching]] studied search problems under several simplifying assumptions. The environment was assumed to be:
 >

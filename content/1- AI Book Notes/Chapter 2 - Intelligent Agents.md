@@ -217,8 +217,6 @@ The answer proposed is:
 
 ## Rationality
 
----
-
 # Rational Agent
 
 A rational agent chooses actions expected to maximize performance according to available information.
@@ -484,17 +482,8 @@ This chapter acts as the bridge between philosophy and engineering by transformi
 - analyzable,
     
 - mathematically implementable.
-    
 
----
 
-## Sources
-
-- [Artificial Intelligence: A Modern Approach (Russell & Norvig)](https://aima.cs.berkeley.edu/?utm_source=chatgpt.com)
-    
-- [Stanford Encyclopedia of Philosophy – Artificial Intelligence](https://plato.stanford.edu/entries/artificial-intelligence/?utm_source=chatgpt.com)
-    
-- [DeepMind – Reinforcement Learning Overview](https://deepmind.google/discover/blog/reinforcement-learning/?utm_source=chatgpt.com)
 
 # 2.3 The Nature of Environments
 
@@ -511,7 +500,6 @@ This is one of the most important conceptual shifts in AI because it establishes
 > [!success] Central Principle
 > The difficulty of AI is often not inside the agent alone, but in the structure of the environment the agent must survive within.
 
----
 
 # 2.3.1 Specifying the Task Environment
 
@@ -529,8 +517,6 @@ The book introduces the standard framework for defining task environments:
 This framework forces AI designers to formally define what success means, what the world contains, how the agent acts, and what information it receives.
 
 Before designing an intelligent agent, the task environment must be specified as fully as possible.
-
----
 
 # Automated Taxi Driver Example
 
@@ -576,8 +562,6 @@ For example, highway-only autonomous driving is dramatically easier than unrestr
 
 This becomes foundational for modern AI benchmarking and simulation design.
 
----
-
 ## 3. Actuators
 
 Actuators are the mechanisms through which the agent changes the environment.
@@ -592,8 +576,6 @@ Taxi actuators include:
 - communication systems.
 
 Actuators are effectively the “output channels” of intelligence.
-
----
 
 ## 4. Sensors
 
@@ -810,8 +792,6 @@ The most difficult environments combine:
 
 Taxi driving is close to this hardest category.
 
----
-
 # Environment Classes
 
 Agents are not evaluated in a single environment instance but across collections of environments called:
@@ -964,8 +944,6 @@ The agent may then endlessly loop between squares.
 
 Randomization can sometimes help avoid loops.
 
----
-
 # 2.4.3 Model-Based Reflex Agents
 
 The chapter introduces the key solution to partial observability:
@@ -1029,8 +1007,6 @@ So decision-making becomes:
 
 > “Which action moves me closer to the desired future state?”
 
----
-
 ## Key Concept: Goal
 
 A **goal** is a description of a desirable situation/state.
@@ -1047,8 +1023,6 @@ Examples:
 The important conceptual shift here is that intelligence is no longer viewed as merely reacting to the present moment. A goal-based agent reasons about _future possibilities_. It evaluates actions not only by immediate outcomes, but by whether they help move the system toward a preferred future state.
 
 This marks the beginning of genuine planning behavior in AI.
-
----
 
 ## Important Shift from Reflex → Goal-Based
 
@@ -1102,8 +1076,6 @@ The agent must mentally simulate future outcomes before acting. Instead of merel
 
 This is one of the major transitions from simple reactive systems toward intelligent planning systems.
 
----
-
 ## Critical AI Principle
 
 Goal-based agents require:
@@ -1143,8 +1115,6 @@ This is the beginning of:
     
 
 Modern AI planning systems, robotics, autonomous navigation, and strategic game-playing all emerge from this principle.
-
----
 
 ## Search & Planning
 
@@ -1245,8 +1215,6 @@ Goal satisfaction alone cannot compare these outcomes.
 
 The agent needs a way to evaluate _degrees of desirability_.
 
----
-
 ## Utility = Degree of Preference
 
 Utility measures:
@@ -1268,8 +1236,6 @@ better vs worse
 ```
 
 This is one of the most important ideas in rational AI systems.
-
----
 
 ## Utility Function
 
@@ -1369,8 +1335,6 @@ agents improve through experience
 This becomes central to modern AI.
 
 Rather than hardcoding every behavior, systems learn dynamically from interaction with the environment.
-
----
 
 ## Four Components of Learning Agents
 
@@ -1495,8 +1459,6 @@ Just a label or black box.
 
 No internal structure.
 
----
-
 ## Characteristics
 
 - Simple
@@ -1523,8 +1485,6 @@ Money = ₹500
 ```
 
 Now states share attributes and relationships.
-
----
 
 ## Advantages
 
@@ -1632,8 +1592,10 @@ Additional foundational references:
 - The Emotional Brain
     
 
-Official resources:
+## Sources
 
-- [AIMA Official Website](https://aima.cs.berkeley.edu/?utm_source=chatgpt.com)
+- [Artificial Intelligence: A Modern Approach (Russell & Norvig)](https://aima.cs.berkeley.edu/?utm_source=chatgpt.com)
     
-- [Sutton & Barto RL Book](https://www.andrew.cmu.edu/course/10-703/textbook/BartoSutton.pdf?utm_source=chatgpt.com)
+- [Stanford Encyclopedia of Philosophy – Artificial Intelligence](https://plato.stanford.edu/entries/artificial-intelligence/?utm_source=chatgpt.com)
+    
+- [DeepMind – Reinforcement Learning Overview](https://deepmind.google/discover/blog/reinforcement-learning/?utm_source=chatgpt.com)

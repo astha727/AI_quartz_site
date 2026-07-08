@@ -1,4 +1,4 @@
-
+Refer: [[Lecture 1 - Search]], [[Simulated Annealing]]
 
 > [!info]+ Core Idea
 > Unlike classical search algorithms (BFS, DFS, UCS, A*), **local search algorithms do not build paths from the start state to the goal.**

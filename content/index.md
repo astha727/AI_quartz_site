@@ -2,34 +2,35 @@
 
 A structured collection of notes covering Artificial Intelligence, Machine Learning, Mathematics, and Computer Science.
 
+>**About these notes:** These are my personal study notes based primarily on _Artificial Intelligence: A Modern Approach (4th Edition)_, lectures from Georgia Tech's OMSCS AI course, and my own understanding. They are not a substitute for the original textbook and lectures.
+
 ## Core Topics
 
 ### Artificial Intelligence
 
-- Artificial Intelligence: A Modern Approach (AIMA)
-- Georgia Tech OMSCS — Artificial Intelligence
+[[1- AI Book Notes]]     [[2 - Class Notes]]
 - Search
 - Adversarial Search
 - Constraint Satisfaction Problems
 - Bayesian Networks
 - Decision Theory
+- Machine Learning
+- Deep Learning
 - Reinforcement Learning
-
-[[1- AI Book Notes]]
-
-[[2 - Class Notes]]
 
 ---
 
 ### MIT 6.034
 
-Detailed notes based on the MIT OpenCourseWare lecture series.
-
 [[3 - MIT Lectures]]
+
+Detailed notes based on the MIT OpenCourseWare lecture series.
 
 ---
 
 ### Data Structures & Algorithms
+
+[[DSA Notes]]
 
 Fundamental computer science topics including:
 
@@ -41,11 +42,13 @@ Fundamental computer science topics including:
 - Searching Algorithms
 - Graph Algorithms
 
-[[DSA Notes]]
+
 
 ---
 
 ### Additional Topics
+
+[[Additional Notes]]
 
 Supporting material covering the mathematical foundations of Artificial Intelligence.
 
@@ -69,4 +72,7 @@ Primary references include:
 - NCERT Mathematics
 - Standard Computer Science and Mathematics textbooks
 
-[[Additional Notes]]
+
+Source
+- Artificial Intelligence: A Modern Approach (AIMA)
+- Georgia Tech OMSCS — Artificial Intelligence

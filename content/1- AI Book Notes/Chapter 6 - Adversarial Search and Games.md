@@ -1,3 +1,5 @@
+Refer: [[Lecture 3 - Game Playing]], [[MIT 6.034 Lecture 6 - Game Playing, Minimax, Alpha-Beta, and Deep Blue]]
+
 > [!historical-context]
 > Game playing has served as one of the primary testbeds for AI research.
 > Major milestones:

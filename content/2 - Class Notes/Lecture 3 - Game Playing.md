@@ -1,33 +1,5 @@
 
-
-> [!abstract] Learning Objectives  
-> By the end of this lecture you should understand:
-> 
-> - Game Trees
->     
-> - Adversarial Search
->     
-> - Minimax
->     
-> - Evaluation Functions
->     
-> - Alpha-Beta Pruning
->     
-> - Horizon Effect
->     
-> - Quiescence Search
->     
-> - Iterative Deepening
->     
-> - Stochastic Games
->     
-> - Expectimax
->     
-> - Probabilistic Alpha-Beta Pruning
->     
-
----
-
+Refer: [[Chapter 6 - Adversarial Search and Games]], [[MIT 6.034 Lecture 6 - Game Playing, Minimax, Alpha-Beta, and Deep Blue]]
 # 1. Game Theory Foundations
 
 > [!info] Definition  

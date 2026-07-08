@@ -343,3 +343,21 @@ b {
   color: #ff82b2;
   font-weight: 650;
 }
+@media (min-width: 1200px) {
+
+  .page > #quartz-body {
+    grid-template-columns: 250px auto 250px !important;
+  }
+
+  .center {
+    max-width: none;
+  }
+
+  article {
+    max-width: none;
+  }
+}
+.page > #quartz-body .center {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
