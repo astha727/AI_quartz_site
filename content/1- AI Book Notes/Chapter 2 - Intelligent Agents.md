@@ -71,7 +71,7 @@ Thus behavior depends not only on current input but also on historical observati
 
 The book defines an **agent function** mathematically as:
 
-f : P^* \rightarrow A
+$$f : P^* \rightarrow A$$
 
 Meaning:
 

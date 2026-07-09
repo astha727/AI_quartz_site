@@ -45,116 +45,593 @@ Machine Learning algorithms are broadly divided into two categories.
 
 ## Supervised Learning
 
-In supervised learning, the training data contains both:
+> [!insight]
+> **Supervised Learning** is a machine learning paradigm in which the algorithm learns a mapping from **inputs (features)** to **known outputs (labels)** using labeled training data.
+>
+> During training, the model repeatedly compares its predictions against the correct answers and adjusts its parameters to minimize prediction error. Once trained, it can generalize to unseen examples.
 
-* Inputs (features)
-* Correct outputs (labels)
+### Components of Supervised Learning
 
-The algorithm learns a mapping from inputs to outputs.
+A supervised learning dataset consists of:
 
-Examples include:
+- **Features (Input Variables, X)** — measurable attributes describing each observation.
+- **Labels (Target Variable, y)** — the correct output associated with each observation.
 
-* Email spam detection
-* Disease diagnosis
-* Image classification
-* House price prediction
+The goal is to learn a function
+
+$$
+f : X \rightarrow Y
+$$
+
+that predicts the correct output for previously unseen data.
+
+---
+
+### Learning Process
+
+1. Collect labeled training data.
+2. Learn patterns relating features to labels.
+3. Optimize model parameters to minimize prediction error.
+4. Evaluate performance on unseen test data.
+5. Deploy the trained model for inference.
+
+---
+
+### Types of Supervised Learning
+
+Supervised learning problems are broadly divided into two categories.
+
+#### Classification
+
+The output belongs to one of several **discrete categories**.
+
+Examples:
+
+- Spam vs Not Spam
+- Disease diagnosis
+- Handwritten digit recognition
+- Sentiment analysis
+- Fraud detection
+
+Typical algorithms include:
+
+- [[Naïve Bayes]]
+- [[Decision Trees]]
+- [[Random Forests]]
+- [[Support Vector Machines]]
+- [[Neural Networks]]
+- [[k-Nearest Neighbors]]
 
 See:
 
-* [[1. Classification]]
-* [[2. Regression]]
+- [[1 - Classification]]
+
+---
+
+#### Regression
+
+The output is a **continuous numerical value**.
+
+Examples:
+
+- House price prediction
+- Temperature forecasting
+- Stock price estimation
+- Patient survival time
+- Sales prediction
+
+Typical algorithms include:
+
+- [[Linear Regression]]
+- [[Polynomial Regression]]
+- Decision Trees
+- Random Forest Regression
+- Neural Networks
+
+See:
+
+- [[2. Regression]]
+
+---
+
+### Characteristics
+
+Advantages
+
+- High predictive performance when labeled data is available.
+- Clear evaluation using ground-truth labels.
+- Supports a wide variety of applications.
+
+Limitations
+
+- Requires large amounts of labeled data.
+- Label collection can be expensive and time-consuming.
+- Performance depends on how representative the training data is.
+
+---
+
+### Common Applications
+
+Healthcare
+
+- Disease diagnosis
+- Medical image analysis
+- Risk prediction
+
+Natural Language Processing
+
+- Spam detection
+- Sentiment analysis
+- Language translation
+
+Computer Vision
+
+- Face recognition
+- Object detection
+- OCR
+
+Finance
+
+- Credit scoring
+- Fraud detection
+- Loan approval
+
+Engineering
+
+- Predictive maintenance
+- Fault detection
+- Quality inspection
+
+
+> [!important]
+> Most of the algorithms introduced in this Machine Learning section—including **k-Nearest Neighbors, Naïve Bayes, Decision Trees, Random Forests, Boosting, and Neural Networks**—are examples of **supervised learning algorithms**.
 
 ## Unsupervised Learning
 
-In unsupervised learning, only the inputs are available.
+> [!insight]
+> **Unsupervised Learning** is a machine learning paradigm in which the algorithm is given **unlabeled data** and must discover hidden patterns, relationships, or structure without knowing the correct answers beforehand.
 
-There are no labels.
+Unlike supervised learning, there are **no target labels** to guide the learning process.
 
-The algorithm attempts to discover hidden structure within the data.
+Instead, the algorithm attempts to identify similarities, clusters, latent variables, or lower-dimensional representations directly from the data.
+
+---
+
+### Components of Unsupervised Learning
+
+An unsupervised dataset contains only
+
+- **Features (Input Variables, X)**
+
+There are **no labels (y)**.
+
+The objective is to discover meaningful structure within the feature space.
+
+---
+
+### Learning Process
+
+1. Collect unlabeled data.
+2. Measure similarities or distances between observations.
+3. Identify hidden patterns or structures.
+4. Group similar observations or learn compact representations.
+5. Analyze the discovered structure.
+
+---
+
+### Types of Unsupervised Learning
+
+#### Clustering
+
+Clustering partitions observations into groups such that:
+
+- Observations within the same cluster are highly similar.
+- Observations in different clusters are significantly different.
+
+Examples:
+
+- Customer segmentation
+- Document grouping
+- Gene expression analysis
+- Image segmentation
+
+Typical algorithms include:
+
+- [[k-Means]]
+- [[Hierarchical Clustering]]
+- [[Gaussian Mixture Models]]
+- [[DBSCAN]]
+
+See:
+
+- [[6. Clustering]]
+- [[Lecture 7- Machine Learning Part V]]
+
+---
+
+#### Dimensionality Reduction
+
+Many real-world datasets contain hundreds or thousands of features.
+
+Dimensionality reduction attempts to represent the same information using fewer variables while preserving as much structure as possible.
+
+Applications include:
+
+- Data visualization
+- Noise reduction
+- Feature extraction
+- Faster machine learning
+
+Typical methods include:
+
+- [[Principal Component Analysis (PCA)]]
+- [[t-SNE]]
+- [[Autoencoders]]
+
+See:
+
+- [[7. Features]]
+
+---
+
+#### Density Estimation
+
+Instead of assigning classes, some algorithms estimate the probability distribution that generated the data.
 
 Examples include:
 
-* Customer segmentation
-* Topic discovery
-* Anomaly detection
-* Dimensionality reduction
+- [[Gaussian Mixture Models]]
+- [[Expectation Maximization (EM)]]
+- [[Kernel Density Estimation]]
 
-See:
-
-* [[6. Clustering]]
-* [[7. Features]]
+Density estimation forms the foundation of many probabilistic machine learning methods.
 
 ---
 
-# 3. Choosing the Right Algorithm
+### Advantages
 
-There is no single best Machine Learning algorithm.
+- No labeled data required.
+- Can discover previously unknown patterns.
+- Useful for exploratory data analysis.
+- Often serves as preprocessing for supervised learning.
 
-Different algorithms are suitable for different types of problems.
+---
 
-For example,
+### Limitations
 
-* Decision Trees produce highly interpretable models.
-* k-Nearest Neighbors is simple but computationally expensive.
-* Support Vector Machines perform well for high-dimensional data.
-* Neural Networks excel at learning complex nonlinear relationships.
+- Difficult to evaluate objectively.
+- Results may not correspond to meaningful real-world categories.
+- Performance often depends heavily on algorithm assumptions.
 
-Selecting the right algorithm depends on:
+---
 
-* Dataset size
-* Number of features
-* Noise
-* Interpretability
-* Computational cost
+### Common Applications
+
+Business
+
+- Customer segmentation
+- Market basket analysis
+
+Healthcare
+
+- Patient subtype discovery
+- Disease phenotype identification
+
+Computer Vision
+
+- Image compression
+- Feature learning
+
+Natural Language Processing
+
+- Topic modeling
+- Word embeddings
+
+Cybersecurity
+
+- Anomaly detection
+- Intrusion detection
+
 
 > [!important]
-> Machine Learning is not about finding one "best" algorithm.
->
-> It is about choosing the algorithm whose assumptions best match the problem.
+> Unsupervised learning focuses on **discovering structure**, whereas supervised learning focuses on **predicting labels**.
 
 ---
+# 3. Choosing the Right Algorithm
+
+> [!note]
+> There is **no universally best Machine Learning algorithm**. Every algorithm makes assumptions about the underlying data, and its performance depends on how well those assumptions match the problem.
+
+This principle is formalized by the **No Free Lunch Theorem**, which states that an algorithm performing exceptionally well on one class of problems must perform worse on others.
+
+---
+
+### Factors That Influence Algorithm Selection
+
+Choosing an algorithm depends on several characteristics of the problem.
+
+#### Dataset Size
+
+Small datasets often work well with
+
+- [[k-Nearest Neighbors]]
+- [[Decision Trees]]
+- [[Naïve Bayes]]
+
+Large datasets often favor
+
+- [[Random Forests]]
+- [[Gradient Boosting]]
+- [[Neural Networks]]
+
+---
+
+#### Number of Features
+
+High-dimensional datasets often benefit from
+
+- [[Support Vector Machines]]
+- [[Naïve Bayes]]
+- [[Neural Networks]]
+
+Lower-dimensional datasets may work well with
+
+- [[Decision Trees]]
+- [[k-Nearest Neighbors]]
+
+---
+
+#### Noise
+
+Datasets containing significant measurement noise often require algorithms that generalize well.
+
+Examples include
+
+- [[Random Forests]]
+- [[Boosting]]
+- [[Regularized Models]]
+
+---
+
+#### Interpretability
+
+Some applications require decisions that humans can understand.
+
+Highly interpretable models include
+
+- [[Decision Trees]]
+- [[Linear Regression]]
+- [[Logistic Regression]]
+
+Less interpretable ("black-box") models include
+
+- [[Neural Networks]]
+- [[Boosting]]
+- [[Ensemble Methods]]
+
+---
+
+#### Computational Cost
+
+Some algorithms require little computation.
+
+Examples:
+
+- Naïve Bayes
+- Decision Trees
+
+Others may require substantial training time.
+
+Examples:
+
+- Deep Neural Networks
+- Large Support Vector Machines
+
+---
+
+### Trade-offs
+
+Every machine learning algorithm balances different objectives.
+
+| Property | Simple Models | Complex Models |
+|-----------|--------------|---------------|
+| Training Speed | High | Lower |
+| Interpretability | High | Low |
+| Flexibility | Lower | Higher |
+| Risk of Overfitting | Lower | Higher |
+| Computational Cost | Low | High |
+
+---
+
+> [!important]
+> Machine Learning is **not** about finding the "best" algorithm.
+>
+> It is about choosing the algorithm whose assumptions best match the characteristics of the data and the problem.
+
 
 # 4. Decision Trees
 
-Decision Trees classify examples by repeatedly asking questions about the data.
+> [!insight]
+> A **Decision Tree** is a supervised learning algorithm that classifies examples by recursively partitioning the feature space using a sequence of decision rules.
 
-Each internal node represents a decision.
+Each internal node asks a question about one feature.
 
-Each branch corresponds to an answer.
+Each branch corresponds to one possible answer.
 
-Each leaf node represents the predicted class.
+Each leaf node contains the final prediction.
 
-Decision Trees attempt to ask the **most informative questions first**, producing compact and accurate trees.
+---
 
-A common construction algorithm is **ID3**, which selects questions using **Information Gain**.
+### Tree Structure
+
+A decision tree consists of
+
+- Root node
+- Internal decision nodes
+- Branches
+- Leaf nodes
+
+```text
+            Outlook?
+          /     |      \
+      Sunny  Overcast  Rain
+        |         |       |
+   Humidity?     Play   Wind?
+```
+
+---
+
+### Learning Process
+
+Decision trees are constructed recursively.
+
+At each step:
+
+1. Evaluate every candidate feature.
+2. Measure how informative each feature is.
+3. Select the feature providing the greatest reduction in uncertainty.
+4. Split the data.
+5. Repeat until stopping criteria are met.
+
+---
+
+### Information Gain
+
+Most decision tree algorithms choose splits using **Information Gain**, which measures how much uncertainty (entropy) decreases after splitting the data.
+
+Algorithms include:
+
+- ID3
+- C4.5
+- CART
+
+---
+
+### Advantages
+
+- Easy to interpret
+- Handles both numerical and categorical features
+- Requires little data preprocessing
+- Fast prediction
+- Naturally performs feature selection
+
+---
+
+### Limitations
+
+- Easily overfits
+- Sensitive to noisy data
+- Small data changes may produce different trees
+
+These limitations motivate ensemble methods such as
+
+- [[Random Forests]]
+- [[Boosting]]
+
+---
+
+### Common Applications
+
+- Medical diagnosis
+- Credit approval
+- Fraud detection
+- Customer segmentation
+- Feature importance analysis
+
+---
 
 See:
 
-* [[1. Decision Trees]]
-
----
+- [[1. Decision Trees]]
 
 # 5. k-Nearest Neighbors (k-NN)
 
-k-Nearest Neighbors is one of the simplest supervised learning algorithms.
+> [!note]
+> **k-Nearest Neighbors (k-NN)** is a supervised, instance-based learning algorithm that classifies new observations based on the labels of the most similar training examples.
 
-Instead of learning an explicit model, it stores the training data.
+Unlike many machine learning algorithms, k-NN performs **no explicit training**.
+
+Instead, it memorizes the training dataset.
+
+---
+
+### Learning Process
 
 When a new example arrives:
 
-1. Find the k closest training examples.
-2. Determine their labels.
-3. Predict the majority label.
+1. Compute the distance to every training example.
+2. Identify the **k nearest neighbors**.
+3. Retrieve their labels.
+4. Predict the majority class.
 
-Small values of **k** produce flexible models but are more sensitive to noise.
+For regression, the prediction is typically the average of the neighboring values.
 
-Large values of **k** produce smoother decision boundaries but may overlook local structure.
+---
+
+### Distance Metrics
+
+Common distance measures include
+
+- Euclidean Distance
+- Manhattan Distance
+- Minkowski Distance
+- Cosine Similarity (high-dimensional text)
+
+The choice of distance metric strongly influences performance.
+
+---
+
+### Choosing k
+
+The value of **k** controls model complexity.
+
+Small k
+
+- Flexible decision boundary
+- Sensitive to noise
+- Higher variance
+
+Large k
+
+- Smoother boundary
+- More robust to noise
+- Higher bias
+
+Cross-validation is commonly used to determine an appropriate value of **k**.
+
+---
+
+### Advantages
+
+- Simple to understand
+- No training phase
+- Naturally handles multiclass problems
+- Flexible decision boundaries
+
+---
+
+### Limitations
+
+- Slow prediction on large datasets
+- Sensitive to irrelevant features
+- Requires feature scaling
+- Memory intensive
+
+---
+
+### Common Applications
+
+- Pattern recognition
+- Image classification
+- Recommendation systems
+- Medical diagnosis
+- Document classification
+
+---
 
 See:
 
-* [[2. k-Nearest Neighbors]]
-
----
+- [[2. k-Nearest Neighbors]]
 
 # 6. Model Evaluation
 
@@ -766,7 +1243,7 @@ Continuous attributes are handled by selecting appropriate threshold values.
 
 See:
 
-- [[1. Classification]]
+- [[1 - Classification]]
 
 ---
 
