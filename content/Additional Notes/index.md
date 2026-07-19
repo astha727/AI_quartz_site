@@ -6,13 +6,13 @@ These notes are intended to complement the AI Book Notes, OMSCS lectures, and MI
 
 ## Machine Learning
 
-#### Machine Learning Prerequisits
-	- [[1 - Machine Learning - Definitions]]
-	- [[2 - Linear Algebra Review]]
+#### Machine Learning Prerequisites
+- [[1 - Machine Learning - Definitions]]
+- [[2 - Linear Algebra Review]]
 #### Machine Learning - Supervised learning
-	- [[1 - Classification]]
-	- [[2 - k-Nearest Neighbors]]
-	- [[3 - Decision Trees]]
+- [[1 - Classification]]
+- [[2 - k-Nearest Neighbors]]
+- [[3 - Decision Trees]]
 
 ## Probability Fundamentals
 
