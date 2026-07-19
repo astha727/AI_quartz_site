@@ -35,13 +35,14 @@ Topics are organized by lecture and closely follow the progression of the course
 - [[Lecture 7 - Machine Learning Part III]]
 - [[Lecture 7 - Machine Learning Part IV]]
 - [[Lecture 7- Machine Learning Part V]]
-
 ### Pattern Recognition
 - [[Lecture 8 - Pattern Recognition Through Time - Part I]]
 - [[Lecture 8 - Pattern Recognition Through Time - Part II]]
 
 ### Deep Learning
  - [[Lecture 9 - Deep Learning]]
+
+
 
 ## Course Topics
 
@@ -64,5 +65,3 @@ The notes cover:
 
 - **Georgia Tech OMSCS – CS 6601: Artificial Intelligence**
 - **Artificial Intelligence: A Modern Approach (4th Edition)** by Stuart Russell and Peter Norvig
-
-
