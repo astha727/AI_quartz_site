@@ -175,8 +175,8 @@ A good classifier should
 
 Some of the most widely used classifiers include
 
-- [[1. Decision Trees]]
-- [[2. k-Nearest Neighbors]]
+- [[3 - Decision Trees]]
+- [[2 - k-Nearest Neighbors]]
 - [[3. Naïve Bayes]]
 - [[4. Logistic Regression]]
 - [[5. Support Vector Machines]]

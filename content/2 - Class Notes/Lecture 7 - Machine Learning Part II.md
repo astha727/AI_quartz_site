@@ -178,7 +178,7 @@ Instead of estimating one large joint probability distribution, it estimates man
 ## Bayesian Network Representation
 
 ```text
-        Class
+            Class
           /   |   \
          /    |    \
  Feature1 Feature2 Feature3

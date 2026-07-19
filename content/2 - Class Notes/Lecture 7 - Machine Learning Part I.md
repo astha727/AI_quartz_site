@@ -542,7 +542,7 @@ These limitations motivate ensemble methods such as
 
 See:
 
-- [[1. Decision Trees]]
+- [[3 - Decision Trees]]
 
 # 5. k-Nearest Neighbors (k-NN)
 
@@ -631,7 +631,7 @@ Cross-validation is commonly used to determine an appropriate value of **k**.
 
 See:
 
-- [[2. k-Nearest Neighbors]]
+- [[2 - k-Nearest Neighbors]]
 
 # 6. Model Evaluation
 
