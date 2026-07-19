@@ -36,6 +36,13 @@ Topics are organized by lecture and closely follow the progression of the course
 - [[Lecture 7 - Machine Learning Part IV]]
 - [[Lecture 7- Machine Learning Part V]]
 
+### Pattern Recognition
+- [[Lecture 8 - Pattern Recognition Through Time - Part I]]
+- [[Lecture 8 - Pattern Recognition Through Time - Part II]]
+
+### Deep Learning
+ - [[Lecture 9 - Deep Learning]]
+
 ## Course Topics
 
 The notes cover:
