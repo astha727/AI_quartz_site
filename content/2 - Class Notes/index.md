@@ -7,7 +7,7 @@
 # Course Contents
 
 ## 01 Search
-**State-space search, graph search, heuristics and optimization.**
+#### State-space search, graph search, heuristics and optimization.
 
 <details>
 <summary>View lectures</summary>
@@ -29,7 +29,7 @@
 
 
 ## 02 Adversarial Search
-**Intelligent decision making in competitive environments.**
+#### Intelligent decision making in competitive environments.
 
 <details>
 <summary>View lectures</summary>
@@ -43,14 +43,14 @@
 
 **References**
 
-- AIMA Chapter 5
+	- AIMA Chapter 6
 - Georgia Tech CS6601 Lecture Notes
 
 </details>
 
 
 ## 03 Constraint Satisfaction
-**Solving problems by satisfying variables and constraints.**
+#### Solving problems by satisfying variables and constraints.
 
 <details>
 <summary>View lectures</summary>
@@ -71,7 +71,7 @@
 
 
 ## 04 Bayesian Networks
-**Reasoning under uncertainty using probabilistic graphical models.**
+#### Reasoning under uncertainty using probabilistic graphical models.
 
 <details>
 <summary>View lectures</summary>
@@ -98,7 +98,7 @@
 
 
 ## 05 Machine Learning
-**Learning from data through statistical and computational methods.**
+#### Learning from data through statistical and computational methods.
 
 <details>
 <summary>View lectures</summary>
@@ -123,7 +123,7 @@
 
 
 ## 06 Pattern Recognition
-**Modeling sequential and temporal data.**
+#### Modeling sequential and temporal data.
 
 <details>
 <summary>View lectures</summary>
@@ -145,7 +145,7 @@
 
 
 ## 07 Deep Learning
-**Representation learning using neural networks.**
+#### Representation learning using neural networks.
 
 <details>
 <summary>View lectures</summary>
@@ -165,8 +165,13 @@
 </details>
 
 
+---
+
 # References
 
 - **Course:** Georgia Tech OMSCS – CS6601 Artificial Intelligence
 - **Textbook:** *Artificial Intelligence: A Modern Approach (4th Edition)* — Stuart Russell & Peter Norvig
 - Additional readings and papers are linked throughout the lecture notes.
+
+---
+	
