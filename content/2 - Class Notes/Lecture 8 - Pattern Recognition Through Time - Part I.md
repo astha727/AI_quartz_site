@@ -1,4 +1,7 @@
 
+>[!info] **From Static Machine Learning to Sequential AI**
+>Traditional machine learning assumes that each observation is independent of the others. However, many real-world problems involve **ordered sequences**, where the timing and order of observations are essential for understanding their meaning. This branch of AI is known as **Pattern Recognition Through Time** or **Sequential Pattern Recognition**. Before the rise of deep learning, algorithms such as **Dynamic Time Warping (DTW)** and **Hidden Markov Models (HMMs)** were the dominant approaches for modeling temporal data like speech, handwriting, gestures, and sign language. These methods laid the foundation for modern sequence models such as **Recurrent Neural Networks (RNNs), LSTMs, and Transformers**.
+
 > [!insight]  
 > Pattern Recognition Through Time studies data whose meaning depends not only on **what** is observed, but also **when** it is observed.
 > 
@@ -376,13 +379,9 @@ Euclidean Distance does not.
 
 - [[1 - Classification]]
     
-- [[Features]]
-    
 - [[Distance Metrics]]
     
-- [[Dynamic Time Warping]]
-    
-- [[Hidden Markov Models]]
+- [[Hidden Markov Models (HMM)]]
 
 # Dynamic Time Warping (DTW)
 
