@@ -2,12 +2,16 @@
 
 > [!info]
 > **Course:** CS 6601 – Artificial Intelligence  
+> **Program:** OMSCS • Georgia Institute of Technology  
 > **Primary Text:** *Artificial Intelligence: A Modern Approach (4th Edition)* — Russell & Norvig
+
+---
 
 # Course Contents
 
 ## 01 Search
-**State-space search, graph search, heuristics and optimization.**
+
+> State-space search, graph search, heuristics and optimization.
 
 <details>
 <summary>View lectures</summary>
@@ -27,9 +31,11 @@
 
 </details>
 
+---
 
 ## 02 Adversarial Search
-**Intelligent decision making in competitive environments.**
+
+> Intelligent decision making in competitive environments.
 
 <details>
 <summary>View lectures</summary>
@@ -48,9 +54,11 @@
 
 </details>
 
+---
 
 ## 03 Constraint Satisfaction
-**Solving problems by satisfying variables and constraints.**
+
+> Solving problems by satisfying variables and constraints.
 
 <details>
 <summary>View lectures</summary>
@@ -69,9 +77,11 @@
 
 </details>
 
+---
 
 ## 04 Bayesian Networks
-**Reasoning under uncertainty using probabilistic graphical models.**
+
+> Reasoning under uncertainty using probabilistic graphical models.
 
 <details>
 <summary>View lectures</summary>
@@ -96,9 +106,11 @@
 
 </details>
 
+---
 
 ## 05 Machine Learning
-**Learning from data through statistical and computational methods.**
+
+> Learning from data through statistical and computational methods.
 
 <details>
 <summary>View lectures</summary>
@@ -121,9 +133,11 @@
 
 </details>
 
+---
 
 ## 06 Pattern Recognition
-**Modeling sequential and temporal data.**
+
+> Modeling sequential and temporal data.
 
 <details>
 <summary>View lectures</summary>
@@ -143,9 +157,11 @@
 
 </details>
 
+---
 
 ## 07 Deep Learning
-**Representation learning using neural networks.**
+
+> Representation learning using neural networks.
 
 <details>
 <summary>View lectures</summary>
@@ -164,6 +180,7 @@
 
 </details>
 
+---
 
 # References
 

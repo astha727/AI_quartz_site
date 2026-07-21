@@ -8,7 +8,7 @@
 - [[4 - Conditional Porbability]]
 - [[6 - Bayes' Theorem]]
 - [[2 - Expected Value (Expectation) and LOTUS]]
-- [[Lecture 6 - Bayes' Net Part I]], [[Lecture 6 - Bayes' Net Part II]], [[Lecture 6 - Bayes' Net Part III]]
+- [[Lecture 6 - Bayesian Networks I — Foundations & Bayes Rule]], [[Lecture 6 – Bayesian Networks V -  Probabilistic Inference]], [[Lecture 6 – Bayesian Networks VI - Exact Inference]]
 
 ---
 

@@ -1,7 +1,7 @@
 Refer: [[Chapter 3 - Solving Problems by Searching]], [[MIT 6.034 Lecture 4 - Search - Hill Climbing, Depth - First, Beam]]
 ## Search as Problem Solving
 
-> [!abstract]+ Core Idea  
+> [!info]+ Core Idea  
 > Problem solving occurs when an agent cannot immediately determine the correct action.
 > 
 > Instead of acting reflexively, the agent must reason about future possibilities and search for a sequence of actions that achieves a goal.
@@ -1850,3 +1850,4 @@ Exam shortcut
 
 BFS = shortest steps, UCS = cheapest cost, DFS = least memory, A* = cheapest cost + heuristic guidance.
 
+Next: [[Lecture 2 - Simulated Annealing]]

@@ -1,8 +1,144 @@
+Previous:  [[Lecture 6 - Bayesian Networks III — Conditional Independence]]
+Next: [[Lecture 6 - Bayesian Networks V - Probabilistic Inference]]
+# A New Bayesian Network Structure
+
+Until now, we studied a network where **one hidden cause** produced **two observations**.
+
+```text
+          Cause
+         /     \
+        ▼       ▼
+ Observation Observation
+```
+
+The lecture now introduces the opposite structure.
+
+Two independent causes influence a single outcome.
+
+```text
+Sunny ───► Happiness ◄──── Raise
+```
+
+where
+
+- Sunny = whether the weather is sunny
+- Raise = whether you receive a salary raise
+- Happiness = whether you are happy
+
+---
+
+# Prior Probabilities
+
+The lecture assumes
+
+$$
+P(Sunny)=0.7
+$$
+
+and
+
+$$
+P(Raise)=0.01
+$$
+
+These two causes are assumed to be independent.
+
+---
+
+# Happiness Probabilities
+
+The conditional probabilities are
+
+| Sunny | Raise | $$P(Happy)$$ |
+|--------|-------|--------------|
+| Yes | Yes | 1.0 |
+| No | Yes | 0.9 |
+| Yes | No | 0.7 |
+| No | No | 0.1 |
+
+These values define how the two causes jointly influence Happiness.
+
+---
+
+# Independence Before Observing Happiness
+
+The lecture asks
+
+> What is
+
+$$
+P(Raise\mid Sunny)?
+$$
+
+Because neither variable causes the other,
+
+and Happiness has **not** been observed,
+
+the answer is simply
+
+$$
+P(Raise\mid Sunny)
+=
+P(Raise)
+=
+0.01
+$$
+
+Knowing that the weather is sunny tells us nothing about whether we received a raise.
+
+The two causes remain independent.
+
+---
+
+# Why?
+
+Looking at the network,
+
+```text
+Sunny ───► Happiness ◄──── Raise
+```
+
+Sunny and Raise only meet at their common effect (Happiness).
+
+Since Happiness has **not** been observed,
+
+there is no mechanism through which information can pass between Sunny and Raise.
+
+Therefore,
+
+they remain independent.
+
+---
+
+# Looking Ahead
+
+The lecture ends by introducing this new network structure.
+
+Later in the course, we will see that **observing Happiness changes everything**.
+
+Once the common effect is observed,
+
+Sunny and Raise are no longer independent.
+
+This phenomenon is known as **Explaining Away**, one of the most important ideas in Bayesian Networks.
+
+---
+
+# Key Takeaways
+
+- Independence and conditional independence are different concepts.
+- Conditional independence does **not** imply ordinary independence.
+- Ordinary independence does **not** imply conditional independence.
+- In the cancer example, the first test changes our belief about Cancer, which changes the probability of the second test.
+- A Bayesian Network with two independent causes and one common effect behaves differently from the common-cause structure studied earlier.
+- Before observing the common effect, the two causes remain independent.
+
+---
 # Explaining Away
 
 > [!info] Prerequisites
 > - [[6 - Bayes' Theorem]]
-> - [[Lecture 6 - Bayes' Net Part I]]
+> - [[Lecture 6 - Bayesian Networks I — Foundations & Bayes Rule]]
 
 ---
 
@@ -1257,299 +1393,4 @@ Earthquake┘         │
 ```
 
 ---
-
-# What is Probabilistic Inference?
-
-Probabilistic inference means:
-
-> Using the Bayes Network to compute probabilities after observing evidence.
-
-Instead of simply storing probabilities, we now **reason with them**.
-
-For example:
-
-> Mary calls and says the alarm is ringing.
-
-We may want to know:
-
-> How likely is it that there was actually a burglary?
-
-The Bayes Network lets us answer this mathematically.
-
----
-
-# Three Types of Variables
-
-During inference, every variable belongs to one of three categories.
-
-## 1. Evidence Variables
-
-These are variables whose values are already known.
-
-Example:
-
-```text
-Mary Calls = True
-```
-
-We already observed this fact.
-
-These variables become the **input** to our inference problem.
-
-
-## 2. Query Variables
-
-These are the variables whose probabilities we want to compute.
-
-Example:
-
-```text
-Burglary = ?
-```
-
-We do not know whether a burglary occurred.
-
-The purpose of inference is to estimate its probability.
-
-## 3. Hidden Variables
-
-These are variables that are neither observed nor directly asked for.
-
-However, they still influence the computation.
-
-Example:
-
-```text
-Earthquake
-Alarm
-```
-
-Even if we are not interested in these variables themselves, they affect the probability of burglary and therefore cannot simply be ignored.
-
----
-
-# Example Classification
-
-Suppose:
-
-> Mary calls to report that the alarm has gone off.
-
-We want to know whether there was a burglary.
-
-Then:
-
-| Variable | Type |
-|----------|------|
-| Burglary | Query |
-| Mary Calls | Evidence |
-| Alarm | Hidden |
-| Earthquake | Hidden |
-| John Calls | Hidden |
-
-Notice that the hidden variables are **not discarded**.
-
-They must still be considered during inference because they influence the query.
-
----
-
-# Posterior Distribution
-
-The answer produced by probabilistic inference is called the **posterior distribution**.
-
-It is written as
-
-$$
-P(\text{Query} \mid \text{Evidence})
-$$
-
-Meaning:
-
-> The probability of the query variable **after incorporating the observed evidence**.
-
-Example:
-
-$$
-P(B \mid M)
-$$
-
-This reads:
-
-> Probability of a burglary given that Mary called.
-
----
-
-# General Form
-
-If there are multiple query variables,
-
-$$
-P(Q_1,Q_2,\ldots \mid E_1,E_2,\ldots)
-$$
-
-Examples:
-
-$$
-P(B,E \mid M)
-$$
-
-Probability of burglary and earthquake given Mary called.
-
----
-
-$$
-P(B,J \mid M)
-$$
-
-Probability of burglary and John calling given Mary called.
-
----
-
-# Evidence Can Be Anywhere
-
-Unlike ordinary programming functions, Bayes Networks are **not limited to one direction**.
-
-In a normal function:
-
-```text
-Inputs
-   │
-   ▼
-Function
-   │
-   ▼
-Outputs
-```
-
-Information only flows one way.
-
----
-
-In a Bayes Network, evidence can be supplied anywhere.
-
-For example:
-
-### Causal reasoning
-
-Known:
-
-```text
-Burglary
-Earthquake
-```
-
-Infer:
-
-```text
-Alarm
-John Calls
-Mary Calls
-```
-
-Reasoning follows the direction of the arrows.
-
----
-
-### Diagnostic reasoning
-
-Known:
-
-```text
-John Calls
-Mary Calls
-```
-
-Infer:
-
-```text
-Burglary
-Earthquake
-```
-
-Reasoning goes **against** the arrows.
-
-This is exactly the type of reasoning made possible by Bayes' Rule.
-
----
-
-### Mixed reasoning
-
-Known:
-
-```text
-Mary Calls
-```
-
-Infer:
-
-```text
-Burglary
-John Calls
-```
-
-Evidence and queries can be placed anywhere in the network.
-
----
-
-# Most Likely Explanation (MLE)
-
-Sometimes we are not interested in the full probability distribution.
-
-Instead, we ask:
-
-> Which combination of variable values is most likely?
-
-Instead of computing
-
-$$
-P(Q \mid E)
-$$
-
-we compute
-
-$$
-\arg\max_Q P(Q \mid E)
-$$
-
-This means:
-
-> Find the assignment of the query variables with the highest posterior probability.
-
-For example:
-
-Mary called.
-
-Possible explanations:
-
-| Burglary | Earthquake | Probability |
-|-----------|------------|------------|
-| True | False | 0.28 |
-| False | True | 0.12 |
-| False | False | 0.55 |
-| True | True | 0.05 |
-
-The **Most Likely Explanation (MLE)** is simply the row with the highest probability.
-
----
-
-# Key Ideas from This Section
-
-- Bayes Networks are not just representations—they are tools for **probabilistic inference**.
-- During inference, variables are classified as:
-  - Evidence
-  - Query
-  - Hidden
-- The result of inference is the **posterior distribution**
-
-$$
-P(\text{Query} \mid \text{Evidence})
-$$
-
-- Evidence can appear anywhere in the network.
-- Bayes Networks support both **causal reasoning** and **diagnostic reasoning**.
-- Sometimes we want the full posterior distribution, while other times we only want the **most likely explanation (MLE)**.
-
----
-
-# Summary
-
-This section introduces **probabilistic inference**, the process of answering probability questions using a Bayes Network. Every inference problem is defined by **evidence variables** (known observations), **query variables** (what we want to infer), and **hidden variables** (unknown intermediate variables). The goal is usually to compute the **posterior distribution**, $P(\text{Query}\mid\text{Evidence})$, although sometimes we seek only the **most likely explanation**. Unlike traditional programs, Bayes Networks allow reasoning in both causal and diagnostic directions, making them powerful tools for uncertain reasoning.
+Next: [[Lecture 6 - Bayesian Networks V - Probabilistic Inference]]

@@ -1,4 +1,3 @@
-
 # Artificial Intelligence: A Modern Approach (AIMA)
 
 These notes are based on **Artificial Intelligence: A Modern Approach (4th Edition)** by Stuart Russell and Peter Norvig, the primary textbook for Georgia Tech's OMSCS Artificial Intelligence course.

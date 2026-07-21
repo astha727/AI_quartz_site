@@ -1087,3 +1087,5 @@ Probabilistic Pruning
 > **Expectimax = Average-case randomness**
 > 
 > **Probabilistic Pruning = Only works when value bounds are known**
+
+Next: [[Lecture 4 - Constraint Satisfaction]]

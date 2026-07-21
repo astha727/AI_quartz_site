@@ -1364,3 +1364,5 @@ BS --> GA
 - [[Constraint Satisfaction Problems]]
 - [[Optimization]]
 - [[Simulated Annealing]]
+
+Next: [[Lecture 3 - Game Playing]]

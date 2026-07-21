@@ -2373,4 +2373,4 @@ No domain is empty.
 > Arc Consistency = **repeated propagation**.
 
 ---
-
+Next: [[Lecture 6 - Bayesian Networks I — Foundations & Bayes Rule]]
