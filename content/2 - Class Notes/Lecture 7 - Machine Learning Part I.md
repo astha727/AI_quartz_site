@@ -96,8 +96,8 @@ Examples:
 Typical algorithms include:
 
 - [[Naïve Bayes]]
-- [[Decision Trees]]
-- [[Random Forests]]
+- Decision Trees
+- Random Forests
 - [[Support Vector Machines]]
 - [[Neural Networks]]
 - [[k-Nearest Neighbors]]

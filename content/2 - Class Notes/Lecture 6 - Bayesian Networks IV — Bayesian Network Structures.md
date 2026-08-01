@@ -1,8 +1,9 @@
 Previous:  [[Lecture 6 - Bayesian Networks III — Conditional Independence]]
-Next: [[Lecture 6 - Bayesian Networks V - Probabilistic Inference]]
+Next: [[Lecture 6 – Bayesian Networks V -  Probabilistic Inference]]
 # A New Bayesian Network Structure
 
 Until now, we studied a network where **one hidden cause** produced **two observations**.
+
 
 ```text
           Cause

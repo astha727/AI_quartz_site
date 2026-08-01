@@ -81,7 +81,7 @@
 - [[Lecture 6 - Bayesian Networks II - Bayesian Inference In Simple Networks]]
 - [[Lecture 6 - Bayesian Networks III — Conditional Independence]]
 - [[Lecture 6 - Bayesian Networks IV — Bayesian Network Structures]]
-- [[Lecture 6 - Bayesian Networks V - Probabilistic Inference]]
+- [[Lecture 6 – Bayesian Networks V -  Probabilistic Inference]]
 - [[Lecture 6 – Bayesian Networks VI - Exact Inference]]
 - [[Lecture 6 – Bayesian Networks VII - Approximate Inference]]
 
@@ -161,6 +161,26 @@
 
 - Georgia Tech CS6601 Lecture Notes
 - Additional Deep Learning Resources
+
+</details>
+
+## 08 Planning Under Uncertainty
+#### Sequential decision making under stochastic and partially observable environments.
+
+<details>
+<summary>View lectures</summary>
+
+### Lectures
+- [[Lecture 10 - Planning Under Uncertainty]]
+
+**Key Concepts**
+
+`Markov Decision Processes (MDPs)` · `States` · `Actions` · `Transition Probabilities` · `Reward Function` · `Policy` · `Value Function` · `Bellman Equation` · `Value Iteration` · `Discount Factor` · `Expected Utility` · `Absorbing States` · `Grid World` · `Stochastic Planning` · `Partially Observable Markov Decision Processes (POMDPs)` · `Belief States` · `Information Gathering` · `Exploration vs Exploitation`
+
+**References**
+
+- AIMA Chapter 17
+- Georgia Tech CS6601 Lecture Notes
 
 </details>
 
