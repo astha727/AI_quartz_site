@@ -24,6 +24,9 @@ Before studying Bayes Networks, review:
 - [[4 - Conditional Porbability]]
 - [[6 - Bayes' Theorem]]
 
+Also, for additional background refer:
+- [[MIT 6.034 Lecture 21 - Probabilistic Reasoning]]
+
 Bayesian Networks repeatedly use conditional probability and Bayes' theorem to reason about uncertain events.
 
 ---

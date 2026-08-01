@@ -53,11 +53,7 @@ For example,
 - reinforcement learning,
 - probabilistic reasoning.
 
-In reality,
-
-each technique solves a different class of problems.
-
-Probability is most useful when
+In reality, each technique solves a different class of problems. Probability is most useful when
 
 - the world is uncertain,
 - outcomes cannot be predicted exactly,
@@ -67,9 +63,7 @@ Probability is most useful when
 
 # A Motivating Example
 
-Imagine driving through campus one morning.
-
-Suddenly you notice that a **new statue** has appeared.
+Imagine driving through campus one morning. Suddenly you notice that a **new statue** has appeared.
 
 Your immediate reaction might be:
 
@@ -128,9 +122,7 @@ or
 False
 ```
 
-we can list every possible combination.
-
-For three binary variables,
+we can list every possible combination. For three binary variables,
 
 the total number of possible worlds is
 
@@ -181,25 +173,17 @@ Hack = True
 Art Show = False
 ```
 
-meaning
-
-the statue really is the result of a prank.
+meaning the statue really is the result of a prank.
 
 ---
 
 # Every Row Represents One Possible World
 
-This idea is extremely important.
-
-Rather than storing information separately,
-
-a **joint probability table** stores probabilities for
+This idea is extremely important. Rather than storing information separately, a **joint probability table** stores probabilities for
 
 > **every possible combination of every variable simultaneously.**
 
-In other words,
-
-each row answers the question:
+In other words, each row answers the question:
 
 > "If the world looked exactly like this, how likely would it be?"
 
@@ -215,9 +199,7 @@ Each day we record
 - Was there a hack?
 - Was there an art show?
 
-Eventually,
-
-our observations might look like this.
+Eventually, our observations might look like this.
 
 | Combination | Frequency |
 |-------------|-----------|
@@ -227,9 +209,7 @@ our observations might look like this.
 | F T T | 40 |
 | ... | ... |
 
-These are simply **counts**.
-
-They tell us
+These are simply **counts**. They tell us
 
 > how often each possible world actually occurred.
 
@@ -278,11 +258,7 @@ P(\text{No Statue},\text{No Hack},\text{No Art Show})
 0.405
 $$
 
-Each row of the table receives its own probability.
-
-Together,
-
-these probabilities form the
+Each row of the table receives its own probability. Together, these probabilities form the
 
 > **Joint Probability Distribution**
 
@@ -314,9 +290,7 @@ is a **joint probability** because it refers to all three variables at once.
 
 # Why Is This So Powerful?
 
-Once every possible world has been assigned a probability,
-
-we can answer almost any probability question.
+Once every possible world has been assigned a probability, we can answer almost any probability question.
 
 For example,
 
@@ -326,11 +300,7 @@ For example,
 - How likely is there a hack if a statue appears?
 - How likely is there an art show if a statue appears?
 
-Remarkably,
-
-all of these can be computed from the same table.
-
-Patrick Winston calls this the "miracle" of probabilistic inference.
+Remarkably, all of these can be computed from the same table. Patrick Winston calls this the "miracle" of probabilistic inference.
 
 The only problem is that this miracle comes with a cost...
 
@@ -405,15 +375,7 @@ Variables might include
 - Blood Pressure
 - Oxygen Level
 
-Even this small problem already requires
-
-thousands of possible combinations.
-
-Real AI systems often contain
-
-hundreds or thousands of variables,
-
-making a complete joint probability table impossible to store.
+Even this small problem already requires thousands of possible combinations. Real AI systems often contain hundreds or thousands of variables, making a complete joint probability table impossible to store.
 
 ---
 
@@ -422,14 +384,7 @@ making a complete joint probability table impossible to store.
 - AI often operates under uncertainty rather than certainty.
 - Probability helps an agent reason about uncertain situations.
 - A **joint probability table** lists every possible combination of variables.
-- For **n** binary variables, the table contains
-
-$$
-2^n
-$$
-
-rows.
-
+- For **n** binary variables, the table contains $2^n$ rows.
 - Each row stores the probability of one complete possible world.
 - Once the joint probability table is known, many different probability questions can be answered.
 - Unfortunately, the table grows **exponentially**, motivating the need for more efficient representations—namely **Bayesian (Belief) Networks**.
@@ -505,13 +460,7 @@ $$
 
 ## Why Is It Called "Marginal"?
 
-Historically,
-
-when probability tables were written in books,
-
-the totals were written in the **margin** of the table.
-
-Those totals became known as
+Historically, when probability tables were written in books, the totals were written in the **margin** of the table. Those totals became known as
 
 > **Marginal probabilities**
 
@@ -523,9 +472,7 @@ A marginal probability is therefore obtained by
 
 # Conditional Probability
 
-Now suppose we learn new information.
-
-Instead of asking
+Now suppose we learn new information. Instead of asking
 
 > What is the probability of a statue?
 
@@ -535,17 +482,13 @@ we ask
 
 Now we no longer consider every row.
 
-Instead,
-
-we restrict ourselves to only those rows where
+Instead, we restrict ourselves to only those rows where
 
 ```
 Art Show = True
 ```
 
-Within this smaller set,
-
-we calculate
+Within this smaller set, we calculate
 
 $$
 P(\text{Statue}\mid\text{Art Show})
@@ -567,11 +510,7 @@ Initially,
 Statue
 ```
 
-may be relatively unlikely.
-
-However,
-
-once we discover there is an
+may be relatively unlikely. However, once we discover there is an
 
 ```
 Art Show
@@ -601,21 +540,13 @@ P(\text{Statue}\mid
 \text{Hack})
 $$
 
-Again,
-
-the joint probability table answers this simply by considering
-
-only the rows satisfying both conditions.
+Again, the joint probability table answers this simply by considering only the rows satisfying both conditions.
 
 ---
 
 # A Second Example
 
-Patrick Winston introduces another example.
-
-Instead of statues,
-
-consider a neighbor's dog.
+Patrick Winston introduces another example. Instead of statues, consider a neighbor's dog.
 
 The dog may bark because
 
@@ -660,9 +591,7 @@ We simply sum all rows where
 Raccoon = True
 ```
 
-Next,
-
-suppose we hear the dog barking.
+Next, suppose we hear the dog barking.
 
 Now we ask
 
@@ -670,17 +599,13 @@ $$
 P(\text{Raccoon}\mid\text{Dog Barking})
 $$
 
-Because barking is evidence that something is outside,
-
-the probability of a raccoon increases.
+Because barking is evidence that something is outside, the probability of a raccoon increases.
 
 ---
 
 # Explaining Away
 
-Now suppose we discover something else.
-
-The police confirm
+Now suppose we discover something else. The police confirm
 
 ```
 Burglar = True
@@ -695,17 +620,13 @@ P(\text{Raccoon}
 \text{Burglar})
 $$
 
-Surprisingly,
-
-the probability of a raccoon **decreases**.
+Surprisingly, the probability of a raccoon **decreases**.
 
 ---
 
 # Why Does It Decrease?
 
-Initially,
-
-the barking needs an explanation.
+Initially, the barking needs an explanation.
 
 Possible explanations include
 
@@ -729,13 +650,7 @@ Burglar = True
 
 the barking is already explained.
 
-Therefore,
-
-the raccoon becomes less necessary as an explanation.
-
-This phenomenon is known as
-
-> **Explaining Away**
+Therefore, the raccoon becomes less necessary as an explanation. This phenomenon is known as **Explaining Away**
 
 ---
 
@@ -759,19 +674,9 @@ Earthquake
 
 become **dependent once we observe their common effect**.
 
-If we hear the alarm,
+If we hear the alarm, both burglary and earthquake become more likely.
 
-both burglary and earthquake become more likely.
-
-However,
-
-once we discover a burglary actually occurred,
-
-the earthquake becomes less likely.
-
-Exactly the same reasoning appears in the
-
-Dog–Burglar–Raccoon example.
+However, once we discover a burglary actually occurred, the earthquake becomes less likely. Exactly the same reasoning appears in the Dog–Burglar–Raccoon example.
 
 ---
 
@@ -782,8 +687,6 @@ Dog–Burglar–Raccoon example.
 - Evidence changes beliefs.
 - One explanation can reduce the probability of competing explanations.
 - This phenomenon is called **explaining away** and is one of the most important ideas in Bayesian Networks.
-
----
 
 ## Why Joint Probability Tables Don't Scale
 
@@ -800,23 +703,15 @@ Patrick Winston describes the joint probability table as almost miraculous.
 
 Why?
 
-Because once the table is known,
+Because once the table is known, it can answer nearly every probability question.
 
-it can answer nearly every probability question.
-
-Unfortunately,
-
-this miracle comes with a serious limitation.
-
-The table becomes impossibly large.
+Unfortunately, this miracle comes with a serious limitation. The table becomes impossibly large.
 
 ---
 
 # Exponential Growth
 
-Suppose every variable is binary.
-
-Each new variable doubles the number of possible worlds.
+Suppose every variable is binary. Each new variable doubles the number of possible worlds.
 
 The number of rows becomes
 
@@ -897,13 +792,7 @@ The growth is exponential rather than linear.
 
 # Collecting the Probabilities
 
-Even if storage were free,
-
-there is another problem.
-
-Where do all these probabilities come from?
-
-Patrick Winston suggests two possibilities.
+Even if storage were free, there is another problem. Where do all these probabilities come from? Patrick Winston suggests two possibilities.
 
 ---
 
@@ -936,13 +825,7 @@ This is called the
 
 # 2. Subjective Interpretation
 
-Sometimes
-
-there simply is not enough data.
-
-Instead,
-
-an expert estimates the probabilities.
+Sometimes there simply is not enough data. Instead, an expert estimates the probabilities.
 
 Examples include
 
@@ -964,13 +847,7 @@ This is called the
 
 Patrick Winston pauses to make an important philosophical point.
 
-Probability is an extremely useful AI tool,
-
-but it is **not** the only tool.
-
-Sometimes,
-
-there already exists an exact scientific model.
+Probability is an extremely useful AI tool, but it is **not** the only tool. Sometimes, there already exists an exact scientific model.
 
 ---
 
@@ -980,9 +857,7 @@ Imagine trying to determine
 
 > Which objects float?
 
-One approach would be purely statistical.
-
-Observe thousands of objects.
+One approach would be purely statistical. Observe thousands of objects.
 
 Record
 
@@ -998,29 +873,19 @@ Estimate probabilities for everything.
 
 ## But Physics Already Solves It
 
-Instead,
-
-physics provides a direct explanation.
-
-Whether something floats depends on
+Instead, physics provides a direct explanation. Whether something floats depends on
 
 - density,
 - displaced water,
 - buoyancy.
 
-No probability table is necessary.
-
-The correct model comes from
-
-**Archimedes' Principle**, not statistics.
+No probability table is necessary. The correct model comes from **Archimedes' Principle**, not statistics.
 
 ---
 
 # When Probability Is Appropriate
 
-Probability becomes useful when
-
-there is **no complete physical model**.
+Probability becomes useful when there is **no complete physical model**.
 
 Examples include
 
@@ -1035,9 +900,7 @@ These involve many hidden influences that cannot easily be modeled using determi
 
 # The Need for a Better Representation
 
-At this point,
-
-Patrick Winston concludes
+At this point, Patrick Winston concludes
 
 > Joint probability tables are theoretically perfect...
 
@@ -1095,12 +958,7 @@ making inference tractable even for very large systems.
 # Key Takeaways
 
 - Joint probability tables are mathematically complete.
-- Their size grows exponentially as
-
-$$
-2^n
-$$
-
+- Their size grows exponentially as $2^n$
 - Probabilities may come from data (frequentist) or expert knowledge (subjective).
 - Probability is one AI tool among many—not every problem requires probabilistic reasoning.
 - The exponential growth of joint probability tables motivates Bayesian Networks, which compress the representation by exploiting conditional independence.
@@ -1133,9 +991,7 @@ $$
 2^3 = 8
 $$
 
-possible combinations.
-
-This is manageable.
+possible combinations. This is manageable.
 
 ---
 
@@ -1174,9 +1030,7 @@ $$
 2^{10}=1024
 $$
 
-rows.
-
-Already, we need over one thousand probabilities.
+rows. Already, we need over one thousand probabilities.
 
 ---
 
@@ -1225,9 +1079,7 @@ Collecting enough data for every one of them is unrealistic.
 
 ## 2. Guessing the Probabilities
 
-Even if we do not collect data and instead estimate the probabilities ourselves,
-
-the task becomes impossible.
+Even if we do not collect data and instead estimate the probabilities ourselves, the task becomes impossible.
 
 Estimating
 
@@ -1242,13 +1094,9 @@ Estimating
 
 A Joint Probability Table is mathematically complete.
 
-If we had one,
+If we had one, we could answer virtually **any probabilistic query**.
 
-we could answer virtually **any probabilistic query**.
-
-However,
-
-its size grows exponentially with the number of variables.
+However, its size grows exponentially with the number of variables.
 
 Therefore,
 
@@ -1260,17 +1108,11 @@ Therefore,
 
 This limitation motivates the development of **Bayesian Networks**.
 
-Instead of storing one gigantic table,
-
-Bayesian Networks exploit **conditional independence** to store only the probabilities that are actually needed.
+Instead of storing one gigantic table, Bayesian Networks exploit **conditional independence** to store only the probabilities that are actually needed.
 
 This dramatically reduces the number of parameters required.
 
-For example,
-
-instead of storing millions of probabilities,
-
-a Bayesian Network may only require a few dozen conditional probability tables.
+For example, instead of storing millions of probabilities, a Bayesian Network may only require a few dozen conditional probability tables.
 
 This is the major reason Bayesian Networks became one of the most important probabilistic models in Artificial Intelligence.
 
@@ -1286,9 +1128,7 @@ This is the major reason Bayesian Networks became one of the most important prob
 
 ## Where Do Probabilities Come From?
 
-Once we decide to use probabilities,
-
-an important question arises.
+Once we decide to use probabilities, an important question arises.
 
 > **Where do the probability values actually come from?**
 
@@ -1300,17 +1140,11 @@ Patrick Winston discusses several possible interpretations.
 
 The first approach is the **Frequentist** view.
 
-Here,
-
-probabilities come directly from observed data.
+Here, probabilities come directly from observed data.
 
 We repeatedly observe the world and record how often events occur.
 
-For example,
-
-suppose we observe the Student Center over many years.
-
-If a statue appears on 355 out of 1000 observations,
+For example, suppose we observe the Student Center over many years. If a statue appears on 355 out of 1000 observations,
 
 then
 
@@ -1331,27 +1165,13 @@ The probability is simply the observed frequency.
 
 # 2. Subjective Interpretation
 
-Sometimes,
+Sometimes, we do **not** have enough data. Instead, an expert estimates the probabilities.
 
-we do **not** have enough data.
-
-Instead,
-
-an expert estimates the probabilities.
-
-For example,
-
-a doctor might estimate
+For example, a doctor might estimate
 
 > "There is about a 20% chance this patient has Disease X."
 
-No large dataset is required.
-
-Instead,
-
-the probability reflects the expert's belief.
-
-This is called the **Subjective** interpretation of probability.
+No large dataset is required. Instead, the probability reflects the expert's belief. This is called the **Subjective** interpretation of probability.
 
 ## Characteristics
 
@@ -1363,19 +1183,9 @@ This is called the **Subjective** interpretation of probability.
 
 # 3. Natural Propensity
 
-Patrick Winston briefly mentions another interpretation,
+Patrick Winston briefly mentions another interpretation, mainly used in physics. Some events appear to possess an inherent randomness.
 
-mainly used in physics.
-
-Some events appear to possess an inherent randomness.
-
-For example,
-
-radioactive decay or certain quantum events.
-
-Here,
-
-probability is treated as a natural property of the physical world rather than something estimated from data.
+For example,radioactive decay or certain quantum events. Here, probability is treated as a natural property of the physical world rather than something estimated from data.
 
 ---
 
@@ -1392,23 +1202,13 @@ The exact philosophical interpretation is usually less important than having rea
 
 # The Real Problem
 
-Regardless of where the probabilities come from,
-
-the main difficulty remains the same.
-
-Even if we know every probability,
-
-we still cannot practically build a massive Joint Probability Table.
-
-The representation itself is too large.
+Regardless of where the probabilities come from, the main difficulty remains the same. Even if we know every probability, we still cannot practically build a massive Joint Probability Table. The representation itself is too large.
 
 ---
 
 # A Huge Research Area
 
-Because Joint Probability Tables do not scale,
-
-an enormous amount of AI research has focused on finding better representations.
+Because Joint Probability Tables do not scale, an enormous amount of AI research has focused on finding better representations.
 
 Patrick Winston describes this as an entire industry devoted to representing probabilities **without storing the full Joint Probability Table**.
 
@@ -1547,27 +1347,15 @@ Imagine the following Venn diagram.
 +------------------------------------+
 ```
 
-Normally,
+Normally, the probability of A is measured relative to the **entire universe**. However, once we know that **B is true**, the universe changes.
 
-the probability of A is measured relative to the **entire universe**.
-
-However,
-
-once we know that **B is true**, the universe changes.
-
-Instead of considering every possible outcome,
-
-we only consider the outcomes inside B.
-
-Our new sample space becomes
+Instead of considering every possible outcome, we only consider the outcomes inside B. Our new sample space becomes
 
 ```
 Only B
 ```
 
-Within this smaller world,
-
-we ask:
+Within this smaller world, we ask:
 
 > What fraction also belongs to A?
 
@@ -1636,19 +1424,13 @@ P(\text{Cat} \mid \text{Dog})
 0.333
 $$
 
-So,
-
-among dog owners,
-
-approximately **33% also own a cat**.
+So, among dog owners, approximately **33% also own a cat**.
 
 ---
 
 # Rearranging the Formula
 
-We can rearrange the definition algebraically.
-
-Starting from
+We can rearrange the definition algebraically. Starting from
 
 $$
 P(A \mid B)
@@ -1707,9 +1489,7 @@ $$
 P(A \cap B \cap C)
 $$
 
-Instead of estimating this directly,
-
-we again apply the Product Rule.
+Instead of estimating this directly, we again apply the Product Rule.
 
 Treat
 
@@ -1733,9 +1513,7 @@ $$
 P(B \cap C)
 $$
 
-can itself be expanded using the same Product Rule.
-
-Specifically,
+can itself be expanded using the same Product Rule. Specifically,
 
 $$
 P(B \cap C)
@@ -1767,9 +1545,7 @@ P(B \mid C)
 P(C)
 $$
 
-Notice what happens from left to right.
-
-The conditioning becomes smaller.
+Notice what happens from left to right. The conditioning becomes smaller.
 
 First,
 
@@ -1795,11 +1571,7 @@ $$
 
 depends on **nothing**.
 
-Each step removes one conditioning variable.
-
-Patrick Winston points out that this is not an accident.
-
-It is the beginning of a very powerful general rule.
+Each step removes one conditioning variable. Patrick Winston points out that this is not an accident. It is the beginning of a very powerful general rule.
 
 ---
 
@@ -1824,9 +1596,7 @@ X_{i-1},X_{i-2},\ldots,X_1
 \right)
 $$
 
-Equivalently,
-
-writing it out explicitly,
+Equivalently, writing it out explicitly,
 
 $$
 P(X_1,\ldots,X_n)
@@ -1849,13 +1619,7 @@ $$
 P(X_1,X_2,\ldots,X_n)
 $$
 
-into a product of simpler conditional probabilities.
-
-Instead of estimating one enormous probability directly,
-
-we estimate several smaller probabilities.
-
-This decomposition is mathematically exact—it does **not** make any approximations.
+into a product of simpler conditional probabilities. Instead of estimating one enormous probability directly, we estimate several smaller probabilities. This decomposition is mathematically exact—it does **not** make any approximations.
 
 ---
 
@@ -1863,15 +1627,9 @@ This decomposition is mathematically exact—it does **not** make any approximat
 
 The Chain Rule is one of the foundations of Bayesian Networks.
 
-Later,
+Later, Bayesian Networks will exploit **conditional independence** to simplify these conditional probabilities even further.
 
-Bayesian Networks will exploit **conditional independence** to simplify these conditional probabilities even further.
-
-Instead of conditioning on *every previous variable*,
-
-most variables only depend on a small number of **parents**.
-
-This is what allows Bayesian Networks to represent complex probability distributions efficiently.
+Instead of conditioning on *every previous variable*, most variables only depend on a small number of **parents**. This is what allows Bayesian Networks to represent complex probability distributions efficiently.
 
 ---
 
@@ -1928,18 +1686,14 @@ This allows us to simplify these conditional probabilities dramatically.
 
 Two events are **independent** if knowing one event tells us **nothing** about the other.
 
-For example,
-
-Suppose we toss
+For example, Suppose we toss
 
 - one coin
 - and roll one die.
 
 The result of the coin toss does **not** affect the die roll.
 
-Similarly,
-
-the die roll does not affect the coin toss.
+Similarly, the die roll does not affect the coin toss.
 
 These are independent events.
 
@@ -1975,15 +1729,9 @@ Suppose we already know
 Event B happened.
 ```
 
-Normally,
+Normally, learning new information changes our beliefs.
 
-learning new information changes our beliefs.
-
-However,
-
-if A and B are independent,
-
-then learning B changes **nothing**.
+However, if A and B are independent, then learning B changes **nothing**.
 
 ```
 Before observing B
@@ -2031,21 +1779,13 @@ P(A\mid B)
 \frac{P(A\cap B)}{P(B)}
 $$
 
-If A and B are independent,
-
-this ratio should equal
+If A and B are independent, this ratio should equal
 
 $$
 P(A)
 $$
 
-In other words,
-
-the **fraction of B occupied by A**
-
-must be exactly the same as
-
-the **fraction of the entire universe occupied by A**.
+In other words, the **fraction of B occupied by A** must be exactly the same as the **fraction of the entire universe occupied by A**.
 
 Learning B does not change the proportion.
 
@@ -2097,31 +1837,17 @@ $$
 P(A)
 $$
 
-because
-
-A does not depend on B or C.
+because A does not depend on B or C.
 
 This removes enormous amounts of complexity.
 
-Unfortunately,
-
-completely independent variables are actually quite rare in real-world problems.
-
-Most variables influence one another in some way.
-
-This leads us to a much more useful concept.
+Unfortunately, completely independent variables are actually quite rare in real-world problems. Most variables influence one another in some way. This leads us to a much more useful concept.
 
 ---
 
 # Conditional Independence
 
-Conditional independence is one of the most important ideas in Bayesian Networks.
-
-Two variables may appear dependent,
-
-but once we know a third variable,
-
-they become independent.
+Conditional independence is one of the most important ideas in Bayesian Networks. Two variables may appear dependent, but once we know a third variable, they become independent.
 
 ---
 
@@ -2167,17 +1893,9 @@ Suppose
 - B = Patient has a cough
 - Z = Chest X-ray result
 
-Initially,
+Initially, a cough provides useful evidence about pneumonia.
 
-a cough provides useful evidence about pneumonia.
-
-However,
-
-once we already have the X-ray,
-
-the cough adds very little additional information.
-
-The X-ray explains the relationship.
+However, once we already have the X-ray, the cough adds very little additional information. The X-ray explains the relationship.
 
 So,
 
@@ -2220,9 +1938,7 @@ we compare
 - the proportion of A inside B,
 - with the proportion of A inside all of Z.
 
-If those proportions are equal,
-
-then B provides no additional information once Z is known.
+If those proportions are equal, then B provides no additional information once Z is known.
 
 ---
 
@@ -2254,25 +1970,15 @@ P(A,B)
 P(A)\,P(B)
 $$
 
-Notice that
-
-both probabilities are now conditioned on Z.
+Notice that both probabilities are now conditioned on Z.
 
 ---
 
 # Why Is Conditional Independence So Important?
 
-Imagine a medical diagnosis system.
+Imagine a medical diagnosis system. Without conditional independence, the probability of every disease would depend on every symptom.
 
-Without conditional independence,
-
-the probability of every disease would depend on every symptom.
-
-The probability tables would become enormous.
-
-Instead,
-
-Bayesian Networks exploit statements like
+The probability tables would become enormous. Instead, Bayesian Networks exploit statements like
 
 > Once we know the disease, two symptoms become independent.
 
@@ -2320,7 +2026,6 @@ $$
 - Once the conditioning variable is known, the second variable becomes irrelevant.
 - Bayesian Networks rely heavily on conditional independence to simplify otherwise enormous probability distributions.
 - The next step is to see **how Bayesian Networks use conditional independence to replace massive joint probability tables with compact graphical models.**
----
 
 ## Belief Networks (Bayesian Networks): Representing Probabilistic Knowledge
 
@@ -2344,29 +2049,21 @@ This dramatically reduces the number of probabilities we need to specify.
 
 # Motivation: The Dog–Burglar–Raccoon Example
 
-Consider a familiar scenario.
+Consider a familiar scenario. A neighbor's dog sometimes barks.
 
-A neighbor's dog sometimes barks.
-
-Why might it bark?
-
-Several explanations are possible:
+Why might it bark? Several explanations are possible:
 
 - A burglar is nearby.
 - A raccoon is outside.
 - Sometimes the dog simply barks for no reason.
 
-Immediately, we notice something important:
-
-The causes of barking are **not all equally related**.
+Immediately, we notice something important: The causes of barking are **not all equally related**.
 
 The burglar does **not** cause raccoons.
 
 The raccoon does **not** cause burglars.
 
-Instead,
-
-both independently influence the dog.
+Instead, both independently influence the dog.
 
 ---
 
@@ -2392,9 +2089,7 @@ Burglar
 Raccoon
 ```
 
-Notice the direction of the arrows.
-
-They represent **causal influence**.
+Notice the direction of the arrows. They represent **causal influence**.
 
 ```
 Cause
@@ -2414,17 +2109,13 @@ The burglar does **not** appear because the dog barked.
 
 Now suppose two additional events exist.
 
-If the dog barks,
-
-the neighbors may
+If the dog barks, the neighbors may
 
 ```
 Call the police.
 ```
 
-If a raccoon appears,
-
-it may
+If a raccoon appears, it may
 
 ```
 Knock over the trash can.
@@ -2482,9 +2173,7 @@ does **not** simply mean
 
 > "A and B are related."
 
-Instead,
-
-it means
+Instead, it means
 
 > **A directly influences B.**
 
@@ -2494,9 +2183,7 @@ For example,
 Burglar → Dog Barking
 ```
 
-means
-
-the probability that the dog barks depends on whether a burglar is present.
+means the probability that the dog barks depends on whether a burglar is present.
 
 Likewise,
 
@@ -2504,23 +2191,17 @@ Likewise,
 Dog Barking → Call Police
 ```
 
-means
-
-the decision to call the police depends on whether the dog is barking.
+means the decision to call the police depends on whether the dog is barking.
 
 ---
 
 # The Local Markov Property
 
-This is the most important idea in Bayesian Networks.
-
-Patrick Winston states it as
+This is the most important idea in Bayesian Networks. Patrick Winston states it as
 
 > **Every node depends only on its parents and is conditionally independent of all its non-descendants given its parents.**
 
 Although the wording sounds intimidating, the intuition is simple.
-
----
 
 ## Example 1 — Calling the Police
 
@@ -2618,13 +2299,7 @@ because calling the police happens **after** the dog barks.
 
 # Why Is This Useful?
 
-Imagine describing the world using a Joint Probability Table.
-
-With
-
-5 binary variables,
-
-we would need
+Imagine describing the world using a Joint Probability Table. With 5 binary variables, we would need
 
 $$
 2^5 = 32
@@ -2632,19 +2307,9 @@ $$
 
 possible rows.
 
-Every additional binary variable doubles the size of the table.
+Every additional binary variable doubles the size of the table. Very quickly, this becomes impossible.
 
-Very quickly,
-
-this becomes impossible.
-
-Instead,
-
-Bayesian Networks describe only the **local dependencies**.
-
-Each variable only needs probabilities involving its parents.
-
-This is far smaller than storing every possible combination.
+Instead, Bayesian Networks describe only the **local dependencies**. Each variable only needs probabilities involving its parents. This is far smaller than storing every possible combination.
 
 ---
 
@@ -2672,9 +2337,7 @@ Dog
 Raccoon
 ```
 
-Since each parent is binary,
-
-there are only four possible parent combinations.
+Since each parent is binary, there are only four possible parent combinations.
 
 | Burglar | Raccoon | P(Dog Barking=True) |
 |---------|----------|--------------------:|
@@ -2683,11 +2346,7 @@ there are only four possible parent combinations.
 | True | False | 1.00 |
 | True | True | 1.00 |
 
-Notice something remarkable.
-
-Instead of describing every possible world,
-
-we only describe
+Notice something remarkable. Instead of describing every possible world, we only describe
 
 > **How the dog behaves under each combination of its parents.**
 
@@ -2709,9 +2368,7 @@ and
 Raccoon
 ```
 
-These are called **root nodes**.
-
-They simply store prior probabilities.
+These are called **root nodes**. They simply store prior probabilities.
 
 For example,
 
@@ -2797,17 +2454,13 @@ we only store
 10 numbers.
 ```
 
-As the number of variables grows,
-
-this saving becomes enormous.
+As the number of variables grows, this saving becomes enormous.
 
 ---
 
 # Key Insight
 
-A Bayesian Network is **not** just a graph.
-
-It combines
+A Bayesian Network is **not** just a graph. It combines
 
 1. **Graph Structure**
    - shows causal or dependency relationships
@@ -2815,9 +2468,7 @@ It combines
 2. **Conditional Probability Tables**
    - quantify those relationships
 
-Together,
-
-they completely describe the underlying probability distribution.
+Together, they completely describe the underlying probability distribution.
 
 ---
 
@@ -2829,9 +2480,7 @@ Notice how all the ideas fit together.
 - **Conditional Independence** tells us many conditioning variables can be removed.
 - A **Bayesian Network** encodes exactly which variables can be ignored.
 
-In other words,
-
-the graph is a compact representation of conditional independence assumptions.
+In other words, the graph is a compact representation of conditional independence assumptions.
 
 ---
 
@@ -2845,7 +2494,6 @@ the graph is a compact representation of conditional independence assumptions.
 - Child nodes store conditional probabilities.
 - The graph encodes **conditional independence**, allowing large joint probability distributions to be represented compactly.
 - Instead of storing every possible world, Bayesian Networks only store **local relationships**, making probabilistic inference computationally feasible.
----
 
 ## From Bayesian Networks to the Full Joint Probability Distribution
 
@@ -2991,15 +2639,11 @@ P(D\mid B,T,R)
 P(D\mid B,R)
 $$
 
-Again,
-
-one unnecessary variable disappears.
+Again, one unnecessary variable disappears.
 
 ## Example 3 — Burglar
 
-Burglar is a **root node**.
-
-Nothing causes a burglar.
+Burglar is a **root node**. Nothing causes a burglar.
 
 Therefore,
 
@@ -3025,9 +2669,7 @@ $$
 P(T\mid R)
 $$
 
-already has exactly the correct form.
-
-Nothing changes.
+already has exactly the correct form. Nothing changes.
 
 ## Example 5 — Raccoon
 
@@ -3098,11 +2740,7 @@ each variable is conditioned **only on its parents**.
 
 # Why This Works
 
-The graph encodes a set of conditional independence assumptions.
-
-These assumptions allow us to replace
-
-large conditional probabilities such as
+The graph encodes a set of conditional independence assumptions. These assumptions allow us to replace large conditional probabilities such as
 
 $$
 P(D\mid B,T,R)
@@ -3114,19 +2752,13 @@ $$
 P(D\mid B,R)
 $$
 
-As a result,
-
-the Bayesian Network stores only the probabilities that are actually needed.
+As a result, the Bayesian Network stores only the probabilities that are actually needed.
 
 ---
 
 # Example: Number of Parameters
 
-Consider our five-variable network.
-
-Without a Bayesian Network,
-
-a Joint Probability Table requires
+Consider our five-variable network. Without a Bayesian Network, a Joint Probability Table requires
 
 $$
 2^5 = 32
@@ -3176,11 +2808,7 @@ $$
 
 entries.
 
-If each variable only has two or three parents,
-
-a Bayesian Network might require only a few dozen probabilities.
-
-This exponential reduction is why Bayesian Networks are practical for real-world AI systems.
+If each variable only has two or three parents, a Bayesian Network might require only a few dozen probabilities. This exponential reduction is why Bayesian Networks are practical for real-world AI systems.
 
 ---
 
@@ -3235,31 +2863,9 @@ The resulting distribution is mathematically identical to the original joint dis
 
 Patrick Winston emphasizes that we **never explicitly write down the enormous Joint Probability Table**.
 
-Instead,
-
-we construct a graph and specify only local probability tables.
-
-From these,
-
-the complete probability distribution can always be reconstructed.
+Instead, we construct a graph and specify only local probability tables. From these, the complete probability distribution can always be reconstructed.
 
 This is what makes Bayesian Networks one of the most successful probabilistic representations in Artificial Intelligence.
-
----
-
-# Connection to Georgia Tech CS6601
-
-This lecture explains **why** Bayesian Networks work.
-
-The Georgia Tech lectures focus more on **how to perform inference** once the network has been built, including:
-
-- Bayes' Rule
-- Exact Inference
-- Variable Elimination
-- Approximate Inference
-- Sampling Methods
-
-Understanding this factorization is essential because every inference algorithm relies on it.
 
 ---
 
