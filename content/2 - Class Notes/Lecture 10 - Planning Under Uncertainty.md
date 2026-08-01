@@ -616,7 +616,6 @@ Let's interpret each symbol.
 |(a)|Action taken|
 |(s')|Next state after the action|
 
----
 
 ## Example
 
