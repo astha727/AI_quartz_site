@@ -526,15 +526,15 @@ This leads directly to the **Viterbi Algorithm**, covered in the next note.
 
 ## See Also
 
-- [[Pattern Recognition Through Time]]
+- [[Lecture 8 - Pattern Recognition Through Time - Part I]]
     
 - [[Dynamic Time Warping]]
     
 - [[Viterbi Algorithm]]
     
-- [[Bayesian Networks]]
+- [[Lecture 6 - Bayesian Networks I — Foundations & Bayes Rule]]
     
-- [[Probability]]
+- [[3 - Probability]]
 
 
 > [!summary]

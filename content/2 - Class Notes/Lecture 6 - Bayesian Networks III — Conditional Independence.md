@@ -428,9 +428,10 @@ Again,
 
 **No.**
 
-The instructor states that this is false and notes that the reason will become clear later in the course.
+The lecture states that this is false and notes that the reason will become clear later in the course.
 
 The next lecture introduces a different Bayesian Network structure that explains why.
 
 
-Next: [[Lecture 6 – Bayesian Networks VI - Exact Inference]]
+Next: [[Lecture 6 - Bayesian Networks IV — Bayesian Network Structures]]
+

@@ -1394,4 +1394,4 @@ Earthquake┘         │
 ```
 
 ---
-Next: [[Lecture 6 - Bayesian Networks V - Probabilistic Inference]]
+Next: [[Lecture 6 – Bayesian Networks V -  Probabilistic Inference]]

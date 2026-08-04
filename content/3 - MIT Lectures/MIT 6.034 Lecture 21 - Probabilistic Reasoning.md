@@ -896,39 +896,10 @@ Examples include
 
 These involve many hidden influences that cannot easily be modeled using deterministic equations.
 
----
-
-# The Need for a Better Representation
-
-At this point, Patrick Winston concludes
-
-> Joint probability tables are theoretically perfect...
-
-...but practically impossible.
-
-We therefore need a representation that
-
-- stores far fewer probabilities,
-- avoids exponential explosion,
-- still allows probabilistic inference.
-
-This motivates the invention of
-
-# Bayesian (Belief) Networks
-
-Rather than storing probabilities for **every possible world**,
-
-Bayesian Networks exploit
-
-> **conditional independence**
-
-to represent the same information much more efficiently.
-
-This is why Bayesian Networks became one of the most important probabilistic models in Artificial Intelligence.
 
 ---
 
-# Connection to Your Georgia Tech Notes
+# Connection to class Notes
 
 This is exactly the motivation behind
 
@@ -952,85 +923,6 @@ Bayesian Networks store only
 - conditional probability tables,
 
 making inference tractable even for very large systems.
-
----
-
-# Key Takeaways
-
-- Joint probability tables are mathematically complete.
-- Their size grows exponentially as $2^n$
-- Probabilities may come from data (frequentist) or expert knowledge (subjective).
-- Probability is one AI tool among many—not every problem requires probabilistic reasoning.
-- The exponential growth of joint probability tables motivates Bayesian Networks, which compress the representation by exploiting conditional independence.
-
-## Why Joint Probability Tables Do Not Scale
-
-Up to this point, we have assumed that we can answer probabilistic questions simply by building a **Joint Probability Table (JPT)**.
-
-The problem is that this approach becomes impossible as the number of variables increases.
-
-
-## The Size of a Joint Probability Table
-
-Suppose our world contains only three binary variables.
-
-For example,
-
-- Statue
-- Hack
-- Art Show
-
-Each variable has two possible values:
-
-- True
-- False
-
-Therefore, the table contains
-
-$$
-2^3 = 8
-$$
-
-possible combinations. This is manageable.
-
----
-
-# What Happens When We Add More Variables?
-
-Now suppose we decide that another variable might influence the situation.
-
-Examples might include:
-
-- Day of the week
-- Weather
-- Whether there is a football game
-- What I ate for breakfast
-
-Every new **binary** variable doubles the number of rows.
-
-If we have four variables,
-
-$$
-2^4 = 16
-$$
-
-rows.
-
-Five variables require
-
-$$
-2^5 = 32
-$$
-
-rows.
-
-Ten variables require
-
-$$
-2^{10}=1024
-$$
-
-rows. Already, we need over one thousand probabilities.
 
 ---
 
@@ -1262,7 +1154,7 @@ The ultimate goal is to replace the impractical Joint Probability Table with a c
 
 ---
 
-# Part 6 — Conditional Probability and the Chain Rule
+## Conditional Probability and the Chain Rule
 
 In the previous section, we introduced the three basic axioms of probability.
 
