@@ -1,178 +1,90 @@
 
 ## Overview
 
-Up to this point in the course, we have studied several major topics in Artificial Intelligence.
+Up to this point in the course, we have studied three major areas of Artificial Intelligence independently:
 
-These topics include:
+- **Search & Planning** — finding sequences of actions to achieve a goal.
+- **Probability** — reasoning under uncertainty.
+- **Machine Learning** — learning patterns from data.
 
-- **Search and Planning**
-    
-- **Probability**
-    
-- **Machine Learning**
-    
+Each of these solved a different problem.
 
-Although all three are fundamental areas of AI, they have been studied **independently**.
+- Search assumed the environment was **deterministic**.
+- Probability modeled **uncertainty**, but did not explain how an agent should act.
+- Machine Learning focused on learning from experience.
 
-For example,
+Planning Under Uncertainty combines the first two.
 
-When we studied search algorithms such as **Breadth-First Search**, **Depth-First Search**, **Uniform Cost Search**, and **A***, we assumed the environment was completely predictable.
+Instead of asking:
 
-Later, when we studied probability and Bayes' theorem, we focused on reasoning under uncertainty, but we did **not** discuss how an intelligent agent should actually make decisions in uncertain environments.
+> *"How do I reach the goal?"*
 
-In this module, these two worlds finally come together.
+we now ask:
 
-We will learn how an agent can:
+> *"How should I act when the outcome of my actions is uncertain?"*
 
-- reason about uncertainty,
-    
-- evaluate possible future outcomes,
-    
-- and still make intelligent decisions.
-    
-
-This area of AI is known as **Planning Under Uncertainty**.
+The mathematical framework used to answer this question is the **Markov Decision Process (MDP)**.
 
 ---
 
-# Why Do We Need Planning Under Uncertainty?
+# Why Classical Planning Breaks Down
 
-Imagine you are giving directions to a robot.
-
-You tell the robot:
-
-> Move one step forward.
-
-In the planning algorithms we have studied so far, this command is assumed to work perfectly.
+All classical planning algorithms studied so far assume that every action has a **single predictable outcome**.
 
 ```
 Move Forward
 
 ↓
 
-Robot moves exactly one square forward.
+Robot moves forward
 ```
 
-Every action has a **single predictable outcome**.
-
-This assumption makes planning relatively straightforward because the agent always knows what the next state will be after performing an action.
-
-## The Real World Is Not Deterministic
-
-Unfortunately, the real world rarely behaves this way.
-
-Suppose the same robot is navigating through a busy hospital.
-
-It again receives the command:
-
-> Move forward.
-
-Many different things could happen.
-
-- Its wheels may slip on the floor.
-    
-- A person may suddenly walk in front of it.
-    
-- Another robot may block the hallway.
-    
-- The floor may be uneven.
-    
-- Its sensors may produce noisy measurements.
-    
-
-Even though the robot executed exactly the same command, it may not end up where it expected.
-
-```
-Command:
-
-Move Forward
-
-Possible Outcomes:
-
-80% → Move forward
-
-10% → Drift left
-
-10% → Drift right
-```
-
-The action is no longer perfectly predictable.
-
-Instead, every action has **multiple possible outcomes**, each occurring with some probability.
-
-This uncertainty is present in almost every real-world AI application.
-
----
-
-# Real-World Examples of Uncertainty
-
-Uncertainty appears in many AI systems.
-
-|AI Application|Source of Uncertainty|
-|---|---|
-|Self-driving cars|Other drivers, weather, pedestrians|
-|Medical diagnosis|Imperfect medical tests|
-|Financial trading|Random market behavior|
-|Robots|Slipping wheels, noisy sensors|
-|Voice assistants|Speech recognition errors|
-|Game-playing agents|Opponent behavior|
-
-Notice that uncertainty does **not** mean the agent is making mistakes.
-
-Instead, it means the **environment itself is unpredictable.**
-
----
-
-# Classical Planning Assumes a Perfect World
-
-All of the planning algorithms studied so far make one important assumption.
-
-> The world behaves exactly as expected.
-
-For example,
-
-Suppose a robot wishes to move north.
-
-Classical planning assumes:
-
-```
-Move North
-
-↓
-
-Always move north
-```
-
-If the robot executes this action one hundred times,
-
-it will move north one hundred times.
-
-Because every action is predictable, planning algorithms only need to find a sequence of actions that reaches the goal.
+Because every action is deterministic, planning reduces to finding a sequence of actions from the start state to the goal.
 
 Examples include:
 
 - Breadth-First Search
-    
 - Depth-First Search
-    
 - Uniform Cost Search
-    
 - A*
-    
-- Dynamic Programming on deterministic graphs
-    
+- Dynamic Programming
 
-These algorithms are extremely powerful **when the environment is deterministic.**
+These algorithms work extremely well **only when the environment behaves exactly as expected.**
 
-However, they begin to fail once uncertainty is introduced.
+## Real-World Actions Are Uncertain
 
----
+Real environments are rarely deterministic.
 
-# What Happens When Actions Become Uncertain?
+A robot instructed to move forward may instead
 
-Suppose a robot wants to reach the charging station.
+- slip,
+- collide with an obstacle,
+- encounter sensor noise,
+- or be blocked by another agent.
 
-A classical planner might produce the following plan.
+Instead of one outcome, an action produces several possible outcomes.
+
+```
+Move Forward
+
+↓
+
+80% → Forward
+
+10% → Left
+
+10% → Right
+```
+
+The same action no longer guarantees the same result.
+
+Instead, each possible outcome has an associated probability.
+
+This type of environment is called **stochastic**.
+
+## Why This Matters
+
+Suppose a planner generates the path
 
 ```
 North
@@ -182,254 +94,117 @@ North
 East
 
 East
-
-East
 ```
 
-This plan assumes every action succeeds perfectly.
+If the very first action fails,
 
-Now suppose the very first action fails.
+the robot is no longer where the planner expected.
 
-Instead of moving north,
+The remainder of the plan may now be completely invalid.
 
-the robot accidentally moves west.
+Classical planning offers no mechanism for adapting to unexpected outcomes.
 
-```
-Expected
+Instead of planning for **one future**, we must reason about **many possible futures simultaneously**.
 
-□ □ □
-□ R □
-□ □ □
+# Planning Under Uncertainty
 
-↓
+Planning under uncertainty extends classical planning by combining
 
-Move North
+- **Planning** — deciding which action to take
+- **Probability** — reasoning about uncertain outcomes
 
-↓
+Rather than searching for a single perfect path, the agent chooses actions that perform well **on average across all possible outcomes.**
 
-□ R □
-□ □ □
-□ □ □
+## Real-World Examples
 
+| Application | Source of Uncertainty |
+|-------------|-----------------------|
+| Self-driving cars | Traffic, pedestrians, weather |
+| Robots | Wheel slip, noisy sensors |
+| Medical diagnosis | Imperfect tests |
+| Financial trading | Market fluctuations |
+| Voice assistants | Speech recognition errors |
 
-Actual
-
-↓
-
-Move North
-
-↓
-
-R □ □
-□ □ □
-□ □ □
-```
-
-The entire plan is now incorrect.
-
-The robot is no longer in the location that the planner expected.
-
-The remaining actions may even move it farther away from the goal.
-
-Classical planning provides **no guidance** for what to do next.
+Notice that uncertainty comes from the **environment**, not necessarily from the agent.
 
 ---
 
-# The Goal of Planning Under Uncertainty
+# Where This Fits in AI
 
-Instead of asking
+| Environment | Appropriate Framework |
+|-------------|----------------------|
+| Fully observable + deterministic | Classical Planning |
+| Fully observable + stochastic | **Markov Decision Processes (MDPs)** |
+| Partially observable + stochastic | **POMDPs** |
+| Unknown environment | **Reinforcement Learning** |
 
-> "What sequence of actions reaches the goal?"
+Each framework relaxes another assumption about the world.
 
-we now ask a much more realistic question.
+> [!important]
+> **Key Idea**
+>
+> Classical planning assumes actions always succeed.
+>
+> Planning under uncertainty assumes actions have probabilistic outcomes and seeks the action that produces the best long-term expected result.
 
-> **"What should the agent do if the world does not behave exactly as expected?"**
-
-The agent must be prepared for **every possible outcome**, not just the most likely one.
-
-This is the central idea behind planning under uncertainty.
-
-Rather than finding a single path,
-
-the agent learns how to behave **in every possible situation** it might encounter.
-
----
-
-# Planning + Probability
-
-Planning under uncertainty combines two ideas we have already studied separately.
-
-### Planning
-
-Planning answers the question:
-
-> Which action should I take?
-
----
-
-### Probability
-
-Probability answers the question:
-
-> How likely is each possible outcome?
-
----
-
-Planning under uncertainty combines both.
-
-The agent must choose actions **while simultaneously reasoning about uncertain outcomes.**
-
-This is one of the biggest ideas in Artificial Intelligence because it allows agents to operate successfully in the real world instead of only in perfectly predictable environments.
-
----
-
-# Where This Fits Within AI
-
-Earlier in the course, we separated different types of environments.
-
-These categories become important again.
-
-|Environment|Appropriate AI Technique|
-|---|---|
-|Fully Observable + Deterministic|Classical Planning (A*, BFS, DFS)|
-|Fully Observable + Stochastic|**Markov Decision Processes (MDPs)**|
-|Partially Observable + Stochastic|**Partially Observable Markov Decision Processes (POMDPs)**|
-|Planning + Uncertainty + Learning|**Reinforcement Learning**|
-
-Notice how each new framework adds another layer of complexity.
-
-- Classical planning assumes perfect actions.
-    
-- MDPs introduce uncertainty.
-    
-- POMDPs introduce hidden information.
-    
-- Reinforcement Learning removes the assumption that the agent already knows the environment.
-    
-
----
-
-# Key Idea
-
-> **Classical planning assumes the world is predictable. Planning under uncertainty assumes the world is unpredictable and teaches an agent how to make the best possible decisions despite that uncertainty.**
-
-
-## Intuition
-
-Think of planning under uncertainty like planning a road trip.
-
-A GPS that assumes there will never be traffic is similar to **classical planning**.
-
-A GPS that considers traffic jams, road closures, accidents, and weather—and continuously adjusts your route—is much closer to **planning under uncertainty**.
-
-Instead of creating **one perfect route**, it continuously reasons about what might happen and chooses the action that is expected to produce the best overall outcome.
-
----
 
 # Markov Decision Processes (MDPs)
 
-## From Classical Planning to MDPs
+## Motivation
 
-Earlier, we saw that classical planning assumes every action always succeeds exactly as expected.
+Once actions become uncertain, planning is no longer about finding a fixed sequence of moves.
 
-For example,
+Instead, the agent must evaluate
 
-```
-Move North
+- every possible action,
+- every possible outcome,
+- and the long-term consequences of each.
 
-↓
+This motivates the **Markov Decision Process (MDP)**.
 
-Always move north
-```
+## Definition
 
-However, in real-world environments, actions are uncertain.
+A **Markov Decision Process (MDP)** is a mathematical framework for sequential decision making in environments that are
 
-```
-Move North
+- fully observable,
+- stochastic,
+- and reward-driven.
 
-↓
-
-80% → Move North
-
-10% → Move West
-
-10% → Move East
-```
-
-Because of this uncertainty, simply finding a sequence of actions is no longer sufficient.
-
-We need a mathematical framework that allows an intelligent agent to:
-
-- represent uncertain outcomes,
-    
-- evaluate future possibilities,
-    
-- and choose actions that maximize long-term success.
-    
-
-This framework is called a **Markov Decision Process (MDP).**
+The objective is to choose actions that maximize **expected cumulative reward**.
 
 ---
 
-# What is a Markov Decision Process?
+# The Markov Property
 
-A **Markov Decision Process (MDP)** is a mathematical model for making decisions in environments where:
+The defining assumption of an MDP is the **Markov Property**.
 
-- the current situation is fully observable,
-    
-- actions have uncertain outcomes,
-    
-- and the agent wants to maximize some notion of long-term reward.
-    
+> The future depends only on the current state—not on the sequence of states that came before it.
 
-An MDP answers the following question:
+Once the current state is known,
 
-> **"Given that my actions may not always work as expected, what should I do?"**
-
-Rather than assuming a perfect world, an MDP explicitly models uncertainty.
-
----
-
-# Why is it called "Markov"?
-
-The word **Markov** comes from the **Markov Property**.
-
-The Markov Property states:
-
-> **The future depends only on the current state, not on the sequence of events that led to that state.**
-
-In other words,
-
-once we know where we are **right now**, our past history becomes irrelevant.
-
-## Example
-
-Imagine a robot standing in a hallway.
+the history becomes irrelevant for predicting future behavior.
 
 ```
+Path A
+
 Start
 
 ↓
 
-Room A
+Room 1
 
 ↓
 
-Room B
+Room 2
 
 ↓
 
-Current Position
-```
+Current State
 
-Another robot arrives at exactly the same current position but followed a completely different path.
 
-```
+Path B
+
 Garage
-
-↓
-
-Storage
 
 ↓
 
@@ -437,144 +212,69 @@ Kitchen
 
 ↓
 
-Current Position
+Current State
 ```
 
-Although the robots arrived differently,
+Although the two paths are different,
 
-once both occupy the same state,
-
-their future decisions should be identical.
-
-The planner only cares about:
-
-- the current location,
-    
-- not how the robot got there.
-    
-
-This is the **Markov Property**.
+both agents make exactly the same decision because they occupy the same current state.
 
 ---
 
-# The Four Components of an MDP
+# Components of an MDP
 
-Every Markov Decision Process is defined using four fundamental components.
+Every MDP consists of four fundamental components.
 
-|Component|Purpose|
-|---|---|
-|States|Describe the possible situations the agent can be in|
-|Actions|Choices available to the agent|
-|Transition Model|Describes how actions change the state|
-|Reward Function|Measures how desirable each state is|
+| Component | Purpose |
+|------------|----------|
+| States | Describe the current situation |
+| Actions | Choices available to the agent |
+| Transition Model | Probabilities of future states |
+| Reward Function | Describes how desirable outcomes are |
 
-Together, these completely define an MDP.
-
----
-
-# 1. States
-
-A **state** represents the current situation of the agent.
-
-Examples include:
-
-|Problem|Possible State|
-|---|---|
-|Robot navigation|Robot's current location|
-|Chess|Current board configuration|
-|Self-driving car|Position, speed, nearby vehicles|
-|Medical diagnosis|Current patient condition|
-
-States are usually denoted by $S$ or $s$. A collection of all possible states is called the **state space**.
-
-## Example State Space
-
-Suppose a robot can occupy only three locations.
-
-```
-S₁
-
-S₂
-
-S₃
-```
-
-These three locations form the complete state space.
-
-At any moment,
-
-the robot is in exactly one of these states.
+Together these completely specify the decision problem.
 
 ---
 
-# 2. Actions
+# States
 
-An **action** is something the agent can choose to do.
+A **state** represents everything the agent needs to know about the current situation.
 
-For a robot navigating a grid,
+Examples include
 
-possible actions might be
+| Problem | State |
+|----------|-------|
+| Robot navigation | Robot location |
+| Chess | Board configuration |
+| Self-driving car | Position, speed, nearby vehicles |
+| Medical diagnosis | Patient condition |
+
+The collection of all possible states is called the **state space**.
+
+---
+
+# Actions
+
+Actions are the decisions available to the agent.
+
+For a navigation robot
 
 - North
-    
 - South
-    
 - East
-    
 - West
-    
 
-Actions are commonly represented as
-
-$$  
-A  
-$$
-
-or
-
-$$  
-a  
-$$
-
-Unlike states,
-
-actions are chosen by the agent.
+Unlike states, actions are chosen by the agent.
 
 ---
 
-# 3. Transition Model
+# Transition Model
 
-The transition model describes what happens **after** an action is taken.
+The transition model describes how actions change the state.
 
-In deterministic planning,
+Unlike deterministic planning,
 
-this was very simple.
-
-```
-State A
-
-↓
-
-Move East
-
-↓
-
-State B
-```
-
-The outcome was guaranteed.
-
-## Transition Model in an MDP
-
-In an MDP,
-
-the outcome is uncertain.
-
-Suppose the robot attempts to move east.
-
-Instead of one guaranteed outcome,
-
-there may be several possible next states.
+each action now has multiple possible outcomes.
 
 ```
 Current State
@@ -585,182 +285,54 @@ Move East
 
 ↓
 
-80% → State B
+80% → S₂
 
-10% → State A
+10% → S₁
 
-10% → State C
+10% → S₃
 ```
 
-The transition model stores these probabilities.
+The transition probabilities are written as
+
+$$
+P(s' \mid s,a)
+$$
+
+which means
+
+> Probability of reaching state $s'$ after taking action $a$ in state $s$.
+
+Unlike Bayes' Rule,
+
+this conditional probability models **state transitions**, not inference about hidden variables.
 
 ---
 
-# Transition Probability
+# Reward Function
 
-The probability of reaching a new state is written as
+The reward function assigns a numerical value to states.
 
-$$  
-P(s' \mid s,a)  
+$$
+R(s)
 $$
 
-This notation means:
+represents the immediate reward obtained from state $s$.
 
-> **The probability of arriving in state** (s') **after taking action** (a) **while currently in state** (s).
+Example
 
-Let's interpret each symbol.
+| State | Reward |
+|--------|---------|
+| Empty hallway | 0 |
+| Goal | +100 |
+| Dangerous area | -100 |
 
-|Symbol|Meaning|
-|---|---|
-|(s)|Current state|
-|(a)|Action taken|
-|(s')|Next state after the action|
+The objective of an MDP is **not** simply to reach the goal,
 
-
-## Example
-
-Suppose the robot is currently in state
-
-$$  
-S_1  
-$$
-
-and executes the action
-
-```
-Move East
-```
-
-There might be
-
-- 80% chance of reaching (S_2)
-    
-- 20% chance of remaining in (S_1)
-    
-
-This would be written as
-
-$$  
-P(S_2 \mid S_1,\text{East})=0.8  
-$$
-
-and
-
-$$  
-P(S_1 \mid S_1,\text{East})=0.2  
-$$
-
-These probabilities define the uncertainty of the environment.
+but to maximize the **total expected reward over time.**
 
 ---
 
-# Why Is This Different from Bayes' Theorem?
-
-The notation
-
-$$  
-P(s' \mid s,a)  
-$$
-
-may look similar to conditional probability from Bayes' theorem.
-
-However,
-
-it serves a different purpose.
-
-In Bayes' theorem,
-
-conditional probability answers questions like
-
-> What is the probability of cancer given a positive test?
-
-In an MDP,
-
-the transition probability answers
-
-> After performing an action, what is the probability of ending up in each possible next state?
-
-Instead of reasoning about hidden variables,
-
-we are reasoning about **state transitions**.
-
----
-
-# 4. Reward Function
-
-Knowing how the world changes is not enough.
-
-The agent also needs to know
-
-> **Which states are desirable?**
-
-This is represented using the **reward function**.
-
-Instead of assigning probabilities,
-
-we assign numerical values indicating how good each state is.
-
-The reward function is usually written as
-
-$$  
-R(s)  
-$$
-
-meaning
-
-> **The reward received for being in state** (s).
-
----
-
-## Example
-
-Suppose the robot has three possible states.
-
-```
-S₁
-
-Reward = 0
-
-S₂
-
-Reward = 10
-
-S₃
-
-Reward = 100
-```
-
-Clearly,
-
-the robot would prefer reaching (S_3).
-
-The reward function tells the planner exactly that.
-
----
-
-# Rewards Guide Decision Making
-
-The reward function represents the **objective** of the planning problem.
-
-For example,
-
-|State|Reward|
-|---|---|
-|Empty hallway|0|
-|Goal location|+100|
-|Dangerous area|-100|
-
-The planner's objective is **not simply to move.**
-
-Its objective is to choose actions that maximize the **total reward** it expects to receive.
-
-This is the central goal of an MDP.
-
----
-
-# Putting Everything Together
-
-An MDP combines all four components into one mathematical framework.
+# The MDP Cycle
 
 ```
 Current State
@@ -786,115 +358,96 @@ Receive Reward
 Repeat
 ```
 
-Unlike classical planning,
+The agent continually
 
-the agent does not assume a single predictable outcome.
-
-Instead,
-
-it considers:
-
-- every possible next state,
-    
-- how likely each one is,
-    
-- and how rewarding each outcome will be.
-    
+- observes the current state,
+- selects an action,
+- experiences an uncertain transition,
+- receives a reward,
+- and repeats the process.
 
 ---
 
 # Summary
 
-A Markov Decision Process is completely defined by four components.
+| Component | Question Answered |
+|------------|-------------------|
+| States | Where am I? |
+| Actions | What can I do? |
+| Transition Model | Where might I end up? |
+| Reward Function | How desirable is that outcome? |
 
-|Component|Question it Answers|
-|---|---|
-|States|Where am I?|
-|Actions|What can I do?|
-|Transition Model|Where might I end up after acting?|
-|Reward Function|How good is each state?|
+Together these components allow an intelligent agent to make optimal decisions despite uncertainty.
 
-Together, these components allow an intelligent agent to plan effectively in uncertain environments.
+> [!summary]
+> **Takeaway**
+>
+> Classical planning searches for the best sequence of actions assuming perfect execution.
+>
+> MDPs generalize this idea by planning over probabilistic outcomes and optimizing **expected long-term reward** instead of a single deterministic path.
 
-## Key Idea
-
-> **A classical planner assumes actions always succeed. An MDP assumes every action may have several possible outcomes and chooses actions that maximize the expected long-term reward despite this uncertainty.**
-
----
 
 # Grid World: The Simplest MDP
 
-## Why Use Grid Worlds?
+## Why Study Grid Worlds?
 
-Real-world planning problems can be extremely complicated.
+Real-world planning problems—such as autonomous driving, robotics, or drone navigation—are often too complex to analyze directly.
 
-For example:
+Instead, AI researchers introduce a much simpler environment called a **Grid World**.
 
-- self-driving cars navigate busy roads,
-    
-- robots move through crowded museums,
-    
-- drones fly in unpredictable weather.
-    
+A Grid World is a two-dimensional grid in which an agent moves between square cells.
 
-Studying these problems directly would make it difficult to understand the underlying algorithms.
+Although simple, it captures the essential ingredients of a Markov Decision Process:
 
-Instead, AI researchers often simplify the environment into a **Grid World**.
+- states,
+- actions,
+- stochastic transitions,
+- rewards,
+- and decision making under uncertainty.
 
-A Grid World is essentially a small board made of square cells.
-
-Although simple, it captures all the important ideas behind planning under uncertainty.
-
-> Most introductory reinforcement learning and MDP algorithms are first demonstrated using Grid Worlds before being applied to real robots.
+> [!note]
+> Most introductory MDP and Reinforcement Learning algorithms are first developed on Grid Worlds before being applied to real-world problems.
 
 ---
 
 # A Simple Grid World
 
-Consider the following environment.
-
 ```text
 +---------+---------+---------+---------+
-|                 |                  |                       +100    |
-|                 |                  |                 |     Goal    |
+|                 |                  |                 |   +100    |
+|                 |                  |                 |   Goal    |
 +---------+---------+---------+---------+
-|                 |                  |                 |                 |
-|      Start   |                  |                 |                 |
+|                 |                  |                 |              |
+|    Start    |                  |                 |               |
 +---------+---------+---------+---------+
-|                 |                  |                 |      -100    |
-|                 |                  |                 |   Danger  |
+|                 |                  |                 |   -100     |
+|                 |                  |                 |  Danger |
 +---------+---------+---------+---------+
 ```
 
-The agent begins in the **Start** state.
+The agent starts in the **Start** state. Two cells have special rewards:
 
-There are two special states.
+| State | Reward |
+|--------|-------:|
+| Goal | +100 |
+| Danger | -100 |
 
-- **Goal State** → Reward = +100
-    
-- **Danger State** → Reward = −100
-    
-
-These are called **absorbing states**.
+These are **terminal (absorbing) states**.
 
 ---
 
-# What is an Absorbing State?
+# Absorbing States
 
-An **absorbing state** is a terminal state.
+An **absorbing state** is a state that ends the decision process.
 
-Once the agent reaches it,
+Once the agent enters one of these states,
 
-the process immediately ends.
-
-There are no further actions.
+- it receives the corresponding reward,
+- no further actions are taken,
+- and the episode terminates.
 
 ```text
 Start
-
-↓
-
-Move
 
 ↓
 
@@ -912,10 +465,6 @@ Start
 
 ↓
 
-Move
-
-↓
-
 Danger (-100)
 
 ↓
@@ -923,83 +472,44 @@ Danger (-100)
 End
 ```
 
-After reaching either absorbing state,
+---
 
-the game is over.
+# Actions in a Grid World
+
+At every non-terminal state, the agent can choose one of four actions:
+
+- North
+- South
+- East
+- West
+
+Unlike classical planning, selecting an action **does not guarantee** the intended movement.
+
+The environment determines the actual outcome according to the transition model.
 
 ---
 
-# The Agent's Objective
+# Stochastic Actions
 
-The goal of the agent is simple.
+Suppose the agent chooses
 
-> Reach the +100 state while avoiding the −100 state.
+```
+Move North
+```
 
-If the environment were deterministic,
+Instead of always moving north,
 
-finding the solution would be easy.
+the action succeeds with probability **0.8**.
 
-Simply compute the shortest path.
+The remaining probability is distributed between the neighboring directions.
+
+| Outcome | Probability |
+|----------|-----------:|
+| Intended direction | 0.8 |
+| Left of intended direction | 0.1 |
+| Right of intended direction | 0.1 |
 
 For example,
-
-```text
-Start
-
-↑
-
-↑
-
-→
-
-→
-
-→
-
-Goal
-```
-
-Unfortunately,
-
-the environment is **not deterministic**.
-
----
-
-# Introducing Uncertainty
-
-Suppose the agent chooses the action
-
-```text
-Move North
-```
-
-In deterministic planning,
-
-the result is guaranteed.
-
-```text
-Current Cell
-
-↓
-
-Move North
-
-↓
-
-North Cell
-```
-
-Every single time.
-
-## In an MDP
-
-The same action may produce several different outcomes.
-
-Instead of moving north with certainty,
-
-the movement succeeds only **80%** of the time.
-
-The remaining probability is divided among neighboring cells.
 
 ```text
 Attempt North
@@ -1011,511 +521,224 @@ Attempt North
 10% → East
 ```
 
-Notice something important.
+The agent selects the action,
 
-The agent never intended to move west or east.
+but the environment determines which transition actually occurs.
 
-Those movements happen because the environment is stochastic.
+This uncertainty is captured by the transition probabilities
 
----
-
-# Transition Probabilities
-
-The Grid World used throughout the lecture follows the same transition model for every movement.
-
-When attempting any action,
-
-|Intended Outcome|Probability|
-|---|--:|
-|Intended direction|80%|
-|Left of intended direction|10%|
-|Right of intended direction|10%|
-
-This transition model represents imperfect control.
-
-A robot's wheels may slip.
-
-A self-driving car may skid.
-
-A drone may be pushed by wind.
-
-The action requested by the agent is **not always** the action executed by the environment.
-
----
-
-# Example: Moving North
-
-Suppose the robot is located here.
-
-```text
-      N
-
-W   Robot   E
-
-      S
-```
-
-The robot chooses
-
-```text
-Move North
-```
-
-The possible outcomes are
-
-```text
-80%
-
-      X
-
-W   Robot   E
-
-      S
-```
-
-or
-
-```text
-10%
-
-      N
-
-X   Robot   E
-
-      S
-```
-
-or
-
-```text
-10%
-
-      N
-
-W   Robot   X
-
-      S
-```
-
-Even though the robot selected only **one** action,
-
-nature decides which outcome actually occurs.
-
----
-
-# What Happens at Walls?
-
-Suppose the robot attempts to move into a wall.
-
-```text
-##########
-
-Robot
-
-↓
-
-Move North
-```
-
-Since there is no valid square above,
-
-the robot cannot move.
-
-Instead,
-
-it **bounces back** into the same cell.
-
-The intended 80% probability is assigned to remaining where it is.
-
-```text
-80%
-
-Stay Here
-```
-
-The remaining probabilities still apply.
-
-For example,
-
-```text
-Stay
-
-80%
-
-Left
-
-10%
-
-Right
-
-10%
-```
-
-This prevents impossible movements outside the grid.
+$$
+P(s' \mid s,a).
+$$
 
 ---
 
 # Example
 
-Suppose the robot is standing in the upper-left corner.
+Suppose the robot is in the center cell.
+
+```text
+      N
+
+W   Robot   E
+
+      S
+```
+
+After selecting **Move North**, three outcomes are possible.
+
+```
+80% → North
+
+10% → West
+
+10% → East
+```
+
+Although the robot intended only one movement,
+
+all three transitions must be considered during planning.
+
+---
+
+# Walls and Invalid Movements
+
+If the intended movement would leave the grid,
+
+the agent remains in its current state.
+
+For example,
 
 ```text
 ########
 
 Robot
+
+↓
+
+Move North
 ```
 
-It attempts to move north.
+Since there is no valid cell above,
 
-Since north is blocked,
+the 80% probability corresponds to **staying in place**.
 
-the outcomes become
+If multiple directions are blocked,
 
-|Outcome|Probability|
-|---|--:|
-|Stay in current cell|80%|
-|Move left|Impossible (wall)|
-|Move right|10%|
+their probabilities accumulate.
 
-If both north and left are walls,
+For example, in a corner,
 
-their probabilities combine,
+| Outcome | Probability |
+|----------|-----------:|
+| Stay in current state | 0.9 |
+| Move to the only valid neighboring cell | 0.1 |
 
-meaning the robot may remain in place with even higher probability.
-
-This explains why corner cells often have a large probability of staying put.
+This guarantees that transition probabilities always sum to one.
 
 ---
 
-# Why Does This Matter?
+# Why Grid Worlds Matter
 
-Imagine planning a route like this.
+Unlike deterministic search, a Grid World requires the agent to reason about **all possible future states**.
 
-```text
-North
+Choosing an action means evaluating
 
-North
+- where the agent is likely to end up,
+- the reward associated with those outcomes,
+- and how those outcomes affect future decisions.
 
-East
-
-East
-
-East
-```
-
-This sequence assumes every movement succeeds perfectly.
-
-But what if the very first action fails?
-
-Instead of
-
-```text
-Start
-
-↓
-
-North
-```
-
-the robot accidentally moves sideways.
-
-```text
-Start
-
-↓
-
-West
-```
-
-Now the original plan is no longer valid.
-
-Every remaining action was designed assuming the robot occupied a different position.
-
-The planner has no instructions for recovering.
+Planning therefore becomes a problem of **optimizing expected long-term reward**, rather than simply finding the shortest path.
 
 ---
 
-# Classical Planning Breaks Down
+# Looking Ahead: Policies
 
-Traditional planning computes
+Because actions have uncertain outcomes,
 
-```text
-Action 1
+a fixed sequence of moves is no longer sufficient.
 
-↓
+Instead, the agent requires a rule that specifies
 
-Action 2
+> **Which action should be taken in every possible state?**
 
-↓
-
-Action 3
-
-↓
-
-Goal
-```
-
-This works only if every action succeeds exactly as predicted.
-
-Under uncertainty,
-
-the robot might end up somewhere unexpected after any action.
-
-The planner therefore loses track of what to do next.
-
----
-
-# The Need for Something Better
-
-Instead of planning a **single sequence of actions**,
-
-we need something much more flexible.
-
-We need instructions that answer the question
-
-> **"If I end up here, what should I do?"**
-
-for **every possible state**.
-
-Rather than planning one path,
-
-we want a complete decision strategy.
-
-This strategy is called a **policy**, which becomes the central idea of MDPs.
+Such a decision rule is called a **policy**, and it becomes the central object studied in Markov Decision Processes.
 
 ---
 
 # Summary
 
-The Grid World demonstrates why uncertainty fundamentally changes planning.
+Grid Worlds provide a simple environment for studying decision making under uncertainty.
 
-Unlike deterministic environments,
+Key characteristics include:
 
-each action may have several possible outcomes.
+- discrete states arranged in a grid,
+- probabilistic state transitions,
+- terminal (absorbing) states,
+- rewards associated with outcomes,
+- and stochastic actions.
 
-|Deterministic Planning|MDP Planning|
-|---|---|
-|One action → one outcome|One action → many possible outcomes|
-|Fixed action sequence|Adaptive decision strategy|
-|Predictable environment|Stochastic environment|
+> [!summary]
+> **Key Insight**
+>
+> In an MDP, selecting an action does **not** determine the next state—it determines a **probability distribution over possible next states**. The agent must therefore plan using expected future outcomes rather than a single deterministic path.
 
-Because the robot can end up in unexpected states,
+# Why Classical Search Does Not Work for MDPs
 
-planning must consider **every possible future state**, not just the intended one.
+The search algorithms studied earlier in the course—such as **DFS**, **BFS**, **Uniform Cost Search**, **A***, and **Dynamic Programming on deterministic graphs**—all assume a **deterministic transition model**.
 
-## Key Insight
+That assumption has an important consequence:
 
-> **In a stochastic environment, planning is no longer about finding one perfect path. It is about deciding the best action for every possible situation the agent might encounter.**
+> **Each action produces exactly one successor state.**
 
----
+As a result, planning reduces to searching for a sequence of actions from the start state to the goal.
 
-# Why Conventional Planning Fails Under Uncertainty
+An MDP violates this assumption.
 
-## Review
+Instead of producing a single successor, every action produces a **probability distribution over successor states**.
 
-Until now, all of the planning algorithms we've studied assumed that:
-
-- every action succeeds exactly as expected,
-    
-- the environment behaves predictably,
-    
-- executing the same action twice always produces the same result.
-    
-
-Examples include:
-
-- Depth-First Search (DFS)
-    
-- Breadth-First Search (BFS)
-    
-- Uniform Cost Search (UCS)
-    
-- A*
-    
-- Dynamic Programming
-    
-
-These algorithms work extremely well in **deterministic environments**.
-
-## What Changes in an MDP?
-
-In a Markov Decision Process, **actions are stochastic**.
-
-That means:
-
-> Choosing an action does **not** guarantee a single outcome.
-
-Instead,
-
-each action produces **a probability distribution over possible next states**.
-
-For example,
-
-suppose the robot is currently at state **C1**.
-
-It chooses
-
-```
-Go North
-```
-
-Instead of always arriving at B1,
-
-the robot might end up in several different locations.
-
-```
-          80%
-
-C1 ─────────────► B1
-
-          10%
-
-C1 ─────────────► C1
-
-          10%
-
-C1 ─────────────► C2
-```
-
-The robot chooses the action,
-
-but **Nature chooses the outcome.**
-
-This single difference completely changes how planning works.
+This seemingly small change fundamentally alters the planning problem.
 
 ---
 
-# Conventional Planning Builds a Search Tree
+# From Search Trees to Chance Nodes
 
-Previously,
+In classical search,
 
-a search tree looked like this.
+each action generates exactly one child node.
 
-```
-Start
-
- │
-
- ▼
-
-Action
+```text
+State
 
  │
 
+Action
+
  ▼
 
-One next state
+Next State
 ```
 
-Every action produced **exactly one child node**.
-
-Example:
-
-```
-      C1
-
-     / | | \
-
-    N S E W
-
-```
-
-Each branch represented one action.
-
-## In an MDP, Every Action Splits Into Multiple Outcomes
-
-Now every action has several possible results.
-
-Instead of
-
-```
-Action
-
-↓
-
-One state
-```
-
-we now have
-
-```
-Action
-
-      ↓
-
-Nature chooses
-
- ┌────┼────┐
-
-▼        ▼         ▼
-
-State State State
-```
+The search tree branches only because the **agent has multiple actions**.
 
 For example,
 
-choosing North from C1 becomes
+```text
+          C1
 
+      /   |   |   \
+
+     N    S   E    W
 ```
+
+Each branch represents one possible action.
+
+---
+
+## In an MDP
+
+Choosing an action does **not** determine the next state.
+
+Instead, the environment randomly selects one of several possible outcomes according to the transition probabilities.
+
+```text
              Choose North
 
                   │
 
+              Chance
+
         ┌─────────┼─────────┐
 
-         ▼                ▼                    ▼
+        ▼         ▼         ▼
 
-        B1               C1                  C2
+       B1        C1        C2
 
-        80%           10%                10%
+      0.8       0.1       0.1
 ```
 
-The robot cannot decide which branch happens.
+Notice the distinction:
 
-Only the probabilities are known.
+- **The agent chooses an action.**
+- **The environment determines the resulting state.**
+
+Planning must therefore consider **all possible outcomes**, not only the intended one.
 
 ---
 
-# The Branching Factor Explodes
+# Consequence 1: Larger Search Trees
 
-In deterministic planning,
+Suppose every state offers four actions.
 
-suppose every state has
-
-```
-4 actions
-```
-
-The branching factor is
+In deterministic search,
 
 ```
-b = 4
+Branching factor = 4
 ```
 
-Every level of the search tree grows by a factor of four.
+If each action can lead to three possible successor states,
 
-## Under Uncertainty
-
-Now each action has multiple possible outcomes.
-
-Suppose
-
-- North has 3 possible outcomes
-    
-- South has 3 possible outcomes
-    
-- East has 3 possible outcomes
-    
-- West has 3 possible outcomes
-    
-
-Instead of
-
-```
-4 children
-```
-
-we now have
+the planner must reason about
 
 ```
 4 actions
@@ -1526,66 +749,22 @@ we now have
 
 =
 
-12 branches
+12 possible transitions
 ```
 
-The search tree becomes
+The search tree grows much more rapidly because every decision is followed by several stochastic outcomes.
 
-```
-                  C1
-
-          N        S        E        W
-
-         / | \    / | \    / | \    / | \
-
-         •  •  •  •  •  •  •  •  •  •  •  •
-```
-
-Instead of expanding
-
-```
-4
-```
-
-nodes,
-
-we may now need to consider
-
-```
-12
-```
-
-possible futures.
+This phenomenon is often called the **explosion of the search tree**.
 
 ---
 
-# Problem 1 — The Search Tree Grows Too Fast
+# Consequence 2: Cycles Become Common
 
-The first problem is therefore:
-
-> Every action creates **multiple possible future states**, causing the search tree to grow much faster.
-
-The search complexity becomes enormous.
-
-Even a few planning steps ahead can produce thousands or millions of possible futures.
-
----
-
-# Problem 2 — The Tree Can Become Infinite
-
-The second problem is even more serious.
-
-Because actions are stochastic,
-
-the robot may never reach the goal immediately.
-
-Instead,
-
-it may accidentally return to previous states.
+Stochastic transitions also make repeated states unavoidable.
 
 For example,
 
-```
+```text
 C1
 
 ↓
@@ -1606,607 +785,771 @@ C1
 
 ↓
 
-C2
-
-↓
-
 ...
 ```
 
-The robot can keep looping forever.
+Even when the agent follows the same policy,
 
-Unlike deterministic planning,
+random outcomes may continually return it to previously visited states.
 
-there is **no guarantee** that every sequence eventually reaches the goal.
+Unlike deterministic search, there is no guarantee that the goal will be reached after a fixed number of actions.
 
----
-
-## Why This Is a Problem
-
-Conventional planning searches until it finds a goal.
-
-But if loops are possible,
-
-the search tree may never end.
-
-```
-Goal?
-
-↓
-
-No
-
-↓
-
-Keep searching...
-
-↓
-
-Still no goal...
-
-↓
-
-More loops...
-
-↓
-
-Tree keeps growing forever
-```
-
-The planner may spend enormous effort exploring repeated possibilities.
+Planning algorithms must therefore reason about **ongoing decision processes**, not finite paths.
 
 ---
 
-# Problem 3 — The Same State Appears Repeatedly
+# Consequence 3: Paths Become Less Important Than States
 
-Consider this example.
+In classical search,
 
-```
+the objective is to find the **best path** to the goal.
+
+In an MDP,
+
+many different paths may repeatedly arrive at the same state.
+
+```text
         Start
 
-       /     \
+        /     \
 
-      A       B
+        A       B
 
-       \     /
+        \     /
 
         ▼   ▼
 
-         C
+          C
 ```
 
-There are two different ways to reach state **C**.
+Once the agent reaches state **C**, its previous history is irrelevant because of the **Markov Property**.
 
-In a deterministic planner,
+Only the current state matters when selecting the next action.
 
-this already happens occasionally.
+Consequently,
+
+planning shifts from evaluating **paths** to evaluating **states**.
+
+This observation is fundamental and motivates the algorithms studied later, such as **Value Iteration** and **Policy Iteration**, which compute the value of each state rather than searching through every possible path.
 
 ---
 
-## Under Stochastic Actions
+# Why Classical Search Is No Longer Sufficient
 
-It happens constantly.
+The combination of
 
-The same state may be reached through dozens or hundreds of different action sequences.
+- stochastic transitions,
+- repeated states,
+- and potentially infinite interaction with the environment
+
+makes conventional search algorithms inefficient or even inapplicable.
+
+Instead of asking
+
+> "Which path reaches the goal?"
+
+an MDP asks
+
+> "What is the best action to take from each state, considering all possible future outcomes?"
+
+This requires a different solution framework based on **state values**, **expected rewards**, and **policies** rather than deterministic search trees.
+
+---
+
+# Summary
+
+Classical search and MDP planning differ in several fundamental ways.
+
+| Classical Search | MDP Planning |
+|------------------|--------------|
+| One action produces one successor | One action produces multiple possible successors |
+| Search for the best path | Compute the best decision for every state |
+| Finite search tree | Stochastic process with repeated states |
+| Goal is a sequence of actions | Goal is an optimal policy |
+
+> [!summary]
+> **Key Insight**
+>
+> Classical planning searches for the **best path**.  
+> MDPs instead compute the **best action for every state**, since the actual path followed depends on stochastic outcomes that cannot be predicted in advance.
+
+# Policies: From Plans to Decision Rules
+
+## Why Search Is No Longer Enough
+
+In deterministic planning, the output of a search algorithm is a **plan**—a fixed sequence of actions that leads from the start state to the goal.
 
 For example,
 
-```
-Start
+```text
+North
 
- │
+North
 
- ▼
+East
 
-C1
-
- │
-
- ▼
-
-C2
-
- │
-
- ▼
-
-C1
-
- │
-
- ▼
-
-C2
-
- │
-
- ▼
-
-C1
+East
 ```
 
-Notice that
+This works because every action is assumed to produce exactly one predictable outcome.
 
-```
-C1
-```
+If the agent follows the plan correctly, it will always arrive at the expected state.
 
-appears repeatedly.
+In a **Markov Decision Process (MDP)**, however, this assumption no longer holds.
 
-However,
+Actions are **stochastic**, meaning the same action can lead to multiple possible outcomes.
 
-the planner treats each occurrence as a completely different node in the search tree.
+A robot that intends to move north may instead drift east or west due to wheel slippage, sensor noise, or environmental factors.
 
-This wastes a tremendous amount of computation.
+As a result, the agent may quickly find itself in a state that was **never part of the original plan**.
+
+A fixed action sequence is therefore no longer sufficient.
 
 ---
 
-# Why This Is Wasteful
+# From Plans to Policies
 
-Suppose we already know
+Instead of computing a single sequence of actions, an MDP computes a **policy**.
 
-> "The best action from C1 is Go North."
+A policy answers a different question.
 
-If we encounter C1 again,
+Instead of asking
 
-there is no reason to recompute the best action.
+> *"What sequence of actions reaches the goal?"*
 
-The answer should still be
+it asks
 
-```
-Go North
-```
+> *"For every possible state I might encounter, what is the best action to take?"*
 
-Conventional search does **not** remember this.
-
-It keeps solving the same state repeatedly.
+A policy can therefore be viewed as a **decision rule** that tells the agent how to behave regardless of how it arrived at its current state.
 
 ---
 
-# Summary of the Three Problems
+# Definition of a Policy
 
-|Problem|Why It Happens|
-|---|---|
-|**1. Huge branching factor**|Every action has multiple possible outcomes instead of one.|
-|**2. Infinite search depth**|Randomness can cause the agent to loop forever before reaching a goal.|
-|**3. Repeated states**|The same state can be reached through many different action sequences, causing redundant computation.|
+A **policy** is a mapping from states to actions.
 
----
-
-# Why Policies Solve These Problems
-
-Instead of searching for
-
-> **one sequence of actions**
-
-MDPs search for
-
-> **the best action for every possible state.**
-
-This collection of state-to-action mappings is called a **policy**.
-
-Rather than asking:
-
-> "What should I do next?"
-
-the planner asks:
-
-> "If I ever find myself in this state, what is the best action to take?"
-
-This is a much more robust strategy because it prepares the agent for **every possible situation**, including unexpected outcomes caused by randomness.
-
-## Key Takeaways
-
-- Stochastic actions make planning fundamentally different from deterministic search.
-    
-- Every action can lead to multiple possible future states.
-    
-- Conventional search trees become inefficient because they:
-    
-    - grow too quickly,
-        
-    - may become infinitely deep,
-        
-    - repeatedly solve the same states.
-        
-- MDPs overcome these problems by computing a **policy** instead of a single action sequence.
-    
-- A policy tells the agent **what to do in every state**, allowing it to recover from unexpected outcomes and continue toward its goal.
----
-# Rewards, Costs, and the Objective of an MDP
-
-## Why the Previous Policy Feels Strange
-
-In the previous section, we assumed:
-
-- Reaching the **+100** absorbing state gives a reward of **+100**.
-- Reaching the **−100** absorbing state gives a reward of **−100**.
-- **Every other move is free** (reward = 0).
-
-Because moving had **no cost**, the optimal policy sometimes behaved in surprising ways.
-
-For example, instead of moving directly toward the goal, the agent might intentionally take a longer route or even keep trying to move into a wall if doing so slightly reduced the chance of accidentally entering the **−100** state.
-
-Although this policy is mathematically optimal, it does **not** resemble intelligent real-world behavior.
-
-## Why Does This Happen?
-
-The reason is simple:
-
-> **Time has no value.**
-
-If moving is free, then taking:
-
-- 5 steps,
-- 50 steps,
-- or even 500 steps
-
-costs exactly the same.
-
-The only thing that matters is eventually reaching the **+100** state.
-
-The agent therefore has no incentive to reach the goal quickly.
-
----
-
-# Real Life Is Different
-
-Almost every real planning problem has some cost associated with actions.
-
-Examples include:
-
-| Problem | Cost |
-|----------|------|
-| Robot navigation | Battery consumption |
-| Self-driving car | Fuel or energy |
-| Delivery drone | Flight time |
-| Video game AI | Turns spent |
-| Medical treatment planning | Time, money, risk |
-
-Every extra action consumes some limited resource.
-
-Therefore, intelligent agents should prefer plans that are:
-
-- **safe**, and
-- **efficient**.
-
----
-
-# Introducing Step Costs
-
-Instead of rewarding only the terminal states, we now assign a reward (or cost) to **every state**.
-
-For example:
-
-| State | Reward |
-|--------|--------|
-| Goal | +100 |
-| Bad terminal state | −100 |
-| Every ordinary state | −3 |
-
-The value **−3** means:
-
-> Every time the agent enters a normal state, it loses 3 reward points.
-
-This is called the **step cost** (also known as the **living cost**).
-
----
-
-# Why Step Costs Matter
-
-Suppose two different paths both reach the goal.
-
-### Path A
-
-```
-Goal reached in 4 steps
-
-Reward
-
-100 − (4 × 3)
-
-= 88
-```
-
-### Path B
-
-```
-Goal reached in 10 steps
-
-Reward
-
-100 − (10 × 3)
-
-= 70
-```
-
-Although both paths eventually reach the goal, **Path A** receives a higher total reward because it wastes fewer steps.
-
-Thus, step costs naturally encourage shorter and more efficient plans.
-
----
-
-# The Objective of an MDP
-
-The agent is no longer trying to maximize only the final reward.
-
-Instead, it wants to maximize **the total reward collected over its entire lifetime**.
-
-Conceptually,
-
-```
-Total Reward
-
-=
-
-R₀ + R₁ + R₂ + R₃ + ...
-```
-
-where
-
-- **R₀** is the reward received immediately,
-- **R₁** is the reward after one step,
-- **R₂** after two steps,
-- and so on.
-
----
-
-# Why Do We Use an Expectation?
-
-The environment is **stochastic**.
-
-Even if the agent chooses exactly the same action,
-
-the environment may produce different outcomes.
-
-For example:
-
-```
-Move North
-
-80% → North
-
-10% → Left
-
-10% → Right
-```
-
-Since future states are uncertain, the total reward is also uncertain.
-
-Therefore, we maximize the **expected** total reward.
-
-Conceptually,
-
-```
-Expected Total Reward
-
-=
-
-Average reward over all possible future outcomes
-```
-
----
-
-# Mathematical Objective
-
-The lecture defines the objective as
-
-\[
-E\left[\sum_{t=0}^{\infty} R_t\right]
-\]
-
-where
-
-- \(R_t\) is the reward received at time \(t\),
-- \(E[\cdot]\) denotes the expected value.
-
-This simply means:
-
-> Choose actions that maximize the average total reward over every possible future that could occur.
-
----
-
-# Discounting Future Rewards
-
-Many MDPs introduce another important idea:
-
-the **discount factor**.
-
-Instead of valuing rewards equally regardless of when they occur,
-
-future rewards become slightly less valuable.
-
-The objective becomes
+It is commonly written as
 
 $$
-E\left[\sum_{t=0}^{\infty}\gamma^tR_t\right]
+\pi : S \rightarrow A
 $$
 
 where
 
+- $S$ is the set of all possible states,
+- $A$ is the set of available actions.
+
+For every state $s$,
+
 $$
-0 < \gamma < 1
+\pi(s)
 $$
 
-and **γ (gamma)** is called the **discount factor**.
+returns the action that the agent should perform when it is in that state.
+
+Unlike a plan, a policy is **not tied to one particular path** through the environment.
+
+It provides instructions for **every state** that the agent may encounter.
+
+> [!info]
+> A **plan** answers *"What actions should I perform?"*  
+> A **policy** answers *"What action should I perform from this state?"*
 
 ---
 
-# Why Discount Future Rewards?
+# A Policy is a Contingency Plan
 
-Imagine someone offers you:
+One way to think about a policy is as a **contingency plan**.
 
-- ₹100 today
-- ₹100 one year from now
+Rather than assuming everything will go according to plan, the agent prepares for every possible situation in advance.
 
-Most people prefer receiving the money today.
+Imagine a robot attempting to move north.
 
-Future rewards are usually worth slightly less because of:
+```text
+Attempt North
 
-- uncertainty,
-- inflation,
-- opportunity cost,
-- delayed usefulness.
+80% → Move North
 
-Discounting models this intuition mathematically.
+10% → Drift West
+
+10% → Drift East
+```
+
+If the robot unexpectedly drifts west, it does **not** stop and compute a new plan from scratch.
+
+Instead, it simply asks:
+
+> **"I am now in this state. According to my policy, what should I do next?"**
+
+The policy immediately provides the appropriate action.
+
+This ability to recover from unexpected outcomes is one of the major advantages of MDPs over classical planning.
+
+---
+
+# Visualizing a Policy
+
+Instead of storing a path, we can imagine writing an arrow inside every state of the environment.
+
+```text
+→   →   →   G
+
+↑   ↑   →   ↑
+
+↑   ↑   ↑   X
+```
+
+Each arrow indicates the action recommended by the policy.
+
+For example,
+
+- **→** means "Move East"
+- **↑** means "Move North"
+
+The agent simply looks at the current state and follows the corresponding arrow.
+
+Even if randomness causes it to enter an unexpected state, another arrow is already waiting there to guide its next decision.
+
+---
+
+# Plans vs Policies
+
+The difference between the two approaches is fundamental.
+
+| Classical Planning | Markov Decision Processes |
+|--------------------|---------------------------|
+| Produces a **plan** | Produces a **policy** |
+| Sequence of actions | State → Action mapping |
+| Assumes actions succeed | Assumes actions are uncertain |
+| Fails when the agent leaves the planned path | Naturally handles unexpected outcomes |
+
+A policy is therefore much more robust because it specifies the best action **for every possible state**, not just those on one intended path.
+
+---
+
+# Why Policies Solve the Problems of Search
+
+Earlier, we identified three major challenges that arise when planning under uncertainty:
+
+1. Large branching factors
+2. Potentially infinite search trees
+3. Repeated visits to the same states
+
+A policy addresses these issues by changing **what** we compute.
+
+Instead of repeatedly searching through every possible future, the agent computes the best action for each state **once**.
+
+If the same state is encountered again—even through a completely different sequence of actions—the agent simply reuses the previously computed decision.
+
+This avoids redundant computation and allows the agent to react immediately when the environment behaves unexpectedly.
 
 ---
 
 # Example
 
-Suppose
+Suppose the robot reaches state **C1**.
 
+The policy might specify:
+
+```text
+C1
+
+↓
+
+Move North
 ```
-γ = 0.9
+
+Later, because of random transitions, the robot returns to **C1**.
+
+Rather than searching again, it simply applies the same decision:
+
+```text
+C1
+
+↓
+
+Move North
 ```
 
-Then the value of a reward decreases over time.
+The policy is reused every time the state is encountered.
 
-| Time | Effective Reward |
-|------|-----------------:|
-| Today | 100 |
-| After 1 step | 90 |
-| After 2 steps | 81 |
-| After 3 steps | 72.9 |
+This is one of the key reasons MDP algorithms scale far better than repeatedly replanning after every unexpected event.
 
-The farther into the future a reward occurs, the less valuable it becomes.
+> [!summary]
+> A **plan** is a fixed sequence of actions designed for deterministic environments.
+>
+> A **policy** is a mapping from states to actions that tells the agent how to behave in **every possible state**.
+>
+> Because actions in an MDP are stochastic, the agent cannot rely on a single path. Instead, it follows a policy that allows it to recover from unexpected outcomes and continue making optimal decisions throughout its interaction with the environment.
+
 
 ---
 
-# Step Cost vs Discount Factor
+# Rewards and the Objective of an MDP
 
-Interestingly, **step costs** and **discount factors** encourage similar behavior.
+## Why Do We Need Rewards?
 
-## Step Cost
+So far, we have answered **how** an agent should make decisions under uncertainty:
 
-```
-Lose reward every time you move.
-```
+- the environment is modeled as an **MDP**,
+- the agent follows a **policy** instead of a fixed plan.
 
-Longer paths accumulate larger penalties.
+However, one important question remains:
 
-## Discount Factor
+> **How does the agent decide whether one policy is better than another?**
 
-```
-Future rewards become smaller.
-```
+To answer this, we need a way to measure how desirable different outcomes are.
 
-The longer it takes to reach a reward, the less valuable that reward becomes.
+This is the role of the **reward function**.
 
-Many practical MDPs use **both** mechanisms together.
+Rather than simply reaching a goal, the agent seeks to maximize the **total reward** it expects to receive over time.
 
 ---
 
-# Why Introduce γ?
+# The Reward Function
 
-Besides modeling realistic preferences, the discount factor has an important mathematical advantage.
+A **reward** is a numerical signal that tells the agent how desirable a particular outcome is.
+
+It is commonly written as
+
+$$
+R(s)
+$$
+
+meaning
+
+> **the reward received when entering state** $s$.
+
+Positive rewards encourage desirable behavior, while negative rewards discourage undesirable behavior.
+
+For example,
+
+| State | Reward |
+|--------|--------:|
+| Goal | +100 |
+| Dangerous terminal state | −100 |
+| Ordinary state | 0 |
+
+In this simple setting,
+
+- reaching the goal is highly desirable,
+- entering the dangerous state is strongly penalized,
+- all other states are neutral.
+
+---
+
+> [!note]
+> **Reward** and **cost** are simply opposite conventions.
+>
+> - Positive rewards encourage behavior.
+> - Negative rewards (costs) discourage behavior.
+>
+> A step cost of **−3** is simply a reward of **−3** received after every move.
+
+---
+
+# When Zero-Cost Movement Becomes a Problem
+
+Suppose that every ordinary move has a reward of **0**.
+
+The agent receives
+
+- **+100** for reaching the goal,
+- **−100** for entering the dangerous state,
+- **0** everywhere else.
+
+Under this reward structure, moving has **no cost**. As a result, the agent has no incentive to reach the goal quickly.
+
+Whether it takes
+
+- 5 steps,
+- 50 steps,
+- or even 500 steps,
+
+the total reward remains exactly the same as long as it eventually reaches the goal.
+
+This can produce policies that appear unintuitive.
+
+For example, the agent may intentionally take a longer but safer route, or even remain near a wall if that slightly reduces the probability of accidentally entering the dangerous state.
+
+Mathematically, this behavior is perfectly rational.
+
+In practice, however, it is unrealistic because actions almost always consume some resource.
+
+---
+
+# Why Real Agents Care About Time
+
+In real-world applications, every action has an associated cost.
+
+| Application | Resource Being Consumed |
+|--------------|-------------------------|
+| Mobile robot | Battery power |
+| Self-driving car | Fuel or energy |
+| Delivery drone | Flight time |
+| Video game agent | Turns |
+| Manufacturing robot | Time and wear |
+
+Each additional action consumes time, energy, money, or other limited resources.
+
+An intelligent agent should therefore prefer solutions that are not only **successful**, but also **efficient**.
+
+---
+
+# Introducing Step Costs
+
+To encourage efficient behavior, we assign a small negative reward to every ordinary state.
+
+For example,
+
+| State | Reward |
+|--------|--------:|
+| Goal | +100 |
+| Dangerous state | −100 |
+| Every normal state | −3 |
+
+The reward **−3** is called the **step cost** (or **living cost**).
+
+It means that every additional action slightly reduces the total reward.
+
+The longer the agent spends reaching the goal, the more reward it loses.
+
+---
+
+# Example
+
+Suppose two policies both eventually reach the goal.
+
+### Policy A
+
+```
+Goal reached in 4 steps
+```
+
+Total reward
+
+$$
+100 - (4 \times 3) = 88
+$$
+
+---
+
+### Policy B
+
+```
+Goal reached in 10 steps
+```
+
+Total reward
+
+$$
+100 - (10 \times 3) = 70
+$$
+
+Although both policies reach the same goal,
+
+Policy A is preferred because it reaches the goal more efficiently.
+
+Step costs naturally encourage shorter and more purposeful behavior without explicitly telling the agent to minimize path length.
+
+---
+
+# The Objective of an MDP
+
+Because rewards are received repeatedly throughout the agent's interaction with the environment, the objective is no longer to maximize a **single reward**.
+
+Instead, the agent seeks to maximize the **total reward accumulated over time**.
+
+Conceptually,
+
+$$
+R_0 + R_1 + R_2 + R_3 + \cdots
+$$
+
+where
+
+- $R_0$ is the immediate reward,
+- $R_1$ is the reward after one action,
+- $R_2$ after two actions,
+- and so on.
+
+The quality of a policy is therefore measured by the total reward it is expected to accumulate, not simply by whether it eventually reaches the goal.
+
+---
+
+# Why We Use an Expected Value
+
+Unlike deterministic planning,
+
+the future is uncertain.
+
+The same action may produce different outcomes each time it is executed.
+
+For example,
+
+```text
+Move North
+
+80% → North
+
+10% → West
+
+10% → East
+```
+
+Since future states are random, the total reward is also random.
+
+Instead of maximizing one particular outcome, the agent maximizes the **expected cumulative reward**— the probability-weighted average over all possible future trajectories.
+
+---
+
+# Mathematical Objective
+
+The objective of an MDP is written as
+
+$$
+E\left[
+\sum_{t=0}^{\infty}
+R_t
+\right]
+$$
+
+where
+
+- $R_t$ is the reward received at time $t$,
+- $E[\cdot]$ denotes the expected value.
+
+This expression simply means
+
+> **Choose actions that maximize the average total reward across all possible futures.**
+
+---
+
+# Discounting Future Rewards
+
+In many planning problems, future rewards are considered less valuable than immediate rewards. This is modeled using a **discount factor**,
+
+denoted by
+
+$$
+0 < \gamma < 1.
+$$
+
+The objective becomes
+
+$$
+E\left[
+\sum_{t=0}^{\infty}
+\gamma^tR_t
+\right].
+$$
+
+Each future reward is multiplied by
+
+$$
+\gamma^t,
+$$
+
+making rewards received later contribute less to the total value.
+
+---
+
+# Why Do We Discount?
+
+Discounting captures an important intuition:
+
+> **Immediate rewards are generally more valuable than delayed rewards.**
+
+There are several reasons for this.
+
+- The future is uncertain.
+- Delayed rewards may never be received.
+- Resources available today can often be used immediately.
+- Many real-world tasks naturally prioritize quicker success.
+
+The discount factor therefore models an agent that prefers achieving its objectives sooner rather than later.
+
+---
+
+# Interpreting γ
+
+The discount factor also determines **how far ahead** the agent plans.
+
+| Discount Factor | Agent Behavior |
+|-----------------|----------------|
+| γ close to 0 | Focuses almost entirely on immediate rewards |
+| γ close to 1 | Places significant importance on long-term rewards |
+
+For this reason,
+
+γ is often interpreted as controlling the agent's **planning horizon**.
+
+A larger γ produces a more far-sighted agent,
+
+while a smaller γ makes the agent increasingly short-sighted.
+
+---
+
+# Discounting vs Step Costs
+
+Although both mechanisms encourage efficient behavior, they do so in different ways.
+
+### Step Cost
+
+Every action incurs a small penalty.
+
+Longer paths accumulate larger costs.
+
+---
+
+### Discounting
+
+Rewards received far in the future become less valuable.
+
+Longer paths delay rewards, reducing their contribution to the objective.
+
+---
+
+Many practical MDPs combine both mechanisms.
+
+Step costs discourage unnecessary actions,
+
+while discounting naturally favors earlier rewards.
+
+---
+
+# Why Discounting Is Also Important Mathematically
+
+Discounting is not only a modeling choice.
+
+It also provides an important mathematical guarantee.
 
 Because
 
 $$
-0 < \gamma < 1
+0 < \gamma < 1,
 $$
 
-the infinite reward sum always remains **finite**.
+the infinite reward sequence
 
-This guarantees that algorithms such as **Value Iteration** eventually converge to a stable solution.
+$$
+R_0 + \gamma R_1 + \gamma^2R_2 + \cdots
+$$
 
-Without discounting, the total reward could become infinite in some problems.
+always converges to a finite value.
+
+This property allows algorithms such as **Value Iteration** and **Policy Iteration** to converge to stable solutions.
+
+Without discounting, infinite reward sums may fail to converge in continuing tasks.
 
 ---
 
-# Intuition
+# Summary
 
-Think of the objective as answering the question:
+Rewards define **what the agent wants**.
 
-> **"If I start in this state and continue following my policy, how much total reward should I expect to earn over time?"**
+The objective of an MDP is not simply to reach the goal, but to maximize the **expected cumulative reward** collected over time.
 
-The answer depends on:
+Step costs encourage efficient behavior by penalizing unnecessary actions, while discounting encourages the agent to value immediate rewards more highly than distant ones.
+
+Together, these ideas define the optimization objective that every MDP algorithm attempts to solve.
+
+> [!summary]
+> An MDP chooses actions that maximize the **expected discounted cumulative reward**.
+>
+> - **Rewards** define desirable outcomes.
+> - **Step costs** encourage efficiency.
+> - **Expected value** accounts for stochastic transitions.
+> - **Discounting** balances immediate and future rewards while ensuring mathematical convergence.
+
+---
+
+# The Value Function
+
+## From Immediate Rewards to Long-Term Decisions
+
+In the previous section, we defined the objective of an MDP:
+
+> **Choose actions that maximize the expected cumulative reward.**
+
+This immediately raises an important question.
+
+> **How can an agent tell whether one state is better than another?**
+
+At first, it might seem sufficient to compare the **immediate reward** of each state.
+
+However, this is often misleading.
+
+Consider the following two states.
+
+```text
+State A
+
+Immediate Reward = -3
+```
+
+```text
+State B
+
+Immediate Reward = -3
+```
+
+Although both states have the same immediate reward:
+
+- State A may be only one step away from the goal.
+- State B may be close to a dangerous terminal state.
+
+Clearly, these states should not be considered equally desirable.
+
+An intelligent agent therefore needs to look **beyond the immediate reward** and consider what is likely to happen in the future.
+
+This motivates the idea of the **Value Function**.
+
+---
+
+## What Does "Value" Mean?
+
+A **reward** answers the question:
+
+> *"What do I receive right now?"*
+
+A **value** answers a different question:
+
+> *"If I start here and continue making decisions according to my policy, how much total reward should I expect to collect in the future?"*
+
+Unlike rewards, values incorporate:
 
 - immediate rewards,
 - future rewards,
 - uncertainty in the environment,
-- and how much we value the future.
+- and the decisions made by the policy.
 
-This idea leads directly to the **Value Function**, which is the central concept in the next section.
+In other words,
 
----
-
-# Key Takeaways
-
-- In the previous MDP examples, moving had **no cost**, which sometimes produced unintuitive policies.
-- Step costs assign a small penalty to every move, encouraging shorter paths.
-- An MDP seeks to maximize the **expected cumulative reward**, not just the final reward.
-- Because outcomes are uncertain, the objective uses an **expected value**.
-- A **discount factor (γ)** makes future rewards less valuable than immediate rewards.
-- Discounting also guarantees that Value Iteration converges to a finite solution.
-- The next concept—the **Value Function**—uses this objective to evaluate how good each state is.
----
-# The Value Function
-
-## From Rewards to Values
-
-In the previous section, we defined the objective of an MDP:
-
-> **Maximize the expected cumulative future reward.**
-
-The next question is:
-
-> **How do we know whether one state is "better" than another?**
-
-Simply looking at the immediate reward is not enough.
-
-For example, consider two states.
-
-```
-State A
-```
-
-```
-Immediate Reward = -3
-```
-
-```
-State B
-```
-
-```
-Immediate Reward = -3
-```
-
-Both states have exactly the same immediate reward.
-
-However:
-
-- one state may be only **one step away from +100**, while
-- the other may be close to **−100**.
-
-Clearly these two states should not be considered equally good.
-
-This motivates the idea of assigning every state a **value**.
+> **A state's value measures the quality of the future, not just the present.**
 
 ---
 
-# What is a Value?
+## Reward vs Value
 
-A **value** tells us
+Although the terms are related, they describe different ideas.
 
-> **How good it is to start from a particular state if we continue following a given policy.**
+| Reward | Value |
+|---------|-------|
+| Immediate payoff for entering a state | Expected long-term return from that state |
+| Local information | Global information |
+| Known immediately | Depends on future decisions and uncertainty |
 
-Notice that this is **not** the reward of the current state.
+For example, every ordinary square in a Grid World may have a reward of **−3**, yet their values can differ dramatically depending on their location.
 
-Instead, it includes:
-
-- the immediate reward,
-- the future rewards,
-- all future uncertainty,
-- and the actions chosen by the policy.
+A state close to the goal is usually much more valuable than one near a dangerous terminal state.
 
 ---
 
-# Definition of the Value Function
+## The Value Function
 
-For every state \(s\), the value function is written as
+The value of a state is written as
 
 $$
 V^\pi(s)
@@ -2214,9 +1557,9 @@ $$
 
 which is read as
 
-> **"The value of state \(s\) under policy \(\pi\)."**
+> **"The value of state $s$ while following policy $\pi$."**
 
-The lecture defines it as
+The formal definition is
 
 $$
 V^\pi(s)
@@ -2229,507 +1572,342 @@ S_0=s
 \right]
 $$
 
-Although this expression looks intimidating, it has a very intuitive meaning.
+Although this expression appears complicated, it is simply a compact mathematical description of the idea introduced above.
 
-It simply says:
+It asks:
 
-> Start in state **s**, follow policy **π**, and compute the **expected total discounted reward** you will receive.
-
----
-
-# Breaking Down the Equation
-
-Let's examine each part.
-
-$$S_0 = s$$
-
-This means
-
-> The agent starts in state **s**.
+> **If the agent starts in state $s$ and follows policy $\pi$, what is the expected total discounted reward it will receive?**
 
 ---
 
-$$R_t$$
+## Understanding the Equation
 
-This is
+Each part of the equation represents one aspect of planning under uncertainty.
 
-> the reward received at time **t**.
+| Notation | Meaning |
+|-----------|---------|
+| $$S_0=s$$ | The agent starts in state $s$. |
+| $$R_t$$ | Reward received at time $t$. |
+| $$\gamma^t$$ | Discounts rewards that occur further in the future. |
+| $$E[\cdot]$$ | Averages over all possible future outcomes. |
 
----
+Together, these capture the two key challenges of planning:
 
-$$gamma^t$$
-
-This discounts future rewards.
-
-Rewards received later contribute less than immediate rewards.
-
----
-
-$$E[\cdot]$$
-
-Because the environment is stochastic,
-
-many different futures are possible.
-
-Therefore we compute the **expected value**, or average over all possible futures.
+- the future is uncertain,
+- and rewards accumulate over time.
 
 ---
 
-# A Simple Interpretation
+## Why Do We Use an Expected Value?
 
-Suppose we have this grid world.
+Because actions are stochastic, the future is not fixed.
 
-```
-S ----> ----> +100
-|
-|
-v
+Suppose the agent chooses to move north.
 
--100
-```
+```text
+Move North
 
-Imagine starting in the left-most state.
+80% → Move North
 
-Sometimes you may
+10% → Drift Left
 
-```
-Go directly to +100.
+10% → Drift Right
 ```
 
-Sometimes
+Each possible outcome leads to a different future sequence of rewards.
 
-```
-Slip sideways.
+The value function therefore computes the **average long-term return** across all possible futures, weighted by their probabilities.
 
-Take extra steps.
-
-Eventually reach +100.
-```
-
-Sometimes
-
-```
-Accidentally fall into −100.
-```
-
-Each possible future produces a different total reward.
-
-The value function computes
-
-> **the average reward across all these possible futures.**
+This is why the expectation operator $$E[\cdot]$$ appears in the definition.
 
 ---
 
-# Value Depends on the Policy
+## A Simple Example
 
-An important idea is that
+Imagine the following Grid World.
 
-> **The value of a state is not fixed.**
+```text
+S ───► ───► Goal (+100)
+│
+│
+▼
+Danger (−100)
+```
 
-It depends entirely on **what policy you follow afterward.**
+Suppose the agent starts at **S**.
+
+Different executions of the same policy may produce different outcomes.
+
+```text
+Run 1
+
+S → Goal
+
+Return = 91
+```
+
+```text
+Run 2
+
+S → Slip → Extra Step → Goal
+
+Return = 85
+```
+
+```text
+Run 3
+
+S → Slip → Danger
+
+Return = -100
+```
+
+The value of **S** is **not** any one of these returns.
+
+Instead, it is the **expected average** over all possible executions.
+
+---
+
+## Value Depends on the Policy
+
+An important property of the value function is that it is **policy-dependent**.
+
+The same state may have different values under different decision strategies.
 
 For example,
 
-suppose from the same state we have two different policies.
-
 ### Policy A
 
-```
+```text
 Always move toward the goal.
 ```
 
-Expected reward might be
+Expected return:
 
-```
+```text
 85
 ```
 
----
-
 ### Policy B
 
-```
-Wander randomly.
-```
-
-Expected reward might be
-
-```
-25
+```text
+Move randomly.
 ```
 
-Same state.
+Expected return:
 
-Different behavior.
+```text
+23
+```
 
-Different value.
+The starting state is identical.
 
-Therefore we always write
+Only the behavior changes.
+
+Consequently,
 
 $$
 V^\pi(s)
 $$
 
-instead of simply
-
-$$
-V(s)
-$$
-
-because the value depends on the chosen policy.
+always includes the policy symbol $$\pi$$, reminding us that **the quality of a state depends on the decisions that follow it.**
 
 ---
 
-# Example from the Grid World
+## Interpreting Values in a Grid World
 
-Recall the grid world.
+Suppose every ordinary square has a reward of **−3**.
 
-```
-+100
-```
+The goal provides **+100**, while the dangerous terminal state gives **−100**.
 
-is the good terminal state.
+After computing the value function, the states might look conceptually like this.
 
-```
-−100
-```
+```text
+72    84    94   100
 
-is the bad terminal state.
+60    70    81
 
-Every normal square has
-
-```
-Reward = -3
+42    51   -100
 ```
 
-Suppose our policy is
+Notice that neighboring states no longer have identical values.
 
-```
-Always move toward +100.
-```
+Their values reflect:
 
-Then
+- their distance from the goal,
+- the risk of entering dangerous regions,
+- accumulated step costs,
+- and uncertainty in future actions.
 
-- states near the goal should have **high values**,
-- states far away should have **lower values**,
-- states near the −100 region should have **even lower values**.
-
-The value function captures all of this automatically.
+The value function summarizes all of this information into a **single number** for each state.
 
 ---
 
-# Value is an Expectation
+## Why Is the Value Function Useful?
 
-Notice something important.
+Once every state has a value, planning becomes much simpler.
 
-The value is **not** one particular reward.
+Instead of searching for an entire path from scratch, the agent repeatedly asks:
 
-It is an **average** over many possible executions.
+> **"Which neighboring state has the highest value?"**
 
-For example,
+By moving toward states with larger values, the agent naturally follows actions that maximize long-term expected reward.
 
-starting from one state,
-
-one execution might produce
-
-```
-100
-```
-
-Another execution might produce
-
-```
-82
-```
-
-Another might produce
-
-```
-−25
-```
-
-The value function averages all of these according to their probabilities.
+The value function therefore transforms planning into a local decision problem guided by long-term outcomes rather than immediate rewards.
 
 ---
 
-# Why is the Value Function Useful?
+## Computing the Value Function
 
-Suppose we know the value of **every state**.
+The values are not known in advance.
 
-Then decision making becomes much easier.
+Instead, they are estimated iteratively.
 
-Imagine each state has a number written inside it.
+Initially, every state may be assigned a rough guess.
 
-```
-70     85     97     100
+```text
+0    0    0   100
 
-55     72     89
+0    0    0
 
-40     60     74
-```
-
-If the agent always moves toward neighboring states with larger values,
-
-it naturally moves toward better long-term outcomes.
-
-The value function therefore transforms planning into a simple problem:
-
-> **Move toward states with higher values.**
-
----
-
-# Computing the Value Function
-
-Unfortunately,
-
-we do **not** know the values beforehand.
-
-Instead,
-
-we must calculate them.
-
-The algorithm used in this lecture is called
-
-> **Value Iteration.**
-
-Instead of computing the correct values immediately,
-
-Value Iteration gradually improves its estimates.
-
-Initially,
-
-we know almost nothing.
-
-For example,
-
-```
-0     0     0     100
-
-0     0     0
-
-0     0    -100
+0    0  -100
 ```
 
-After several updates,
+An algorithm called **Value Iteration** repeatedly updates these estimates using the **Bellman Equation**.
 
-the values slowly spread through the grid.
+With each iteration, information propagates outward from the terminal states until every state's value converges to its optimal estimate.
 
-Eventually,
+The next section introduces this algorithm in detail.
 
-they converge to the true optimal values.
-
-This iterative improvement is the central idea behind **Value Iteration**.
-
----
-
-# Sebastian Thrun's Intuition
-
-Sebastian describes the value function as a kind of **potential field**.
-
-Imagine pouring water (or milk) into the goal state.
-
-```
-Goal
-
-↓
-
-↓
-
-↓
-
-Water spreads through the environment.
-```
-
-Eventually,
-
-every location receives some amount of "potential."
-
-An agent simply follows the direction where this potential increases,
-
-naturally reaching the goal.
-
-This physical intuition helps explain why Value Iteration works so well.
-
----
-
-# Key Takeaways
+## Key Takeaways
 
 - A **reward** measures the immediate payoff of entering a state.
-- A **value** measures the **expected total future reward** starting from that state.
-- The value depends on the **policy** being followed.
-- Values include:
-  - immediate rewards,
-  - future rewards,
-  - uncertainty,
-  - and discounting.
-- States closer to desirable outcomes usually receive higher values.
-- We do not know the values initially.
-- **Value Iteration** is the algorithm used to compute them.
+- A **value** measures the expected long-term return from that state.
+- Values incorporate immediate rewards, future rewards, uncertainty, and discounting.
+- The value of a state depends on the **policy** being followed.
+- States with identical immediate rewards can have very different values.
+- Once state values are known, choosing actions becomes straightforward.
+- **Value Iteration** is the algorithm used to compute these values.
 ---
+
 # Value Iteration: Intuition and the Bellman Backup
 
 ## Why Do We Need Value Iteration?
 
-In the previous section, we defined the **value function**.
+In the previous section, we introduced the **value function**, which measures the expected long-term return of starting in a particular state.
 
-The value of a state tells us:
+The challenge, however, is that these values are **not known in advance**.
 
-> **How good is it to start in this state and continue acting optimally?**
+> **How can an agent determine the value of every state in the environment?**
 
-However, there is one major problem.
+This is precisely the purpose of **Value Iteration**.
 
-> **We do not know these values.**
+Rather than solving the entire planning problem at once, Value Iteration starts with rough estimates and repeatedly improves them.
 
-The entire purpose of **Value Iteration** is to compute them.
-
-Instead of trying to solve the whole problem at once, Value Iteration gradually improves its estimate of every state's value until the estimates stop changing.
+With each iteration, the estimates become more accurate until they eventually converge to the optimal values.
 
 ---
 
 # Sebastian Thrun's Intuition
 
-Sebastian Thrun explains Value Iteration using a beautiful physical analogy.
+Sebastian Thrun explains Value Iteration using a simple analogy.
 
 Imagine that the goal state contains a bucket of milk.
 
+```text
+          Goal
+         (+100)
+
+           🥛
 ```
-        +100
-         🥛
-```
 
-Now imagine pouring the milk onto the grid.
+When the milk is poured, it gradually spreads through the grid.
 
-Instead of staying in one square,
-
-the milk slowly spreads outward.
-
-```
+```text
 Iteration 1
 
-          +100
+            100
+```
 
+```text
 Iteration 2
 
-      80     100
+       80    100
+```
 
+```text
 Iteration 3
 
-   60   80   100
+   60    80    100
+```
 
+```text
 Iteration 4
 
-40   60   80   100
+40    60    80    100
 ```
 
-Eventually,
+Eventually, every reachable state receives some amount of "milk."
 
-every reachable square receives some amount of "milk."
+The amount that reaches each square represents **how valuable that state is**.
 
-The amount in each square represents **how valuable that state is**.
+States that are easier, safer, and quicker to reach from the goal naturally receive larger values than states that are farther away or more risky.
 
 ---
 
-# Another Way to Think About It
+# Why Do Values Spread Backward?
 
-Instead of milk,
+Notice that the goal is the **only state whose value is immediately known**.
 
-imagine the goal creates a **gravitational field**.
-
-```
-Goal
-
-↓↓↓↓↓↓↓↓
-
-Every nearby state is pulled toward it.
-```
-
-States closer to the goal feel a stronger pull.
-
-States farther away feel a weaker pull.
-
-The value function is essentially this "pull."
-
-An agent simply climbs uphill toward larger values.
-
----
-
-# Why Values Spread Backwards
-
-Notice something interesting.
-
-The goal already knows its value.
-
-```
+```text
 Goal
 
 Value = +100
 ```
 
-The square beside the goal can estimate its value because it knows it can reach +100.
+The neighboring states can estimate their values because they can reach the goal.
 
-Then the square behind that can estimate its value.
+Once those estimates improve, states further away can improve their own estimates.
 
-Then the next one.
+Information therefore propagates **backward** through the state space.
 
-Information always flows
-
-```
+```text
 Goal
 
 ↓
 
-Neighbor
+Neighbors
 
 ↓
 
-Neighbor
+Neighbors
 
 ↓
 
-Neighbor
+Remaining States
 ```
 
-rather than
-
-```
-Start
-
-↓
-
-Goal
-```
-
-This is why Value Iteration is sometimes described as
-
-> **Propagating values backward from the goal.**
+Instead of searching forward from the start, Value Iteration repeatedly propagates information outward from states whose values are already known.
 
 ---
 
-# The Recursive Idea
+# A Recursive View of Planning
 
-Suppose we are standing here.
+Suppose we want to compute the value of the current state.
 
-```
+```text
 Current State
 
       S
 ```
 
-We want to know
+Rather than considering every possible future path, we ask a much simpler question.
 
-```
-Value(S)
-```
+> **If I take one action, where might I end up next?**
 
-Instead of solving the entire future,
+Suppose one action could lead to
 
-we ask a much simpler question.
-
-> **Where could I be after taking one action?**
-
-Suppose taking one action could move us to
-
-```
+```text
 S₁
 
 S₂
@@ -2737,41 +1915,34 @@ S₂
 S₃
 ```
 
-If we already know the values of those states,
+If we already have good estimates for the values of these successor states, then estimating the value of the current state becomes much easier.
 
-then estimating the value of the current state becomes much easier.
+This recursive idea is the essence of **Dynamic Programming**.
 
-This idea is called **dynamic programming**.
-
-Rather than solving one huge problem,
-
-we solve many small problems that build upon one another.
+Large planning problems are solved by repeatedly combining solutions to many smaller subproblems.
 
 ---
 
-# The Bellman Principle
+# The Bellman Principle of Optimality
 
-Richard Bellman made one key observation.
+Richard Bellman's key insight was remarkably simple.
 
-> **The value of a state depends on the values of its successor states.**
+> **The value of a state depends on the value of the states that can be reached from it.**
 
-Instead of thinking about an entire journey,
+Instead of reasoning about an entire future trajectory, we only need to consider:
 
-we only need to think about
+1. the immediate reward,
+2. one action,
+3. the possible successor states,
+4. and the values already assigned to those successor states.
 
-- one action,
-- one transition,
-- and then trust the value of the next state.
-
-This recursive relationship is the foundation of Value Iteration.
+This recursive relationship is known as the **Bellman Principle of Optimality**, and it forms the foundation of Value Iteration.
 
 ---
 
 # The Bellman Backup Equation
 
 The update performed during Value Iteration is called the **Bellman Backup**.
-
-The update rule is
 
 $$
 V(s)
@@ -2784,88 +1955,70 @@ R(s)
 P(s'|s,a)V(s')
 $$
 
-This equation looks complicated,
+Although the equation appears intimidating, each component has a straightforward interpretation.
 
-but every part has a simple interpretation.
+Rather than memorizing it, it is more useful to understand how each part contributes to updating the value of a state.
 
 ---
 
-# Breaking the Equation Into Pieces
+# Understanding the Bellman Backup
 
-## Step 1 — Immediate Reward
+The update can be read from left to right.
+
+## 1. Receive the Immediate Reward
+
+The agent first receives the reward associated with its current state.
 
 $$
 R(s)
 $$
 
-Every state has an immediate reward (or cost).
+For example,
 
-Example:
+| State | Reward |
+|--------|--------|
+| Ordinary state | −3 |
+| Goal state | +100 |
+| Dangerous terminal state | −100 |
 
-```
-Normal square
+This is the reward obtained **immediately**, before considering the future.
 
-Reward = -3
-```
+---
 
-Goal state
+## 2. Consider Every Possible Outcome
 
-```
-Reward = +100
-```
+After choosing an action, the environment determines the next state.
 
-Bad terminal state
-
-```
-Reward = -100
-```
-
-
-## Step 2 — Future Value
-
-After taking an action,
-
-we arrive in another state.
-
-Those future states already have value estimates.
-
-Their values help determine the value of the current state.
-
-## Step 3 — Transition Probabilities
-
-The environment is stochastic.
-
-Taking one action may lead to several different outcomes.
+Because actions are stochastic, several outcomes may be possible.
 
 For example,
 
-```
+```text
 Move East
 
-80% → Right
+80% → East
 
-10% → Up
+10% → North
 
-10% → Down
+10% → South
 ```
 
-Therefore,
+Each successor state already has a value estimate.
 
-we cannot simply use one successor.
+Rather than selecting one outcome, we compute their **expected value** using the transition probabilities.
 
-We must compute the **expected value**
-
-by averaging over all possible successors.
-
-This is represented by
 $$
 \sum_{s'}
 P(s'|s,a)V(s')
 $$
 
-## Step 4 — Discount Factor
+This term represents the **average value of the future** after taking a particular action.
 
-Future rewards are multiplied by
+---
+
+## 3. Discount Future Rewards
+
+Future rewards are multiplied by the discount factor
 
 $$
 \gamma
@@ -2873,49 +2026,301 @@ $$
 
 If
 
-```
-γ = 1
-```
+$$
+\gamma = 1
+$$
 
-future rewards are worth exactly as much as immediate rewards.
+future rewards are valued exactly the same as immediate rewards.
 
 If
 
-```
-γ = 0.9
-```
+$$
+\gamma = 0.9
+$$
 
-future rewards are slightly less valuable.
+rewards received further into the future contribute slightly less.
 
-## Step 5 — Choose the Best Action
+Discounting encourages earlier rewards and guarantees convergence of Value Iteration.
 
-The agent controls its own action.
+## 4. Choose the Best Action
 
-Therefore,
+The environment controls **which successor state occurs**, but the agent controls **which action to take**.
 
-it chooses whichever action produces the largest expected value.
+Therefore, the agent evaluates every possible action and selects the one with the largest expected value.
 
-This is why the equation contains
+This is represented by
 
 $$
 \max_a
 $$
 
-Nature determines **which successor state occurs**,
+Nature introduces uncertainty through the transition probabilities.
 
-but the agent determines **which action to take**.
-
-This distinction is one of the most important ideas in MDPs.
+The agent responds by choosing the action that maximizes its expected long-term return.
 
 ---
 
-# Agent vs Nature
+# Reading the Bellman Equation in Plain English
 
-There are two different decisions happening.
+The Bellman Backup can be summarized as
 
-## The Agent Chooses
+> **The value of a state equals its immediate reward plus the discounted expected value of the best action available from that state.**
 
+Every iteration applies this update to every state in the Grid World.
+
+As the values improve, better estimates propagate throughout the environment until the values eventually stop changing.
+
+At that point, the Value Function has converged to the optimal solution.
+
+## Key Takeaways
+
+- Value Iteration computes the value of every state through repeated updates.
+- Information propagates backward from states whose values are already known.
+- The Bellman Principle states that a state's value depends on the values of its successor states.
+- The Bellman Backup combines:
+  - the immediate reward,
+  - expected future value,
+  - transition probabilities,
+  - discounting,
+  - and optimal action selection.
+- Repeated Bellman updates eventually converge to the optimal Value Function.
+
+---
+
+# Value Iteration
+
+## Why Do We Need Value Iteration?
+
+In the previous section, we introduced the **value function**, which measures how desirable it is to start in a particular state and continue following the optimal policy.
+
+The challenge is that these values are **unknown**. Before an agent can decide which action is best, it must first estimate how valuable every state is.
+
+The purpose of **Value Iteration** is to compute these values.
+
+Rather than solving the entire planning problem in one step, Value Iteration begins with rough estimates and repeatedly improves them. Each iteration refines the value of every state by using information from neighboring states until the values stabilize.
+
+> [!important] Core Idea
+> Value Iteration does **not** search for paths. Instead, it computes the long-term value of every state in the environment.
+
+---
+
+# Intuition: Values Spread Through the State Space
+
+One of the most intuitive explanations of Value Iteration comes from Sebastian Thrun.
+
+Imagine the goal state contains a source of water (or milk). As time passes, the liquid spreads outward through the grid.
+
+```text
+Iteration 0
+
+          Goal (+100)
+
+
+Iteration 1
+
+       97      Goal
+
+
+Iteration 2
+
+    94      97      Goal
+
+
+Iteration 3
+
+ 91     94      97      Goal
 ```
+
+Initially, only the goal has a known value.
+
+During each iteration, neighboring states "learn" how valuable they are because they can reach states whose values are already known.
+
+Eventually, every reachable state receives an appropriate value.
+
+---
+
+## A Different Perspective: A Potential Field
+
+Another way to visualize the value function is as a **potential field**.
+
+Imagine the goal generates an invisible force that attracts the agent.
+
+```text
+          Goal
+
+        ↓↓↓↓↓↓↓
+
+     Higher Value
+
+        ↓↓↓↓↓↓↓
+
+     Lower Value
+```
+
+States closer to the goal experience a stronger "pull," while distant states experience a weaker one.
+
+Instead of explicitly searching for a path, an agent can simply move toward neighboring states with higher values.
+
+This is why a value function naturally induces a good policy.
+
+---
+
+# Why Information Flows Backward
+
+An important observation is that the goal already knows its own value.
+
+$$
+V(\text{Goal}) = 100
+$$
+
+A neighboring state can estimate its own value because it knows it can eventually reach the goal.
+
+Once that value is updated, its neighbors can do the same.
+
+Information therefore propagates outward from the terminal states.
+
+```text
+Goal
+
+↓
+
+Nearby States
+
+↓
+
+Farther States
+
+↓
+
+Entire State Space
+```
+
+This explains why Value Iteration is often described as **backward propagation of value**.
+
+Unlike classical search, which starts from the initial state and explores forward, Value Iteration repeatedly improves value estimates throughout the entire state space.
+
+---
+
+# Dynamic Programming Intuition
+
+Suppose we want to know the value of the current state.
+
+```text
+Current State
+
+      S
+```
+
+At first glance, this seems difficult because there are countless possible future trajectories.
+
+Instead of reasoning about every future step, Dynamic Programming breaks the problem into much smaller pieces.
+
+The key question becomes:
+
+> **"If I take one action, where might I end up next?"**
+
+Suppose one action could lead to three possible successor states.
+
+```text
+          S
+
+       /  |  \
+
+     S₁  S₂  S₃
+```
+
+If we already have estimates for
+
+- $$V(S_1)$$
+- $$V(S_2)$$
+- $$V(S_3)$$
+
+then estimating the value of the current state becomes much easier.
+
+Rather than solving the entire future repeatedly, we reuse previously computed information.
+
+> [!tip]
+> This reuse of smaller solutions is the essence of **Dynamic Programming**.
+
+---
+
+# The Bellman Principle of Optimality
+
+The idea above was formalized by **Richard Bellman**.
+
+His key insight is remarkably simple:
+
+> [!important]
+> **The value of the current state depends on the values of its successor states.**
+
+Instead of planning an entire future from scratch, an optimal agent only needs to consider:
+
+1. the immediate reward,
+2. the possible next states,
+3. how valuable those states already are.
+
+Because every state can be defined in terms of the states that follow it, the entire planning problem becomes recursive.
+
+This recursive relationship is known as the **Bellman Principle of Optimality**.
+
+---
+
+# The Bellman Backup
+
+The Bellman Principle leads directly to the update rule used by Value Iteration.
+
+This update is called the **Bellman Backup**.
+
+$$
+V(s)
+=
+R(s)
++
+\gamma
+\max_a
+\sum_{s'}
+P(s' \mid s,a)V(s')
+$$
+
+Although the equation appears intimidating, it is simply a recipe for updating one state's value.
+
+Every iteration applies this update to every state until the values converge.
+
+---
+
+# Understanding the Bellman Backup
+
+Instead of memorizing the equation, it helps to interpret it from left to right.
+
+---
+
+## Step 1 — Immediate Reward
+
+Every state contributes an immediate reward (or cost).
+
+$$
+R(s)
+$$
+
+Examples:
+
+| State | Reward |
+|-------|--------:|
+| Ordinary state | -3 |
+| Goal | +100 |
+| Bad terminal | -100 |
+
+This is the reward received **before** considering any future consequences.
+
+---
+
+## Step 2 — Consider Every Action
+
+From the current state, the agent can choose among several actions.
+
+For example,
+
+```text
 North
 
 South
@@ -2925,25 +2330,21 @@ East
 West
 ```
 
-The agent selects one action.
+Each action leads to different future possibilities.
 
-## Nature Chooses
+The Bellman Backup evaluates **every available action**, not just one.
 
-Once the action is selected,
+---
 
-the environment decides what actually happens.
+## Step 3 — Predict Possible Outcomes
 
-Example:
+Because the environment is stochastic, a chosen action may lead to several different successor states.
 
-```
-Command:
+For example,
 
-Go East
-```
+```text
+Attempt East
 
-Actual result
-
-```
 80% → East
 
 10% → North
@@ -2951,171 +2352,309 @@ Actual result
 10% → South
 ```
 
-Therefore,
+Instead of assuming one outcome, the Bellman Backup computes the **expected value** across all possible successor states.
 
-the Bellman equation contains
+This is represented by
 
-- **max** over actions (agent's choice),
-- **expectation** over successor states (nature's randomness).
+$$
+\sum_{s'}
+P(s' \mid s,a)V(s')
+$$
+
+Each successor contributes according to both:
+
+- its probability of occurring,
+- and its current value estimate.
 
 ---
 
-# One Backup Operation
+## Step 4 — Discount Future Rewards
 
-Suppose our current value table is
+Future rewards are multiplied by the discount factor
 
+$$
+\gamma
+$$
+
+The discount factor controls how much importance is given to rewards that occur later.
+
+- $$\gamma = 1$$ means future rewards are valued equally with immediate rewards.
+- Smaller values of $$\gamma$$ make distant rewards less important.
+
+Discounting also guarantees that the infinite reward sum remains finite, allowing Value Iteration to converge.
+
+---
+
+## Step 5 — Choose the Best Action
+
+After evaluating every action, the agent selects the one with the highest expected return.
+
+This is represented by
+
+$$
+\max_a
+$$
+
+Notice that the Bellman Backup does **not** average over actions.
+
+The agent is assumed to act optimally, so it always chooses the action with the greatest expected value.
+
+---
+
+# Putting the Bellman Backup Together
+
+The Bellman Backup can be read almost like a sentence:
+
+> **The value of the current state equals its immediate reward plus the discounted expected value of the best action available.**
+
+Thinking about the equation in this way is much more useful than trying to memorize the formula.
+
+---
+
+# Agent vs Nature
+
+One of the most important ideas in MDPs is that **two different entities make decisions**.
+
+These decisions should never be confused.
+
+## The Agent Chooses the Action
+
+The agent decides **what to attempt**.
+
+```text
+North
+
+South
+
+East
+
+West
 ```
-0     0     100
 
-0     0       0
+This is an intentional decision made by the policy.
 
-0     0    -100
-```
+---
 
-We now update one state.
+## Nature Determines the Outcome
+
+After an action is chosen, the environment determines what actually happens.
 
 For example,
 
-the square beside the goal.
+```text
+Attempt East
 
-Since it can almost reach +100,
+80% → East
 
-its new estimate becomes much larger.
+10% → North
 
-```
-0    77    100
-
-0     0      0
-
-0     0   -100
+10% → South
 ```
 
-That single update is called a **backup**.
+The agent has **no control** over which successor state occurs.
+
+It only knows the probabilities.
+
+---
+
+## Why Both Appear in the Bellman Backup
+
+This distinction explains the two mathematical operations inside the Bellman equation.
+
+The agent chooses the best action:
+
+$$
+\max_a
+$$
+
+Nature determines the outcome through transition probabilities:
+
+$$
+\sum_{s'}
+P(s' \mid s,a)V(s')
+$$
+
+> [!important]
+> The **agent optimizes** over actions, while **nature averages** over uncertain outcomes.
+
+---
+
+# One Bellman Backup
+
+Initially, most state values are unknown.
+
+For example,
+
+```text
+0      0      100
+
+0      0       0
+
+0      0     -100
+```
+
+Suppose we update the state immediately beside the goal.
+
+Because it has a high probability of reaching the goal, its value increases substantially.
+
+```text
+0      77      100
+
+0       0        0
+
+0       0     -100
+```
+
+Updating the value of a single state using the Bellman equation is called a **Bellman Backup**.
 
 ---
 
 # Repeating the Process
 
-Now another state can use the newly updated value.
+After one backup, neighboring states can take advantage of the newly improved estimate.
 
-```
+```text
 Iteration 1
 
-0   77   100
+0      77     100
+
 
 Iteration 2
 
-58  77   100
+58     77     100
+
 
 Iteration 3
 
-58  77   100
+40     58      77
 
-40  58   77
+58     77     100
 ```
 
-Each update spreads information farther away from the goal.
+Each iteration propagates information farther across the grid.
 
-Eventually,
-
-the values stop changing.
-
-When this happens,
-
-Value Iteration has **converged**.
+States become increasingly accurate because they rely on better estimates from their neighbors.
 
 ---
 
-# Bellman Equation at Convergence
+# Convergence
 
-Initially,
+Eventually, repeating Bellman Backups no longer changes the value estimates.
 
-the Bellman equation is only an update rule.
-
-The left side and right side are not equal.
-
-```
+```text
 Old Value
 
 ↓
 
-Updated Value
+Bellman Backup
+
+↓
+
+Same Value
 ```
 
-After enough iterations,
+When successive iterations produce negligible changes, the algorithm is said to have **converged**.
 
-the values stop changing.
+At convergence,
 
-At this point,
+$$
+V(s)
+=
+R(s)
++
+\gamma
+\max_a
+\sum_{s'}
+P(s' \mid s,a)V(s')
+$$
 
-the Bellman update becomes an equality.
-
-This is called the **Bellman Equation**.
-
-It represents the optimal relationship between every state and its successors.
+is no longer just an update rule—it becomes the **Bellman Optimality Equation**, meaning every state's value is perfectly consistent with the values of its successors.
 
 ---
 
 # Why Value Iteration Works
 
-Each update improves our estimate.
+Each Bellman Backup uses the best information currently available.
 
-Better estimates produce even better estimates for neighboring states.
+As value estimates improve, neighboring estimates improve as well.
 
-Eventually,
+Because information continually propagates through the state space, repeated updates eventually produce the optimal value function.
 
-the entire grid becomes consistent.
+The final values answer a single question:
 
-The final values represent
-
-> **the maximum expected future reward obtainable from every state.**
+> **"If I start from this state and always act optimally, what is the maximum expected discounted reward I can obtain?"**
 
 ---
 
 # Key Takeaways
 
-- Value Iteration computes the value of every state.
-- Values spread backward from the goal through the state space.
-- Each update is called a **Bellman Backup**.
-- A state's value depends on:
-  - its immediate reward,
-  - the values of successor states,
-  - transition probabilities,
-  - the discount factor.
-- The agent chooses the **best action** (max).
-- Nature chooses the **actual outcome** (expectation).
-- Repeating backups eventually converges to the optimal value function.
+> [!summary]
+> - Value Iteration computes the value of **every state**, not a single path.
+> - Values propagate backward from terminal states through repeated Bellman Backups.
+> - The Bellman Principle expresses a state's value recursively in terms of its successors.
+> - The Bellman Backup combines:
+>   - immediate reward,
+>   - transition probabilities,
+>   - successor state values,
+>   - discounting,
+>   - and optimal action selection.
+> - The **agent chooses actions** (max), while **nature determines outcomes** (expectation).
+> - Repeated Bellman Backups eventually converge to the optimal value function.
+
+
+# Worked Example: Value Iteration
+
+The Bellman Backup equation defines **how** values should be updated.
+
+The best way to understand it, however, is to work through concrete examples.
+
+In this section, we apply Value Iteration to two versions of the same Grid World:
+
+1. **Deterministic Grid World** — every action succeeds.
+2. **Stochastic Grid World** — actions have uncertain outcomes.
+
+By comparing these two cases, we can see how uncertainty changes both the value function and the resulting policy.
+
 ---
-# Value Iteration Examples (Deterministic vs Stochastic)
 
-After introducing the Bellman Backup equation, Sebastian Thrun demonstrates how it is actually used by working through several examples.
+# Example 1 — Deterministic Grid World
 
-These examples are extremely important because they show **how the Bellman equation is applied numerically**.
+To isolate the mechanics of Value Iteration, we first assume a **deterministic environment**.
 
----
+Every action succeeds exactly as intended.
 
-# Example 1: Deterministic Grid World
+```text
+Move East
 
-To make the calculations easier, Thrun first removes uncertainty.
+↓
 
-Instead of actions succeeding **80% of the time**, he assumes they always succeed.
-
-This means
-
-- there is **no randomness**
-- every action leads to exactly one next state
-
-For this example, he also assumes:
-
-- **Discount factor:** $\gamma = 1$
-- **Cost of each move:** $-3$
-- Terminal rewards:
-  - Goal = $+100$
-  - Bad terminal = $-100$
-
-The initial value table is
-
+Always move East
 ```
+
+There are:
+
+- no transition probabilities,
+- no accidental slips,
+- no uncertainty.
+
+The Bellman Backup therefore becomes much simpler because every action leads to exactly one successor state.
+
+---
+
+## Environment
+
+For this example, assume:
+
+| Parameter | Value |
+|-----------|-------|
+| Discount factor | $$\gamma = 1$$ |
+| Step cost | $$-3$$ |
+| Goal reward | $$+100$$ |
+| Bad terminal reward | $$-100$$ |
+
+The initial value function is
+
+```text
 0      0      +100
 
 0      0        0
@@ -3125,81 +2664,50 @@ The initial value table is
 
 Only the terminal states have known values.
 
-Everything else starts at zero.
+All other states begin with an initial estimate of zero.
 
 ---
 
-# Quiz 1 — What is the Value of A3?
+# Example 1 — Updating State A3
 
-Consider the square immediately to the left of the goal.
+Consider the state immediately to the left of the goal.
 
+```text
+A3  →  Goal (+100)
 ```
-A3  →  Goal(+100)
-```
 
-Since movement is deterministic,
+Since movement is deterministic, moving East always reaches the goal.
 
-going East guarantees reaching the goal.
-
-The Bellman update becomes
+The Bellman Backup becomes
 
 $$
-V(A3)=100-3=97
-$$
-
----
-
-## Why Subtract 3?
-
-Remember,
-
-moving itself has a cost.
-
-Although reaching the goal gives +100,
-
-we must pay the movement cost first.
-
-```
-Reward from goal
-
-100
-
-↓
-
-Movement cost
-
-−3
-
-↓
-
-Value
-
+V(A3)
+=
+100-3
+=
 97
-```
+$$
 
----
+The value consists of:
 
-# Result
+- the future reward of reaching the goal,
+- minus the cost of taking one step.
 
-After one backup,
+After one update,
 
-```
+```text
 97     100
 ```
 
-The value of A3 becomes
-
-```
-97
-```
+The value of A3 becomes **97**.
 
 ---
 
-# Quiz 2 — What is the Value of B3?
+# Example 2 — Updating State B3
 
-Now update the square directly below A3.
+Now consider the state below A3.
 
-```
+```text
 97
 
 ↑
@@ -3207,447 +2715,404 @@ Now update the square directly below A3.
 B3
 ```
 
-Again,
+The optimal action is again obvious.
 
-movement is deterministic.
+Moving North reaches the state whose value is already known.
 
-The best action is
-
-```
-Go North
-```
-
-which reaches the state worth 97.
-
-Therefore,
+Applying the Bellman Backup,
 
 $$
-V(B3)=97-3=94
+V(B3)
+=
+97-3
+=
+94
 $$
 
----
+After this update,
 
-# Result
-
-```
-97   100
+```text
+97     100
 
 94
 ```
 
----
-
-# Quiz 3 — Value After Convergence
-
-Now suppose Value Iteration continues until convergence.
-
-What is the value of C1?
-
-```
-Start
-
-↓
-
-Goal
-```
-
-Every movement costs
-
-```
-−3
-```
-
-Therefore,
-
-every extra step simply subtracts another 3.
-
-The shortest path from C1 requires
-
-```
-5 steps
-```
-
-Hence
-
-$$
-100-(5\times3)=85
-$$
+Notice how information has propagated one step farther from the goal.
 
 ---
 
-# Final Value Function (Deterministic)
+# Continuing the Iterations
 
-The values form a beautiful gradient.
+Each iteration repeats exactly the same process.
 
+Every state updates its value using the latest estimates of its neighbors.
+
+After enough iterations, the values converge.
+
+The final value function becomes
+
+```text
+97     100
+
+94      97
+
+91      94
+
+88      91
+
+85      88
 ```
-97   100
-
-94    97
-
-91    94
-
-88    91
-
-85    88
-```
-
-Every step away from the goal decreases the value by exactly 3.
 
 ---
 
-# Important Observation
+# Interpreting the Result
 
-Because the environment is deterministic,
+Notice the regular pattern.
 
-Value Iteration essentially computes
+Each step away from the goal decreases the value by exactly three.
 
-> **Shortest distance to the goal × movement cost**
+This happens because
 
-The value function behaves almost like a distance map.
+- every move costs $$3$$,
+- every action succeeds,
+- and the shortest path is always optimal.
 
----
+In this deterministic setting, the value function behaves almost like a **distance map**.
 
-# Why This Case Is Simple
+States closer to the goal naturally receive higher values because fewer movement costs remain.
 
-Every action has only one outcome.
-
-```
-Go East
-
-↓
-
-Always reach East
-```
-
-There is
-
-- no uncertainty
-- no probabilities
-- no expected values
-
-This is much simpler than a true MDP.
+> [!note]
+> In deterministic environments, Value Iteration often resembles shortest-path planning, with state values decreasing steadily as distance from the goal increases.
 
 ---
 
-# Example 2: Stochastic Grid World
+# Example 2 — Stochastic Grid World
 
-Now Thrun restores uncertainty.
+Now we restore uncertainty.
 
-Actions behave as before.
+The environment once again behaves like the original MDP.
 
-```
-Command East
+Attempting an action no longer guarantees its intended outcome.
+
+```text
+Attempt East
 
 80% → East
 
-10% → Up
+10% → North
 
-10% → Down
+10% → South
 ```
 
-Everything else stays the same.
+Everything else remains unchanged.
 
-- $\gamma = 1$
-- movement cost = $-3$
+| Parameter | Value |
+|-----------|-------|
+| Discount factor | $$\gamma=1$$ |
+| Step cost | $$-3$$ |
+| Goal reward | $$+100$$ |
+| Bad terminal reward | $$-100$$ |
 
-The initial value table is
+The initial value function is again
 
-```
-0      0      100
+```text
+0      0      +100
 
 0      0        0
 
-0      0     -100
+0      0      -100
 ```
 
 ---
 
-# Quiz 1 — Value of A3
+# Example 3 — Updating State A3
 
-Again,
+Consider the state beside the goal.
 
-consider the square beside the goal.
-
-If we command
-
-```
-East
+```text
+A3  →  Goal
 ```
 
-then
+Suppose the agent attempts to move East.
 
-```
-80%
+Possible outcomes are
 
-→ Goal (+100)
+```text
+80% → Goal (+100)
 
-10%
+10% → Stay
 
-→ Stay
-
-10%
-
-→ Move Down
+10% → Move Down
 ```
 
-The two non-goal states still have value 0.
+Since the remaining neighboring states still have value zero,
+
+the expected future value is
+
+$$
+0.8(100)
++
+0.1(0)
++
+0.1(0)
+=
+80
+$$
+
+Subtracting the movement cost,
+
+$$
+80-3
+=
+77
+$$
 
 Therefore,
 
-Expected future value is
+```text
+77      100
+```
 
-$$
-0.8(100)+0.1(0)+0.1(0)=80
-$$
-
-Subtract the movement cost.
-
-$$
-80-3=77
-$$
+The value is **77**, considerably lower than the deterministic value of **97**.
 
 ---
 
-# Result
+# Why Did the Value Decrease?
 
-Instead of
+Nothing about the reward changed.
 
-```
-97
-```
+Only the certainty changed.
 
-we now obtain
+Although the goal still provides a reward of +100,
 
-```
-77
-```
+the agent now reaches it only **80% of the time**.
 
----
+The remaining probability corresponds to less favorable outcomes.
 
-# Why Is It Smaller?
+Uncertainty therefore lowers the state's expected value.
 
-In the deterministic world,
+This illustrates one of the central ideas of MDPs:
 
-reaching the goal was guaranteed.
-
-Now,
-
-there is only an
-
-```
-80%
-
-chance
-```
-
-of reaching it immediately.
-
-Uncertainty lowers the expected reward.
+> [!important]
+> State values measure **expected future reward**, not guaranteed reward.
 
 ---
 
-# Quiz 2 — Value of B3
+# Example 4 — Updating State B3
 
 Now consider the state below A3.
 
-This example is much more interesting because **two actions compete**.
+Unlike the deterministic example, multiple actions must now be evaluated.
+
+The Bellman Backup compares the expected return of every available action before choosing the best one.
 
 ---
 
-## Option 1 — Go North
+## Action 1 — Move North
 
-Possible outcomes:
+Possible outcomes are
 
-```
-80%
+```text
+80% → A3 (77)
 
-Reach A3 (77)
+10% → -100
 
-10%
-
-Fall into -100
-
-10%
-
-Stay in place (0)
+10% → Stay (0)
 ```
 
-Expected value
+Expected future value
 
 $$
-0.8(77)+0.1(-100)+0.1(0)
+0.8(77)
++
+0.1(-100)
++
+0.1(0)
+=
+51.6
 $$
 
-$$
-=61.6-10
-$$
+Including the movement cost,
 
 $$
-=51.6
-$$
-
-Subtract movement cost
-
-$$
-51.6-3=48.6
-$$
-
-
-## Option 2 — Go West
-
-Possible outcomes
-
-```
-10%
-
-Reach A3 (77)
-
-80%
-
-Stay
-
-10%
-
-Move elsewhere
-```
-
-Expected value
-
-$$
-0.1(77)=7.7
-$$
-
-Subtract movement cost
-
-$$
-7.7-3=4.7
-$$
-
----
-
-# Which Action Should We Choose?
-
-Compare both values.
-
-```
-North
-
+51.6-3
+=
 48.6
+$$
 
-West
+---
 
-4.7
+## Action 2 — Move West
+
+Possible outcomes are
+
+```text
+10% → A3 (77)
+
+80% → Stay
+
+10% → Other state
 ```
 
-Clearly,
+Expected future value
+
+$$
+0.1(77)
+=
+7.7
+$$
+
+After subtracting the movement cost,
+
+$$
+7.7-3
+=
+4.7
+$$
+
+---
+
+# Choosing the Better Action
+
+The Bellman Backup compares both expected returns.
+
+| Action | Expected Value |
+|---------|---------------:|
+| North | 48.6 |
+| West | 4.7 |
+
+Since
 
 $$
 48.6>4.7
 $$
 
-Therefore,
+the update selects
 
-the Bellman backup chooses
-
-```
+```text
 North
 ```
 
----
+This demonstrates an important point.
 
-# Why Doesn't It Avoid the -100 Yet?
-
-This is an important observation.
-
-At this stage,
-
-almost every state still has value
-
-```
-0
-```
-
-The algorithm has only begun propagating information.
-
-The positive value
-
-```
-77
-```
-
-already exists,
-
-making North appear attractive.
-
-The safer western route has not yet accumulated value.
-
-As Value Iteration continues,
-
-those values gradually spread,
-
-and eventually the policy may change.
+The Bellman Backup always evaluates **all available actions** before selecting the one with the highest expected return.
 
 ---
 
-# Key Insight
+# Why the Early Policy May Look Strange
 
-Early iterations
+At this stage of Value Iteration, many surrounding states still have value zero.
 
-```
-Only nearby states know about the goal.
-```
+Only states close to the goal contain useful information.
 
-Later iterations
+As additional Bellman Backups are performed, these values continue to propagate through the environment.
 
-```
-The entire grid understands where the safest path lies.
-```
+Consequently,
 
-This gradual improvement is exactly why Value Iteration is called an **iterative** algorithm.
+- early policies may appear shortsighted,
+- while later iterations produce increasingly sensible behavior.
+
+Only after convergence does the value function correctly represent the long-term consequences of every decision.
 
 ---
 
-# Comparison: Deterministic vs Stochastic
+# Deterministic vs Stochastic Value Iteration
+
+Although the same Bellman Backup algorithm is used in both environments, the interpretation is very different.
 
 | Deterministic | Stochastic |
 |--------------|------------|
-| Actions always succeed | Actions may fail |
 | One successor state | Multiple possible successors |
-| Simple subtraction | Expected value calculation |
-| Value ≈ shortest path | Value balances reward and risk |
-| No probabilities | Transition probabilities required |
+| Guaranteed outcome | Expected outcome |
+| No transition probabilities | Transition probabilities required |
+| Values depend mainly on path length | Values balance reward, risk, and uncertainty |
+
+The deterministic case resembles shortest-path planning.
+
+The stochastic case requires reasoning about **both probability and long-term reward**, making it a true planning-under-uncertainty problem.
 
 ---
 
-# Key Takeaways
+# What These Examples Teach Us
 
-- Deterministic Value Iteration behaves like shortest-path planning.
-- Stochastic Value Iteration must compute **expected future rewards**.
-- Uncertainty lowers the value of risky states.
-- Every Bellman backup compares all actions and chooses the one with the highest expected value.
-- Early iterations are only rough estimates.
-- As backups continue, values spread through the grid until convergence.
+The numerical calculations reveal several important ideas.
+
+> [!summary]
+> - Bellman Backups are local computations performed one state at a time.
+> - Repeated backups gradually propagate information through the state space.
+> - In deterministic environments, values primarily reflect distance from the goal.
+> - In stochastic environments, values represent **expected** long-term reward.
+> - Uncertainty reduces the value of risky states because favorable outcomes are no longer guaranteed.
+> - The Bellman Backup always evaluates every action before selecting the one with the highest expected return.
 
 ---
+
 # From Value Functions to Policies
 
-So far, we have learned how to compute the **value** of every state.
+## Why Values Alone Are Not Enough
 
-However, an intelligent agent ultimately needs to answer a different question:
+After Value Iteration converges, every state has an associated value.
 
-> **"What action should I take?"**
+For example,
 
-Knowing that a state has a value of 82 or 94 is useful, but a robot cannot execute a value.
+```text
+93      97      100
 
-It must execute an **action**.
+89      94
 
-The beautiful idea behind MDPs is that **the optimal action is already hidden inside the Bellman equation.**
+85      90
+```
+
+These numbers tell us **how desirable** each state is.
+
+However, knowing that a state has value **94** does not tell the agent what it should actually do.
+
+A robot cannot execute a value—it must execute an **action**.
+
+Ultimately, an intelligent agent needs to answer a different question:
+
+> [!question]
+> **"Given my current state, which action should I take?"**
+
+This is where the concept of a **policy** becomes essential.
 
 ---
 
-# Recall the Bellman Backup
+# What Is a Policy?
 
-The Bellman update computes
+A **policy** specifies the action the agent should take in every possible state.
+
+Formally, a policy is a mapping
+
+$$
+\pi : S \rightarrow A
+$$
+
+which means
+
+> For every state $$s$$, the policy assigns one action $$a$$.
+
+Unlike a fixed sequence of moves, a policy provides a complete decision strategy for the entire environment.
+
+Instead of storing values, a policy stores **decisions**.
+
+```text
+State A  →  Move East
+
+State B  →  Move North
+
+State C  →  Move West
+```
+
+---
+
+# How Do We Obtain the Policy?
+
+The remarkable feature of Value Iteration is that the policy is **not computed separately**.
+
+It is already hidden inside the Bellman Backup.
+
+Recall the Bellman equation
 
 $$
 V(s)
@@ -3660,301 +3125,168 @@ R(s)
 P(s'|s,a)V(s')
 $$
 
-Notice that the equation contains two different operations.
-
-1. Nature computes the expected outcome
-
-$$
-\sum_{s'}
-P(s'|s,a)V(s')
-$$
-
-2. The agent chooses the action
+Notice the optimization step
 
 $$
 \max_a
 $$
 
-These represent two different decision makers.
+While computing the value of a state, the algorithm has already evaluated every possible action.
+
+Once Value Iteration finishes, we simply recover **which action produced the maximum expected value**.
+
+This process is called **policy extraction**.
 
 ---
 
-# Two Decision Makers
+# Policy Extraction
 
-## Nature
-
-Nature controls uncertainty.
-
-The agent cannot decide which successor state actually occurs.
-
-Instead,
-
-Nature samples according to the transition probabilities.
-
-For example,
-
-```
-Move East
-
-↓
-
-80% East
-
-10% North
-
-10% South
-```
-
-The agent has no control over these probabilities.
-
-They are properties of the environment.
-
----
-
-## The Agent
-
-The agent controls only one thing:
-
-**Which action to attempt.**
-
-It may choose
-
-- North
-- South
-- East
-- West
-
-For each possible action,
-
-the Bellman equation computes the expected future reward.
-
-The agent then selects the action with the highest expected value.
-
----
-
-# The Bellman Equation Already Chooses the Best Action
-
-Notice the
+The optimal policy is defined by
 
 $$
-\max_a
-$$
-
-inside the Bellman equation.
-
-This means
-
-> While computing the value of a state, we are already determining which action is best.
-
-The value function and the optimal policy are therefore tightly connected.
-
----
-
-# Extracting the Policy
-
-Suppose Value Iteration has converged.
-
-Every state now has an optimal value.
-
-For example,
-
-```
-93    97   100
-
-89    94
-
-85    90
-```
-
-The agent now asks:
-
-> "Which neighboring state has the highest expected value?"
-
-The answer determines which action should be taken.
-
----
-
-# Policy Equation
-
-Mathematically,
-
-the optimal policy is
-
-$$
-\pi(s)
+\pi^*(s)
 =
 \arg\max_a
 \sum_{s'}
-P(s'|s,a)V(s')
+P(s'|s,a)V^*(s')
 $$
 
-Notice this looks almost identical to the Bellman equation.
+Although this equation closely resembles the Bellman equation, it answers a different question.
 
-The only difference is:
+The Bellman equation computes
 
-- Bellman computes **values**
-- Policy extraction computes **actions**
+> **"How valuable is this state?"**
+
+The policy equation asks
+
+> **"Which action leads to the highest expected value?"**
+
+Notice that the immediate reward and discount factor no longer appear explicitly.
+
+Those quantities have already been incorporated into the optimal value function $$V^*(s)$$.
 
 ---
 
-# Understanding Argmax
+# Max vs Argmax
 
-Many students confuse
+Students often confuse these two operations.
 
-$$
-\max
-$$
-
-and
-
-$$
-\arg\max
-$$
-
-They are different.
+Understanding the distinction is crucial.
 
 ## Max
 
-Returns the largest value.
+The **maximum** operator returns the largest numerical value.
 
-Example
-
-```
-Actions
-
-North → 48.6
-
-South → 12
-
-West → 4.7
-
-East → 35
-```
-
-The maximum value is
-
-$$
-48.6
-$$
-
----
-
-## Argmax
-
-Returns **which action produced that value.**
-
-In the same example,
-
-```
-North → 48.6
-
-South → 12
-
-West → 4.7
-
-East → 35
-```
-
-the result is
-
-```
-North
-```
-
-The Bellman equation uses
-
-$$
-\max
-$$
-
-to compute the value,
-
-while the policy uses
-
-$$
-\arg\max
-$$
-
-to recover the best action.
-
----
-
-# Building the Policy
-
-Imagine standing in one square.
-
-```
-Current State
-```
-
-Look at every possible action.
-
-For each action,
-
-compute its expected future reward.
-
-Example
+Suppose the expected returns for four actions are
 
 | Action | Expected Value |
-|---------|---------------:|
+|--------|---------------:|
 | North | 48.6 |
 | East | 35 |
 | South | 12 |
 | West | 4.7 |
 
-The optimal policy simply stores
+Then
 
-```
+$$
+\max = 48.6
+$$
+
+The result is a **number**.
+
+---
+
+## Argmax
+
+The **argmax** operator returns the action that produced the maximum value.
+
+Using the same example,
+
+| Action | Expected Value |
+|--------|---------------:|
+| North | 48.6 |
+| East | 35 |
+| South | 12 |
+| West | 4.7 |
+
+we obtain
+
+$$
+\arg\max = \text{North}
+$$
+
+The result is **an action**, not a value.
+
+> [!important]
+> - $$\max$$ answers **"How good is the best option?"**
+> - $$\arg\max$$ answers **"Which option is the best?"**
+
+---
+
+# Building the Policy
+
+Policy extraction is performed independently for every state.
+
+Suppose we are evaluating one particular state.
+
+The expected returns of the available actions are
+
+| Action | Expected Return |
+|--------|----------------:|
+| North | 48.6 |
+| East | 35 |
+| South | 12 |
+| West | 4.7 |
+
+The policy simply stores
+
+```text
 North
 ```
 
 for this state.
 
-Now repeat this for **every state**.
+The same procedure is repeated throughout the entire state space.
 
-The result is a complete policy.
-
----
-
-# Policy as a Map of Actions
-
-Instead of storing numbers,
-
-the policy stores arrows.
-
-Example
-
-```
-→   →   Goal
-
-↑   ↑
-
-↑   ←
-```
-
-Each arrow answers
-
-> "If I am in this state, which action should I execute?"
-
-Unlike a fixed path,
-
-this policy works from **every possible state**.
-
-Even if randomness causes the agent to drift away from the intended path,
-
-the policy immediately tells it what to do next.
+Eventually, every state has one recommended action.
 
 ---
 
-# Why Policies Are Better Than Plans
+# Visualizing a Policy
 
-Recall why ordinary planning failed.
+Unlike a value function, which stores numbers,
 
-A fixed action sequence assumes everything goes exactly as expected.
+```text
+85     90     94
 
-Example
-
+82     87     91
 ```
+
+a policy stores directions.
+
+```text
+→     →     Goal
+
+↑     ↑
+
+↑     ←
+```
+
+Each arrow answers a single question:
+
+> **"If the agent finds itself here, what action should it attempt?"**
+
+This makes policies easy to visualize, especially in Grid World problems.
+
+---
+
+# Why Policies Are More Robust Than Plans
+
+Earlier, we saw why classical planning struggles in stochastic environments.
+
+A deterministic planner produces a fixed sequence of actions.
+
+```text
 North
 
 North
@@ -3964,225 +3296,93 @@ East
 East
 ```
 
-But suppose the first move fails.
+This sequence assumes every action succeeds exactly as expected.
 
-```
-Expected
+If the first movement fails,
+
+```text
+Expected Position
 
 ↓
 
 A2
+```
 
-Actual
+but the agent actually reaches
 
-↓
-
+```text
 B1
 ```
 
-The original plan is now incorrect.
+the remaining plan may no longer be appropriate.
 
-A policy avoids this problem.
-
-No matter where the agent ends up,
-
-there is already an action assigned to that state.
-
-This makes policies much more robust in stochastic environments.
+The planner has no instructions for recovering.
 
 ---
 
-# Important Insight
+## Policies Handle Unexpected Outcomes
 
-A **value function** answers
+A policy does not depend on following one predefined path.
 
-> "How good is this state?"
+Instead, every reachable state already has an associated action.
 
-A **policy** answers
+For example,
 
-> "What should I do in this state?"
+```text
+A1 → East
 
-Value Iteration computes the value function first.
+A2 → North
 
-The policy is then extracted simply by choosing the action with the highest expected future value.
+B1 → East
+
+B2 → North
+```
+
+If the environment causes the agent to drift into an unexpected state, it simply consults the policy for that state and continues.
+
+There is no need to recompute an entirely new plan.
+
+> [!note]
+> A policy acts like a navigation guide that always knows the best next move, regardless of where the agent currently is.
 
 ---
 
-# Key Takeaways
+# Value Functions and Policies Work Together
 
-- Value Iteration computes **how valuable every state is**.
-- The Bellman equation already compares every possible action.
-- The optimal policy is obtained using **argmax** over those action values.
-- Nature determines which successor state actually occurs.
-- The agent determines which action to attempt.
-- Policies are far more robust than fixed action sequences because they specify an action for **every possible state**.
+The value function and policy represent two different aspects of decision making.
 
-# From Value Function to Policy
+The **value function** evaluates states.
 
-At this point, we know how to compute the **value of every state** using Value Iteration.
+The **policy** selects actions.
 
-However, the agent still does not know **what action to take**.
+These two concepts complement one another.
 
-A value function only tells us:
+| Value Function | Policy |
+|---------------|--------|
+| Measures how good a state is | Specifies which action to take |
+| Numerical estimate | Decision rule |
+| Used during Value Iteration | Extracted after Value Iteration converges |
 
-> "How good is it to be in this state?"
+The value function provides the information needed to construct the policy.
 
-To actually act, the agent must convert these values into a **policy**.
-
----
-
-# Recall
-
-A **value function** answers
-
-> "If I start in this state and behave optimally, how much future reward should I expect?"
-
-A **policy** answers
-
-> "Given that I am in this state right now, what action should I take?"
-
-Value functions evaluate states.
-
-Policies choose actions.
+The policy is the component the agent actually executes.
 
 ---
 
-# Extracting a Policy
+# The Complete Value Iteration Pipeline
 
-Suppose the value function has already converged.
+Putting everything together, the entire planning process looks like this.
 
-Now imagine standing in some state.
-
-You look at every possible action:
-
-- North
-- South
-- East
-- West
-
-For each action, you compute
-
-- where you might end up,
-- the probability of each outcome,
-- and the value of those successor states.
-
-The best action is simply the one that gives the **largest expected value**.
-
----
-
-# Policy Equation
-
-Mathematically,
-
-the optimal policy is
-
-$$
-\pi(s)
-=
-\arg\max_a
-\sum_{s'}
-P(s'|s,a)V(s')
-$$
-
-where
-
-- $$\pi(s)$$ = action chosen in state $$s$$
-- $$\arg\max$$ = choose the action that gives the highest value
-- $$P(s'|s,a)$$ = transition probability
-- $$V(s')$$ = value of the successor state
-
----
-
-# Difference Between max and argmax
-
-This is an important distinction.
-
-## max
-
-Returns the **largest value**.
-
-Example
-
-```
-North → 48.6
-
-West → 4.7
-```
-
-The maximum is
-
-```
-48.6
-```
-
----
-
-## argmax
-
-Returns **which action produced the maximum**.
-
-Using the same example
-
-```
-North → 48.6
-
-West → 4.7
-```
-
-The answer is
-
-```
-North
-```
-
-Notice
-
-```
-max
+```text
+Define the MDP
 
 ↓
 
-48.6
-
-argmax
+Initialize State Values
 
 ↓
 
-North
-```
-
-One returns a number.
-
-The other returns an action.
-
----
-
-# Bellman Backup Already Finds the Best Action
-
-When performing Value Iteration,
-
-we already maximize over all possible actions.
-
-Therefore,
-
-once Value Iteration converges,
-
-the optimal action is already hidden inside the Bellman equation.
-
-Extracting the policy simply means asking
-
-> Which action produced the maximum value?
-
----
-
-# Relationship Between Value Function and Policy
-
-```
-Environment
-
-↓
-
-Value Iteration
+Repeated Bellman Backups
 
 ↓
 
@@ -4190,198 +3390,209 @@ Optimal Value Function
 
 ↓
 
-Choose Best Action (argmax)
+Policy Extraction (argmax)
 
 ↓
 
 Optimal Policy
+
+↓
+
+Agent Executes Actions
 ```
 
-This is why Value Iteration solves **both** problems:
+Notice that Value Iteration itself never directly computes actions.
 
-- computing state values
-- finding the optimal policy
+It computes **state values first**.
 
----
-
-# Key Idea
-
-A value function tells us
-
-> "How valuable is this state?"
-
-A policy tells us
-
-> "What should I do here?"
-
-The policy is obtained by choosing the action that leads to the successor states with the highest expected value.
-
-# How Costs Change the Optimal Policy
-
-One of the most interesting ideas in MDPs is that changing the **reward (or cost) function** changes the agent's behaviour.
-
-The environment stays exactly the same.
-
-The transition probabilities stay exactly the same.
-
-Only the rewards change.
-
-Yet the optimal policy becomes completely different.
+The policy naturally follows from those values.
 
 ---
 
-# Case 1 — Movement Cost = -3
+# Why This Matters
 
-This is the example used throughout the lecture.
+Policies solve the central challenge of planning under uncertainty.
 
-Every move costs
+Instead of producing one fragile action sequence, they provide a decision for every possible situation the agent might encounter.
+
+This makes them much more suitable for real-world environments, where unexpected events occur frequently.
+
+Whether the agent slips, encounters an obstacle, or is pushed into another state, it can immediately recover by following the policy associated with its current state.
+
+---
+
+# Key Takeaways
+
+> [!summary]
+> - A value function tells us **how desirable** each state is.
+> - A policy tells us **which action** to take in each state.
+> - Policy extraction uses
+>
+> $$
+> \arg\max
+> $$
+>
+> to select the action with the highest expected return.
+> - $$\max$$ returns a value, whereas $$\arg\max$$ returns the action that achieves that value.
+> - Policies are derived **after** Value Iteration has converged.
+> - Unlike fixed action sequences, policies provide a complete decision strategy that is robust to uncertainty and unexpected outcomes.
+
+
+# Designing Agent Behaviour Through Rewards
+
+## The Reward Function Shapes Behaviour
+
+One of the most powerful ideas in MDPs is that **the planning algorithm does not determine the agent's behaviour—the reward function does.**
+
+The Bellman Backup, Value Iteration, and Policy Extraction remain exactly the same.
+
+What changes is **what the agent considers desirable.**
+
+Changing the rewards changes the optimization objective, which naturally changes the optimal policy.
+
+> [!important]
+> **Same environment + same transition model + different rewards = different optimal behaviour**
+
+This is one reason MDPs are so flexible: the same planning algorithm can solve very different problems simply by redefining the reward function.
+
+---
+
+# Case 1 — Moderate Step Cost
+
+Suppose every ordinary move has a cost of
 
 $$
 -3
 $$
 
-Goal reward
+while the terminal rewards remain
 
-$$
-+100
-$$
+- Goal: $$+100$$
+- Bad terminal: $$-100$$
 
-Bad terminal
-
-$$
--100
-$$
+This is the Grid World used throughout most of the lecture.
 
 ---
 
-## Resulting Behaviour
+## Behaviour
 
-The agent wants to
+Every extra step slightly reduces the total reward.
 
-- reach the goal quickly,
-- but also avoid the dangerous state.
+Consequently, the agent tries to:
 
-Sometimes it accepts a small amount of risk because taking a long detour would accumulate too many movement costs.
+- reach the goal reasonably quickly,
+- avoid unnecessary wandering,
+- but still avoid obviously dangerous regions.
 
-This creates a balance between
+The resulting policy reflects a **trade-off** between two competing objectives:
 
-- **speed**, and
-- **safety**.
+- minimizing travel cost,
+- minimizing risk.
 
----
+Neither objective dominates completely.
 
-# Case 2 — Movement Cost = 0
-
-Now suppose moving has **no cost**.
-
-Every step is free.
-
-The only rewards are
-
-- +100 at the goal
-- -100 at the bad terminal
+> [!note]
+> Moderate step costs often produce realistic behaviour because they balance **efficiency** and **safety**.
 
 ---
 
-## What Happens?
+# Case 2 — No Step Cost
 
-Since moving costs nothing,
+Now suppose moving has **zero cost**.
 
-there is **no penalty for taking a longer route**.
-
-The agent becomes extremely patient.
-
-Instead of risking the -100 terminal,
-
-it willingly takes a long detour if that makes the path safer.
-
----
-
-## Value Function
-
-Eventually every non-terminal state reaches
+Normal states receive
 
 $$
-100
+0
 $$
 
-Why?
+instead of
 
-Because the agent can always keep trying until it eventually reaches the positive terminal.
+$$
+-3.
+$$
 
-Since moving is free,
-
-there is no disadvantage to taking many extra steps.
-
----
-
-## Policy Changes
-
-Some actions that previously moved directly toward the goal are replaced by safer actions.
-
-For example,
-
-near the dangerous terminal,
-
-the policy deliberately moves **away from the goal** first,
-
-avoiding any chance of accidentally entering the -100 state.
+The terminal rewards remain unchanged.
 
 ---
 
-# Case 3 — Movement Cost = -200
+## Behaviour Changes
+
+Without any penalty for movement,
+
+time no longer matters.
+
+The agent has no reason to prefer a shorter path over a longer one.
+
+Instead, it focuses entirely on maximizing the probability of eventually reaching the positive terminal.
+
+This often produces surprisingly cautious behaviour.
+
+Near dangerous regions, the optimal policy may deliberately move **away** from the goal before approaching it from a safer direction.
+
+Although this requires more steps, those extra steps are now free.
+
+---
+
+## Why Do Many State Values Become Large?
+
+If movement is free and the goal is always eventually reachable,
+
+the expected long-term reward for many states approaches the goal reward.
+
+Intuitively,
+
+the agent can simply keep trying until it succeeds.
+
+Since repeated attempts carry no penalty,
+
+there is little disadvantage to taking extremely conservative routes.
+
+> [!tip]
+> Removing the step cost encourages the agent to optimize **success probability** rather than **speed**.
+
+---
+
+# Case 3 — Extremely Large Step Cost
 
 Now consider the opposite extreme.
 
-Every move costs
+Suppose every move costs
 
 $$
--200
+-200.
 $$
 
-This is **twice as bad** as falling into the negative terminal.
+This penalty is larger than the negative terminal reward itself.
 
 ---
 
-## What Happens?
+## A Counterintuitive Policy
 
-Now every additional step is extremely expensive.
+At first glance,
 
-The agent no longer cares very much about reaching the +100 goal.
+one might expect the agent to work even harder to reach the goal.
 
-Instead,
+Instead, the opposite happens.
 
-its priority becomes
+The cost of continuing becomes so severe that **ending the episode quickly** becomes more valuable than pursuing the positive reward.
 
-> **End the episode as quickly as possible.**
+This illustrates an important principle:
 
----
+> [!warning]
+> An optimal policy does **not** necessarily try to reach the goal. It tries to maximize **expected cumulative reward**.
 
-## Surprisingly...
-
-Sometimes the optimal policy intentionally moves toward the
-
-$$
--100
-$$
-
-terminal.
-
-At first this seems irrational.
-
-Why would an agent deliberately choose a negative reward?
+If continuing incurs extremely large penalties, terminating early—even in a bad state—may produce a higher total return.
 
 ---
 
-## Explanation
+## Example
 
-Suppose the two choices are
+Suppose the agent has two options.
 
-### Option 1
+### Continue toward the goal
 
-Walk five more steps.
-
-Cost
+Five additional steps cost
 
 $$
 5\times(-200)
@@ -4389,589 +3600,325 @@ $$
 -1000
 $$
 
-then receive
+followed by the goal reward
 
 $$
-+100
++100.
 $$
 
-Total
+Total return
 
 $$
--900
+-900.
 $$
 
 ---
 
-### Option 2
+### Enter the negative terminal immediately
 
-Immediately enter
-
-$$
--100
-$$
-
-Total
+Reward
 
 $$
--100
+-100.
 $$
 
-Clearly
+Since
 
 $$
--100>-900
+-100>-900,
 $$
 
-The second option is actually better.
+terminating immediately is actually the better decision.
+
+The behaviour appears irrational only if we forget the optimization objective.
+
+The agent is **not maximizing goal achievement**.
+
+It is maximizing **expected return**.
 
 ---
 
-# Lesson
+# Reward Engineering
 
-The agent is **not trying to reach the goal.**
+These examples illustrate a broader idea that appears throughout AI and Reinforcement Learning.
 
-It is trying to **maximize total expected reward.**
+Small changes to the reward function can produce dramatically different behaviours.
 
-Sometimes that means
+This process is often called **reward engineering** or **reward design**.
 
-- reaching the goal,
-- taking a detour,
-- or even intentionally failing.
+The planner itself remains unchanged.
 
-Everything depends on the reward function.
+Instead, designers specify what outcomes should be encouraged or discouraged through rewards.
+
+Examples include:
+
+| Desired Behaviour | Reward Design |
+|-------------------|---------------|
+| Fast navigation | Larger step costs |
+| Safe navigation | Strong penalties for dangerous states |
+| Energy-efficient robot | Penalty for expensive actions |
+| Risk-taking behaviour | Smaller penalties for failure |
+
+Designing an effective reward function is often one of the hardest parts of solving real-world decision problems.
 
 ---
 
-# The Reward Function Defines Behaviour
+# Comparing the Three Reward Structures
 
-Changing only the rewards can produce completely different strategies.
+| Step Cost | Behaviour |
+|-----------|-----------|
+| Moderate negative cost | Balance efficiency and safety |
+| Zero cost | Prioritize safety; long detours become acceptable |
+| Very large negative cost | End the episode quickly to avoid accumulating penalties |
 
-| Reward Structure | Behaviour |
-|------------------|-----------|
-| Small movement cost | Balance speed and safety |
-| Zero movement cost | Always choose the safest route |
-| Huge movement cost | End the episode immediately |
+Although the environment never changes, the agent's behaviour changes dramatically because its notion of **optimality** has changed.
 
 ---
 
 # Key Insight
 
-The reward function determines
-
-- what the agent considers "good,"
-- what it considers "bad,"
-- and therefore how it behaves.
-
-The planning algorithm never changes.
-
-Only the rewards change.
-
----
-# Markov Decision Processes — Lecture Summary
-
-This lecture introduced **planning under uncertainty** using **Markov Decision Processes (MDPs).**
-
-Unlike classical planning,
-
-MDPs assume that actions are **stochastic**.
-
-Even if the agent chooses an action,
-
-the environment may produce different outcomes.
+> [!summary]
+> The reward function defines **what the agent is trying to achieve**, while the planning algorithm determines **how to achieve it optimally**.
 
 ---
 
-# Components of an MDP
+# Lecture Summary
 
-An MDP is defined by four main components.
+This lecture introduced **Markov Decision Processes (MDPs)** as a framework for planning under uncertainty.
 
-## 1. States
+Unlike classical search algorithms, MDPs explicitly model environments where actions may have multiple possible outcomes.
 
-The possible situations the agent can be in.
-
-Example
-
-```
-Robot location
-
-Grid cell
-
-Game position
-```
+Rather than producing a single fixed plan, an MDP computes a policy that specifies the best action for every state.
 
 ---
 
-## 2. Actions
+# Core Components of an MDP
 
-The choices available in each state.
+An MDP is defined by four interacting components.
 
-Example
+| Component | Role |
+|-----------|------|
+| **States** | Describe the agent's current situation |
+| **Actions** | Choices available to the agent |
+| **Transition Model** | Specifies the probability of moving between states |
+| **Reward Function** | Defines the objective the agent should optimize |
 
-```
-North
-
-South
-
-East
-
-West
-```
+Together, these components fully describe the decision-making problem.
 
 ---
 
-## 3. Transition Model
+# The Planning Objective
 
-Specifies how actions change the state.
-
-Instead of being deterministic,
-
-the outcome is represented by
-
-$$
-P(s'|s,a)
-$$
-
-which gives the probability of reaching state $$s'$$ after taking action $$a$$ in state $$s$$.
-
----
-
-## 4. Reward Function
-
-Every state (or state-action pair) receives a reward.
-
-Examples
-
-```
-Goal
-
-+100
-
-Danger
-
--100
-
-Movement
-
--3
-```
-
-The reward function defines what the agent should optimize.
-
----
-
-# Objective of an MDP
-
-The goal is to find a policy that maximizes the expected discounted sum of future rewards.
+The agent seeks a policy that maximizes expected discounted return
 
 $$
 \max_\pi
 E\left[
 \sum_{t=0}^{\infty}
 \gamma^tR_t
-\right]
+\right].
 $$
 
-where
+This objective combines four important ideas:
 
-- $$R_t$$ = reward at time $$t$$
-- $$\gamma$$ = discount factor
-- $$E[\cdot]$$ = expectation over stochastic outcomes
+- immediate rewards,
+- future rewards,
+- uncertainty,
+- and discounting.
 
 ---
 
 # Value Iteration
 
-The central algorithm introduced in this lecture is **Value Iteration**.
+Value Iteration solves this optimization problem using dynamic programming.
 
-It repeatedly updates the value of every state using the Bellman Backup equation until the values stop changing.
+Instead of reasoning about complete action sequences, it repeatedly updates the value of every state using the Bellman Backup.
 
-After convergence,
+Each iteration improves the estimates until they converge to the optimal value function.
 
-the resulting value function is called the **optimal value function**.
-
----
-
-# Bellman Backup
-
-The Bellman equation computes the value of a state by considering
-
-- every possible action,
-- every possible successor state,
-- the probability of each outcome,
-- and the immediate reward.
-
-It forms the foundation of dynamic programming methods for MDPs.
+A useful way to think about this process is that information gradually propagates outward from important states, allowing every location in the environment to estimate its long-term desirability.
 
 ---
 
-# Policy Extraction
+# From Values to Decisions
 
-Once the optimal value function is known,
+Once optimal state values are known,
 
-the optimal policy is obtained by selecting the action with the highest expected successor value.
+determining the best action becomes straightforward.
 
-In other words,
+For every state, the agent simply chooses the action whose expected successor value is highest.
 
-```
-Value Function
+Thus,
+
+```text
+Optimal Value Function
 
 ↓
 
-Choose Highest Expected Value
+Policy Extraction
 
 ↓
 
 Optimal Policy
 ```
 
+The policy is therefore a direct consequence of the value function.
+
 ---
 
-# Classical Planning vs MDPs
+# Why MDPs Extend Classical Planning
 
-| Classical Planning | MDP |
-|-------------------|-----|
+Classical search algorithms assume that actions always succeed.
+
+MDPs remove this assumption by incorporating probabilities directly into the planning process.
+
+| Classical Planning | Markov Decision Process |
+|-------------------|-------------------------|
 | Deterministic actions | Stochastic actions |
-| Produces one action sequence | Produces a policy |
-| Assumes plan always succeeds | Handles unexpected outcomes |
-| No probabilities | Uses transition probabilities |
+| Single action sequence | Policy for every state |
+| No uncertainty | Explicit probabilistic transitions |
+| Fixed execution | Adaptive decision making |
+
+This makes MDPs far better suited to real-world environments where uncertainty is unavoidable.
 
 ---
 
-# Why Policies Are Better Than Plans
+# Where MDPs Are Used
 
-A fixed plan only works if everything goes exactly as expected.
+Many sequential decision-making problems can naturally be modeled as MDPs.
 
-An MDP policy tells the agent what to do **from every possible state**.
-
-If the environment behaves unexpectedly,
-
-the agent simply consults the policy for its current state and continues.
-
-This makes policies much more robust in uncertain environments.
-
----
-
-# Real-World Applications
-
-MDPs are widely used in Artificial Intelligence.
-
-Examples include
+Examples include:
 
 - robot navigation,
 - autonomous vehicles,
 - medical treatment planning,
-- resource allocation,
-- dialogue systems,
 - inventory management,
-- reinforcement learning.
+- financial decision making,
+- recommendation systems,
+- dialogue systems.
 
-Any problem involving **sequential decision-making under uncertainty** can often be modeled as an MDP.
+MDPs also provide the mathematical foundation for **Reinforcement Learning**, where the transition model or reward function is no longer known in advance and must be learned through interaction.
 
 ---
 
-# Key Takeaways
+# Big Picture
 
-- MDPs combine planning with probability.
-- Actions have probabilistic outcomes.
-- The objective is to maximize expected discounted future reward.
-- Value Iteration computes the optimal value function.
-- The Bellman Backup equation is the core update rule.
-- The optimal policy is extracted from the optimal value function.
-- Reward functions determine the behaviour of the agent.
-- Policies are more powerful than fixed action sequences because they specify what to do in **every possible state**.
+> [!summary]
+> Markov Decision Processes extend classical planning by combining **planning**, **probability**, and **optimization** into a single framework.
+>
+> - The **transition model** captures uncertainty.
+> - The **reward function** specifies the objective.
+> - **Value Iteration** estimates long-term utility.
+> - **Policy extraction** converts those values into actions.
+>
+> Together, these ideas allow intelligent agents to make rational decisions even when the outcome of every action is uncertain.
 
 # Partial Observability and POMDPs
 
----
+## When MDPs Are No Longer Enough
 
-# From Fully Observable to Partially Observable Planning
+Throughout this lecture, we assumed that the agent always knows **exactly which state it is in**.
 
-So far in the course, we have assumed that the agent always knows exactly what state it is in.
+This assumption is known as **full observability**, and it is one of the defining assumptions of a Markov Decision Process (MDP).
 
-This assumption allowed us to model problems as **Markov Decision Processes (MDPs)**.
-
-However, many real-world problems are **not fully observable**.
-
-The agent may know:
-
-- where it is,
-- what actions it can perform,
-
-but it may **not know everything about the environment**.
+However, many real-world environments violate this assumption.
 
 Examples include:
 
-- A robot whose sensors are noisy.
+- A robot navigating with noisy sensors.
 - A self-driving car whose cameras are temporarily blocked.
-- A doctor who cannot directly observe a patient's disease.
-- A robot exploring an unknown building.
+- A doctor diagnosing a patient using imperfect test results.
+- A search-and-rescue robot exploring an unfamiliar building.
 
-In all of these situations, the agent must make decisions despite **missing information**.
-
----
-
-# Why MDPs Are Not Enough
-
-Recall what an MDP assumes.
-
-An MDP assumes that the current state is completely known.
-
-```
-Current State
-
-↓
-
-Choose Action
-
-↓
-
-Environment changes
-
-↓
-
-Observe new state
-```
-
-Since the state is always known,
-
-there is **never any reason to gather information**.
-
-The agent already knows everything it needs to know.
-
-This is a major limitation.
+In these situations, the agent must make decisions **without knowing the true state of the world**.
 
 ---
 
-# The Need for Information Gathering
+# Full Observability vs Partial Observability
 
-Suppose you are searching for your car keys.
+The difference between MDPs and POMDPs is **not uncertainty in actions**.
 
-You have two possible actions:
+Both models already allow actions to have probabilistic outcomes.
 
-- Search the living room.
-- Go directly to work.
-
-Clearly,
-
-the first action does **not immediately move you toward your goal**.
-
-Instead,
-
-it gathers information.
-
-Only after finding the keys do you know what to do next.
-
-This kind of reasoning cannot be represented naturally using an MDP.
-
----
-
-# Partially Observable Markov Decision Processes (POMDPs)
-
-To model uncertainty about the current world,
-
-AI uses **Partially Observable Markov Decision Processes (POMDPs).**
-
-A POMDP extends an MDP by allowing the agent to have **incomplete knowledge** about the environment.
-
-Instead of knowing exactly which state it is in,
-
-the agent maintains a **belief** about possible states.
-
----
-
-# MDP vs POMDP
+The difference lies in **uncertainty about the current state**.
 
 | MDP | POMDP |
 |------|--------|
-| State is fully known | State is uncertain |
-| No need to gather information | Information gathering is valuable |
-| Plans directly in physical states | Plans over beliefs about states |
-| Agent always knows where it is | Agent reasons about what it might know |
+| Agent knows the current state exactly | Agent is uncertain about the current state |
+| Plans in state space | Plans in belief space |
+| No need to gather information | Information gathering becomes valuable |
 
-The key difference is **knowledge**.
-
----
-
-# Exploration vs Exploitation
-
-One of the biggest advantages of POMDPs is that they naturally solve the **exploration vs exploitation** problem.
-
-## Exploitation
-
-Exploitation means:
-
-> Use the information you already have to maximize reward.
-
-Example:
-
-A delivery robot already knows the fastest route.
-
-It simply follows it.
+> [!important]
+> **MDPs model uncertainty about what will happen next.**
+>
+> **POMDPs additionally model uncertainty about where the agent currently is (or what the world currently looks like).**
 
 ---
 
-## Exploration
-
-Exploration means:
-
-> Spend time gathering information that will improve future decisions.
-
-Example:
-
-A robot first explores a building before deciding which corridor is safest.
-
----
-
-## Why This Is Impossible in an MDP
+# Why Information Can Have Value
 
 In an MDP,
 
 the current state is already known.
 
-Therefore,
+Therefore, there is never any reason to perform an action whose sole purpose is to gain information.
 
-there is no uncertainty to reduce.
+Every action is evaluated only by the rewards it eventually produces.
 
-Every action is judged only by the reward it directly produces.
+In many real-world problems, however, information itself has value.
 
-Information-gathering actions have no special value.
+Consider searching for your car keys.
 
----
+Before driving to work, you may first search the house.
 
-# A Simple Maze Example
+Searching does not directly achieve the goal of arriving at work.
 
-To explain why POMDPs are necessary,
+Instead, it reduces uncertainty and allows better decisions afterward.
 
-Sebastian Thrun introduces a very small maze.
-
-```
-             Exit
-            (+100 ?)
-
-               |
-
-Start ------- Junction
-
-               |
-
-            Sign
-
-               |
-
-             Exit
-            (-100 ?)
-```
-
-The agent starts on the left.
-
-There are two exits.
-
-One exit gives
-
-```
-+100
-```
-
-The other gives
-
-```
-−100
-```
-
-However,
-
-the agent **does not know which exit is which.**
+This kind of reasoning cannot be represented naturally using an ordinary MDP.
 
 ---
 
-# What Information Is Hidden?
+# The Maze Example
 
-Notice something interesting.
+Sebastian Thrun illustrates this idea using a simple maze.
 
-The agent **does know its physical location**.
+```text
+              Exit
+            (+100 or -100)
 
-It always knows where it is standing.
+                 |
 
-What it does **not** know is:
+Start -------- Junction
 
-> Which exit contains the positive reward.
+                 |
 
-Instead,
+               Sign
 
-there is a sign located below the junction.
+                 |
 
-The sign reveals the correct exit.
-
-For example,
-
-```
-LEFT
+              Exit
+            (-100 or +100)
 ```
 
-means
+The robot knows its physical location throughout the task.
 
-```
-Left exit = +100
-Right exit = −100
-```
+What it **does not know** is which exit contains the positive reward.
 
-while
-
-```
-RIGHT
-```
-
-means the opposite.
+The sign reveals this hidden information.
 
 ---
 
-# Why Conventional Planning Fails
+# The Optimal Behaviour
 
-Suppose the robot ignores the sign.
+A purely reward-seeking agent might immediately choose an exit.
 
-It might simply choose an exit immediately.
+Unfortunately, without reading the sign, it is essentially guessing.
 
-```
+A better strategy is
+
+```text
 Start
-
-↓
-
-Junction
-
-↓
-
-Guess Left
-```
-
-Half the time,
-
-this guess is correct.
-
-Half the time,
-
-it leads directly to
-
-```
-−100
-```
-
-Clearly,
-
-guessing is not optimal.
-
----
-
-# The Optimal Strategy
-
-The optimal strategy is surprisingly different.
-
-```
-Start
-
-↓
-
-Go South
 
 ↓
 
@@ -4979,470 +3926,184 @@ Read the sign
 
 ↓
 
-Return
+Return to the junction
 
 ↓
 
-Take the correct exit
+Choose the correct exit
 ```
 
-Notice something very important.
+Notice that the first action does **not** move the robot closer to the reward.
 
-The first movement
+Instead, it increases the robot's knowledge about the environment.
 
-```
-Go South
-```
+This demonstrates one of the defining ideas of POMDPs:
 
-does **not move the robot toward the goal**.
-
-Instead,
-
-it gathers information.
-
-Only after reading the sign can the robot confidently choose the correct exit.
-
----
-
-# Information Has Value
-
-This example illustrates one of the most important ideas in AI.
-
-Sometimes,
-
-an action is valuable **not because it immediately earns reward**,
-
-but because it **reduces uncertainty**.
-
-The trip to the sign is worthwhile because it prevents making an expensive mistake later.
-
----
-
-# Why Averaging Two MDP Solutions Doesn't Work
-
-One might think of solving the problem twice.
-
-Scenario 1:
-
-```
-Left = +100
-```
-
-Scenario 2:
-
-```
-Right = +100
-```
-
-Then average the two policies.
-
-Unfortunately,
-
-this completely fails.
-
-Why?
-
-Because averaging tells the robot:
-
-```
-Sometimes go left
-
-Sometimes go right
-```
-
-It never discovers that the correct first action is actually
-
-```
-Go read the sign.
-```
-
-The need to gather information disappears entirely.
-
-This shows that **planning separately in each possible world is not enough.**
-
-We must plan while considering **uncertainty itself**.
+> Sometimes an action is valuable because it improves future decisions rather than producing an immediate reward.
 
 ---
 
 # Belief States
 
-Instead of planning over physical states,
+Since the true state is unknown, the agent cannot plan directly in physical state space.
 
-POMDPs plan over **belief states**.
+Instead, it maintains a **belief state**.
 
-A belief state represents
+A belief state is a probability distribution over all possible world states.
 
-> what the agent currently believes about the world.
+Initially, the robot might believe
 
-Initially,
+```text
+50%  Left exit is good
 
-the robot believes:
-
-```
-50%
-
-Left is good
-
-50%
-
-Right is good
+50%  Right exit is good
 ```
 
-This uncertainty itself becomes the state.
+After reading the sign,
 
----
+the belief changes to
 
-# Updating Beliefs
-
-Once the robot reaches the sign,
-
-its belief changes.
-
-Suppose the sign says
-
+```text
+100%  Left exit is good
 ```
-LEFT
-```
-
-Then the belief immediately becomes
-
-```
-100%
-
-Left = +100
-```
-
-The uncertainty disappears.
-
-Reading the sign therefore changes the **belief state**, even though the physical maze has not changed.
-
----
-
-# Belief Space
-
-Instead of planning through physical locations,
-
-the robot now plans through **belief space**.
-
-A simplified picture looks like this.
-
-```
-Unknown
-
-↓
-
-Read Sign
-
-↓
-
-Left is Good
 
 or
 
-Right is Good
+```text
+100%  Right exit is good
 ```
 
-Notice that
+The environment itself has not changed.
 
-reading the sign causes a transition between **beliefs**, not merely locations.
+Only the agent's **knowledge** has changed.
 
 ---
 
-# Value Iteration Works Again
+# Planning in Belief Space
 
-Here is the elegant insight.
-
-Once we represent uncertainty as belief states,
-
-we can use the **same Value Iteration algorithm** we learned for MDPs.
-
-Instead of propagating values through physical locations,
-
-we propagate values through **belief space**.
-
-The algorithm is mathematically almost identical.
-
-Only the states have changed.
-
----
-
-# Intuition: Value Flows Through Beliefs
-
-Imagine pouring water into the goal state.
-
-Just as before,
-
-value spreads backward through the graph.
-
-Eventually,
-
-the value reaches the initial uncertain belief.
-
-Because reading the sign eventually leads to certainty,
-
-the value flowing backward makes the action
-
-```
-Go South
-```
-
-appear optimal.
-
-The algorithm naturally discovers that gathering information is worthwhile.
-
----
-
-# Key Insight
-
-POMDPs transform
-
-```
-Unknown World
-```
-
-into
-
-```
-Known Belief
-```
-
-and then solve the planning problem in that new space.
+A POMDP transforms an uncertain planning problem into planning over belief states.
 
 Instead of asking
 
-> "Where am I?"
+> "Which physical state am I in?"
 
 the agent asks
 
-> "What do I currently know?"
+> "Given everything I have observed so far, what do I currently believe about the world?"
 
-This is a much richer representation of decision making.
+Each action now affects two things:
 
----
+- the physical world,
+- the agent's knowledge.
 
-# Conclusion: Planning Under Uncertainty
-
-This lecture completes the transition from classical planning to probabilistic planning.
-
-We began with deterministic planning algorithms like A*.
-
-Then we introduced uncertainty using **Markov Decision Processes (MDPs)**.
-
-Finally,
-
-we extended those ideas to **Partially Observable Markov Decision Processes (POMDPs)**, where the agent must reason not only about actions and rewards, but also about **information**.
+This makes planning considerably richer than in an MDP.
 
 ---
 
-# What We Learned
+# Relationship to Value Iteration
 
-## Markov Decision Processes (MDPs)
+One elegant aspect of POMDPs is that many of the same dynamic programming ideas still apply.
 
-An MDP models environments where:
+Instead of computing values for physical states,
 
-- the current state is fully observable,
-- actions have stochastic outcomes,
-- the objective is to maximize long-term expected reward.
+algorithms compute values for **belief states**.
 
-An MDP is defined by:
+Conceptually,
 
-- States
-- Actions
-- Transition probabilities
+```text
+MDP
 
-$$
-P(s' \mid s, a)
-$$
+Physical States
 
-- Reward function
+↓
 
-$$
-R(s)
-$$
+Value Function
 
-- Discount factor
+↓
 
-$$
-\gamma
-$$
-
----
-
-## Objective of an MDP
-
-The goal is to maximize the expected cumulative discounted reward.
-
-$$
-\mathbb{E}\left[\sum_{t=0}^{\infty}\gamma^tR_t\right]
-$$
-
-Rather than maximizing immediate reward,
-
-the agent optimizes **all future rewards**.
-
----
-
-## Value Iteration
-
-The central algorithm for solving an MDP is **Value Iteration**.
-
-It repeatedly applies the Bellman Backup equation
-
-$$
-V(s)
-=
-R(s)
-+
-\gamma
-\max_a
-\sum_{s'}
-P(s'|s,a)
-V(s')
-$$
-
-until the values converge.
-
----
-
-## Policy Extraction
-
-Once the optimal value function is known,
-
-the optimal policy is obtained by selecting the action that maximizes the Bellman expression.
-
-$$
-\pi^*(s)
-=
-\arg\max_a
-\sum_{s'}
-P(s'|s,a)
-V(s')
-$$
-
-Thus,
-
-Value Iteration first computes **how valuable each state is**, and then derives **what action should be taken**.
-
----
-
-# Why Policies Are Better Than Plans
-
-A deterministic planner produces
-
-```
-One fixed sequence of actions.
+Optimal Policy
 ```
 
-An MDP produces
+becomes
 
-```
-A complete policy.
-```
+```text
+POMDP
 
-A policy specifies what to do **from every possible state**, including states reached unexpectedly because of randomness.
-
-This makes MDPs much more robust in uncertain environments.
-
----
-
-# Why POMDPs Are Even More Powerful
-
-MDPs assume:
-
-```
-The world is known.
-```
-
-POMDPs assume:
-
-```
-The world is only partially known.
-```
-
-Instead of planning over physical states,
-
-the agent plans over
-
-```
 Belief States
+
+↓
+
+Value Function over Beliefs
+
+↓
+
+Optimal Policy
 ```
 
-which encode everything the agent currently knows about the world.
+The underlying idea remains the same:
 
-This allows actions whose purpose is to **gather information**, not just achieve goals.
+choose actions that maximize expected long-term return.
+
+The difference is that uncertainty about the world is now explicitly represented inside the state itself.
 
 ---
 
-# The Big Picture
+# The Progression of Planning Methods
 
-Throughout the AI course,
+This lecture illustrates how planning becomes progressively more realistic.
 
-planning gradually became more realistic.
+| Framework | Main Assumption | Main Challenge |
+|-----------|-----------------|----------------|
+| Classical Planning | Actions are deterministic | Find a sequence of actions |
+| MDP | Actions are stochastic | Optimize decisions under uncertainty |
+| POMDP | State is partially observable | Act while simultaneously gathering information |
+| Reinforcement Learning | Model is unknown | Learn the optimal behaviour through interaction |
 
-```
-Deterministic Planning
-
-↓
-
-Stochastic Planning (MDPs)
-
-↓
-
-Partially Observable Planning (POMDPs)
-
-↓
-
-Reinforcement Learning
-```
-
-Each stage adds another layer of realism:
-
-- deterministic actions,
-- uncertain actions,
-- uncertain observations,
-- finally learning from experience.
+Each framework extends the previous one by relaxing another simplifying assumption.
 
 ---
 
-# Real-World Applications
+# Why POMDPs Matter
 
-Planning under uncertainty is used in many AI systems.
+Many real-world AI systems must reason under **both action uncertainty and incomplete information**.
 
 Examples include:
 
-- Autonomous robots navigating crowded environments.
-- Self-driving cars dealing with uncertain sensor readings.
-- Warehouse robots avoiding obstacles.
-- Medical decision support systems.
-- Financial decision making.
-- Space exploration robots.
-- Search-and-rescue robots.
-- Dialogue systems that reason about uncertain user intentions.
+- Autonomous robots with noisy sensors.
+- Self-driving vehicles operating in poor visibility.
+- Medical diagnosis under uncertain test results.
+- Human-robot interaction.
+- Dialogue systems reasoning about user intent.
+- Search-and-rescue missions in unknown environments.
 
-In nearly all real-world environments,
+In these problems, acting optimally requires balancing three competing objectives:
 
-actions are uncertain,
+- maximizing reward,
+- minimizing risk,
+- reducing uncertainty.
 
-observations are incomplete,
+# Big Picture
 
-and intelligent agents must continuously balance **reward, risk, and information**.
+> [!summary]
+> Classical planning assumes **certainty**.
+>
+> MDPs introduce **uncertain actions**.
+>
+> POMDPs additionally introduce **uncertain knowledge**.
+>
+> This progression moves AI closer to how intelligent agents must operate in the real world, where both actions and observations are imperfect.
 
 ---
 
 # Final Takeaway
 
-The central lesson of this lecture is:
+Planning under uncertainty is not simply about finding a path to a goal.
 
-> Intelligent planning is not simply about finding the shortest path.
+An intelligent agent must decide
 
-Instead,
+- **what action to perform,**
+- **how future outcomes might unfold,**
+- **how uncertain its current knowledge is,**
+- and **whether gathering more information is worth the cost.**
 
-an intelligent agent must reason about:
-
-- uncertainty,
-- future consequences,
-- probabilities,
-- long-term rewards,
-- and sometimes even the value of obtaining **more information** before acting.
-
-This idea forms the foundation for modern robotics, autonomous systems, reinforcement learning, and sequential decision making under uncertainty.
+This progression—from deterministic planning, to MDPs, to POMDPs—provides the conceptual foundation for modern robotics, autonomous systems, and reinforcement learning.

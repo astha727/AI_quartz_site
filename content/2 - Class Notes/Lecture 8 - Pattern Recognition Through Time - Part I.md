@@ -1,849 +1,1888 @@
 
->[!info] **From Static Machine Learning to Sequential AI**
->Traditional machine learning assumes that each observation is independent of the others. However, many real-world problems involve **ordered sequences**, where the timing and order of observations are essential for understanding their meaning. This branch of AI is known as **Pattern Recognition Through Time** or **Sequential Pattern Recognition**. Before the rise of deep learning, algorithms such as **Dynamic Time Warping (DTW)** and **Hidden Markov Models (HMMs)** were the dominant approaches for modeling temporal data like speech, handwriting, gestures, and sign language. These methods laid the foundation for modern sequence models such as **Recurrent Neural Networks (RNNs), LSTMs, and Transformers**.
 
-> [!insight]  
-> Pattern Recognition Through Time studies data whose meaning depends not only on **what** is observed, but also **when** it is observed.
-> 
-> Unlike traditional machine learning problems where each observation is independent, temporal pattern recognition analyzes sequences of observations whose order carries important information.
-> 
-> This area forms the foundation of many Artificial Intelligence applications including speech recognition, handwriting recognition, gesture recognition, sign language recognition, biological signal analysis, and human activity recognition.
-
----
-
-# Why Time Matters
-
-Many machine learning algorithms assume that every observation is independent.
-
-For example
-
-- Predicting house prices
-    
-- Predicting diabetes
-    
-- Spam detection
-    
-
-Each example can be considered individually.
-
-However, many real-world problems involve **sequences**.
-
-Examples include
-
-- Speech
-    
-- Handwriting
-    
-- Sign language
-    
-- Music
-    
-- Human motion
-    
-- Dolphin whistles
-    
-
-In these problems, the **order of observations** is essential.
-
-Changing the order changes the meaning.
+> [!note] note:
+> ## From Static Machine Learning to Sequential AI
+>
+> Traditional machine learning usually treats each observation as an **independent example**.
+>
+> Pattern Recognition Through Time studies problems where **the order of observations carries meaning**.
+>
+> Instead of asking:
+>
+> > **"What is this object?"**
+>
+> we ask:
+>
+> > **"What happened over time?"**
+>
+> This small change completely transforms the learning problem.
+>
+> Before deep learning became dominant, **Dynamic Time Warping (DTW)** and **Hidden Markov Models (HMMs)** were the two most important algorithms for solving these problems.
+>
+> Today, RNNs, LSTMs and Transformers have largely replaced them, but almost every modern sequence model builds upon ideas introduced by DTW and HMMs.
 
 ---
 
-## Static vs Temporal Recognition
+# Why Time Changes Everything
 
-|Static Recognition|Pattern Recognition Through Time|
-|---|---|
-|Single observation|Sequence of observations|
-|Order not important|Order is critical|
-|Image classification|Speech recognition|
-|Credit approval|Gesture recognition|
-|Face image|Face video|
-
-
-> [!example]  
-> Recognizing a person's face from a **video** is generally easier than recognizing it from a single image.
-> 
-> If one frame is blurred, poorly lit, or partially occluded, other frames often provide enough information for correct recognition.
-
----
-
-# Language-like Structure
-
-Many temporal problems share a common hierarchical structure.
-
-Small units combine into larger units.
+Imagine seeing these letters.
 
 ```text
-Small units
-      │
-      ▼
-Letters / Phonemes / Gestures
-      │
-      ▼
-Words
-      │
-      ▼
-Sentences
-      │
-      ▼
-Complete Meaning
+C
+A
+T
 ```
 
-Examples
+Everyone immediately recognizes
 
-|Domain|Small Unit|Larger Structure|
-|---|---|---|
-|Speech|Phoneme|Word|
-|Handwriting|Letter|Word|
-|Sign Language|Gesture|Sentence|
-|Music|Note|Melody|
-|Human Activity|Motion|Activity|
+```text
+CAT
+```
 
-The lecture argues that many human activities naturally possess this language-like organization.
+Now simply rearrange them.
 
-Examples include
+```text
+T
+A
+C
+```
 
-- Driving
-    
-- Playing basketball
-    
-- Vacuuming
-    
-- Walking
-    
+The letters themselves are identical. Only their **order** changed.
 
-Each activity is composed of reusable movement patterns arranged according to statistical rules.
+Yet the meaning is completely different. This is the fundamental idea behind temporal pattern recognition:
+
+> [!important] note:
+> In sequential problems, **order is part of the information**.
+>
+> The same observations arranged differently can represent completely different meanings.
 
 ---
 
-> [!insight]  
-> Pattern Recognition Through Time is fundamentally about recognizing **ordered sequences** rather than isolated observations.
+# Static vs Sequential Learning
+
+Most introductory machine learning problems are **static**.
+
+Each observation can be analyzed independently.
+
+```mermaid
+flowchart LR
+
+A[Observation] --> B[Classifier]
+B --> C[Prediction]
+```
+
+Examples include
+
+- House price prediction
+- Spam detection
+- Credit approval
+- Disease diagnosis from a medical record
+
+The model never asks
+
+> "What happened before?"
+
+or
+
+> "What happens next?"
+
+Each example stands on its own.
+
+## Sequential Learning
+
+Temporal recognition is different.
+
+Each observation gains meaning from its neighbors.
+
+```mermaid
+flowchart LR
+
+A[Observation 1]
+-->B[Observation 2]
+-->C[Observation 3]
+-->D[Observation 4]
+-->E[Prediction]
+```
+
+Earlier observations provide **context** for interpreting later ones.
+
+Removing or reordering observations may completely change the result.
+
+---
+
+# Static vs Temporal Recognition
+
+| Static Recognition | Pattern Recognition Through Time |
+|-------------------|----------------------------------|
+| One observation | Sequence of observations |
+| Order unimportant | Order is essential |
+| Independent examples | Correlated observations |
+| Image classification | Speech recognition |
+| Credit approval | Gesture recognition |
+| Face image | Face video |
+
+---
+
+# Why Videos Are Easier Than Images
+
+Suppose someone asks you to recognize a friend.
+
+### One Photograph
+
+```text
+😐
+
+(blurry)
+```
+
+This may be difficult.
+
+---
+
+### A Video
+
+```text
+🙂
+
+↓
+
+😄
+
+↓
+
+😁
+
+↓
+
+😆
+```
+
+Even if one frame is blurry, the remaining frames still reveal the person's identity. The sequence provides **redundant information**.
+
+One bad observation rarely destroys the entire prediction.
+
+---
+
+> [!tip] :lucide-film:
+> Many AI systems actually become **more reliable** when they observe an object over time rather than from a single snapshot.
+
+---
+
+# One Pattern Appears Everywhere
+
+Many temporal problems have a surprisingly similar structure.
+
+Small units combine into progressively larger structures.
+
+```mermaid
+flowchart TD
+
+A[Small Units]
+
+-->B[Intermediate Units]
+
+-->C[Complete Meaning]
+```
+
+Examples:
+
+| Domain | Small Unit | Larger Structure |
+|----------|------------|----------------|
+| Speech | Phoneme | Word |
+| Handwriting | Letter | Word |
+| Music | Note | Melody |
+| Sign Language | Gesture | Sentence |
+| Human Motion | Limb movement | Activity |
+
+Although these domains appear unrelated,
+
+they all follow the same principle:
+
+> Small building blocks combine according to statistical rules to produce meaningful sequences.
+
+---
+
+# Human Activities Are Like Languages
+
+Sebastian Thrun makes an interesting observation.
+
+Many everyday activities resemble language.
+
+Consider making coffee.
+
+```text
+Reach
+
+↓
+
+Pick up mug
+
+↓
+
+Pour coffee
+
+↓
+
+Add milk
+
+↓
+
+Drink
+```
+
+Each movement is relatively simple.
+
+The intelligence comes from **performing them in the correct order**.
+
+Similarly,
+
+driving,
+
+playing basketball,
+
+walking,
+
+and vacuuming
+
+are all sequences built from reusable movement primitives.
+
+> [!insight] :lucide-brain:
+> Temporal AI is often less about recognizing **individual observations**
+>
+> and more about recognizing
+>
+> **how observations are organized over time.**
 
 ---
 
 # Dolphin Whistles
 
-The lecture introduces dolphin whistle recognition as a motivating problem.
+To motivate temporal recognition, the lecture introduces dolphin whistle classification. Marine biologists collect enormous amounts of underwater audio.
 
-Marine biologists collect thousands of underwater recordings.
+```text
+🌊🌊🌊🌊🌊
 
-The goal is to automatically recognize different whistle types.
+🎤
 
-Doing so allows researchers to
+↓
 
-- identify dolphins
-    
-- track communication
-    
-- automatically annotate large databases
-    
+Hours of recordings
+```
 
-## Spectrogram
+The objective is to automatically identify different whistle types.
 
-Instead of viewing sound as a waveform, we convert it into a **spectrogram**.
+Doing so helps researchers
+
+- identify individual dolphins,
+- study communication,
+- and automatically annotate large audio databases.
+
+---
+
+# Why Not Listen to the Waveform?
+
+Raw sound waves are difficult to interpret visually.
+
+Instead,
+
+we convert sound into a **spectrogram**.
 
 A spectrogram displays
 
-- time
-    
-- frequency
-    
-- signal power
-    
+- time,
+- frequency,
+- and signal energy,
+
+all at once.
+
+Think of it as a **map of sound**.
+
+---
+
+# Spectrogram
 
 ```text
 Frequency ↑
 
-17 kHz |                                   ███
-        |                          ███
-12 kHz |                           ███
-        |                ███
- 7 kHz |                ███
-        |      ███
- 5 kHz |____________________________
-    0------------------------→ Time
+17 kHz |              ███
 
-Brightness = Signal Power
+15 kHz |           █████
+
+12 kHz |        █████
+
+ 9 kHz |     ████
+
+ 6 kHz |  ███
+
+        +------------------------→ Time
+
+Brightness = Signal Energy
 ```
 
-The lecture notes
+Unlike a waveform,
 
-- x-axis → time
-    
-- y-axis → frequency
-    
-- brighter pixels indicate greater energy
-    
+a spectrogram clearly reveals how frequencies change over time.
 
-## Noise
+This makes whistle shapes much easier to recognize.
 
-Ocean recordings contain substantial background noise.
-
-Typical low-frequency sources include
-
-- waves
-    
-- boats
-    
-- ocean movement
-    
-
-Fortunately,
-
-Atlantic spotted dolphin whistles typically occur between
-
-**5 kHz – 17 kHz**
-
-making them easier to isolate.
-
-## Signature Whistles
-
-Dolphins possess **signature whistles**, which function similarly to human names.
-
-A dolphin entering a new area may emit its signature whistle so nearby dolphins can identify and locate it.
+> [!info] info
+>
+> A spectrogram answers three questions simultaneously:
+>
+> - **When** did something happen?
+> - **At what frequency**?
+> - **How strong was it?**
 
 ---
 
-> [!example]  
-> Human:
-> 
-> "Astha!"
-> 
-> Dolphin:
-> 
-> Unique signature whistle
+# The Ocean Is Noisy
+
+Underwater recordings contain much more than dolphin whistles.
+
+Typical low-frequency noise comes from
+
+- 🌊 waves
+- 🚢 boats
+- 🌬 ocean movement
+- 🐟 other marine life
+
+Fortunately,
+
+Atlantic spotted dolphin whistles usually occur between
+
+```text
+5 kHz — 17 kHz
+```
+
+Most background noise occurs at much lower frequencies.
+
+```text
+Frequency ↑
+
+17 kHz | Dolphin whistles
+
+12 kHz |
+
+ 8 kHz |
+
+----------------------------
+
+ 3 kHz | Waves
+
+ 2 kHz | Boat engines
+
+ 1 kHz | Ocean noise
+```
+
+This allows many irrelevant sounds to be filtered out before recognition begins.
+
+---
+
+# Signature Whistles
+
+One fascinating biological discovery is that many dolphins possess **signature whistles**.
+
+These function similarly to human names.
+
+```text
+Human
+
+"Ray!"
+
+↓
+
+One person responds.
+```
+
+Similarly,
+
+```text
+Dolphin
+
+Unique whistle
+
+↓
+
+One dolphin responds.
+```
+
+Recognizing signature whistles allows scientists to identify individual dolphins without physically observing them.
 
 ---
 
 # The Recognition Problem
 
-The lecture presents two recordings of the **same whistle**.
+Suppose the same dolphin produces two whistles.
 
-Although they represent the same whistle,
+### Whistle A
 
-one is
+```text
+/\____/\_
+```
 
-- faster
-    
+### Whistle B
 
-while the other is
+```text
+/ \__________/ \__
+```
 
-- stretched over time.
-    
+To humans,
+
+both clearly sound like the same whistle.
+
+The only difference is
+
+- one was produced quickly,
+- the other more slowly.
+
+The **shape** is unchanged.
+
+Only the timing differs.
+
+---
+
+# Choosing the Right Features
+
+A machine learning model is only as good as its features.
+
+The most obvious feature would be
+
+> Absolute frequency.
+
+Example:
+
+| Time | Frequency (kHz) |
+|------|----------------:|
+| t₁ | 5 |
+| t₂ | 14 |
+| t₃ | 10 |
+| t₄ | 7 |
+| t₅ | 10 |
+| t₆ | 14 |
+
+Unfortunately,
+
+two dolphins may produce the same whistle at slightly different pitches.
+
+The absolute frequency changes,
+
+even though the whistle pattern remains the same.
+
+---
+
+# Shape Matters More Than Pitch
+
+Instead of storing frequency itself,
+
+the lecture proposes storing the **change in frequency**.
+
+| Frequency | Δ Frequency |
+|-----------|------------:|
+| 5 | — |
+| 14 | +9 |
+| 10 | −4 |
+| 7 | −3 |
+| 10 | +3 |
+| 14 | +4 |
+
+The sequence
+
+```text
++9
+
+↓
+
+−4
+
+↓
+
+−3
+
+↓
+
++3
+
+↓
+
++4
+```
+
+captures
+
+> **how the whistle moves**
+
+rather than
+
+> **where it starts.**
+
+---
+
+> [!important] :lucide-trending-up:
+> Delta Frequency is more robust because it represents the **shape** of the whistle rather than its absolute pitch.
+
+---
+
+# Why Euclidean Distance Fails
+
+Imagine two people saying the same word.
+
+Person A speaks quickly.
+
+```text
+A B C D
+```
+
+Person B speaks slowly.
+
+```text
+A A B B C C D D
+```
+
+Humans instantly recognize
+
+> "These are the same word."
+
+Euclidean Distance disagrees.
+
+Why?
+
+Because it assumes
+
+```text
+A ↔ A
+
+B ↔ A
+
+C ↔ B
+
+D ↔ B
+```
+
+Every observation must occur at exactly the same time.
+
+Real temporal signals rarely satisfy this assumption.
+
+---
+
+# Another Intuition
+
+Imagine two runners completing the same race.
+
+Runner A finishes in
+
+```text
+10 minutes
+```
+
+Runner B finishes in
+
+```text
+14 minutes
+```
+
+Comparing them second-by-second makes little sense.
+
+Instead,
+
+we should compare
+
+- start with start,
+- halfway with halfway,
+- finish with finish.
+
+Temporal recognition requires exactly the same idea.
+
+---
+
+> [!warning] :lucide-triangle-alert:
+> Ordinary distance metrics assume observations occur at identical time steps.
+>
+> Most temporal signals differ **only in timing**, not in meaning.
+
+---
+
+# Looking Ahead
+
+The inability of Euclidean Distance to handle different speaking speeds leads directly to the next algorithm:
+
+> **Dynamic Time Warping (DTW)**
+
+Instead of forcing observations to line up perfectly,
+
+DTW **warps the time axis** so similar events align before measuring similarity.
+
+This idea became one of the foundations of temporal pattern recognition.
+
+---
+
+# Key Takeaways
+
+> [!summary] :summary:
+>
+> - Sequential AI studies **ordered observations** rather than isolated examples.
+> - The same observations arranged differently can represent different meanings.
+> - Many real-world problems (speech, handwriting, gestures, music, activities) share the same hierarchical sequence structure.
+> - Spectrograms transform sound into an image showing **time**, **frequency**, and **energy**.
+> - Dolphin signature whistles function much like human names.
+> - Good feature engineering focuses on **shape**, not absolute measurements.
+> - Delta Frequency is more robust than raw frequency because it captures changes in the whistle.
+> - Euclidean Distance fails whenever similar sequences occur at different speeds.
+> - Dynamic Time Warping (DTW) solves this timing problem by aligning sequences before comparing them.
+
+---
+# Dynamic Time Warping (DTW)
+
+> [!info] :lucide-git-branch:
+> ## The Core Idea
+>
+> Humans naturally recognize patterns even when they happen at different speeds.
+>
+> A person saying **"hello"** quickly and another saying it slowly are still saying the same word.
+>
+> Traditional distance measures compare observations **at the same time index**, while **Dynamic Time Warping (DTW)** first aligns similar events in time and **then** measures similarity.
+>
+> In other words,
+>
+> > DTW compares **events**, not **timestamps**.
+
+---
+
+# The Problem DTW Solves
+
+In the previous section, we saw that Euclidean Distance assumes
+
+```text
+Time 1 ↔ Time 1
+
+Time 2 ↔ Time 2
+
+Time 3 ↔ Time 3
+```
+
+This assumption works only when two sequences evolve at exactly the same speed.
+
+Real-world sequences rarely do.
+
+Imagine two dolphins producing the same whistle.
 
 ```text
 Whistle A
 
 /\____/\_
+```
 
+```text
 Whistle B
 
 / \__________/ \__
 ```
 
-Humans easily recognize them as identical.
+Nothing important has changed except **time**.
 
-A computer must learn to do the same.
+The whistle was simply stretched.
+
+Humans immediately recognize this.
+
+A computer needs a way to do the same.
 
 ---
 
-# Feature Representation
+# Time Is Flexible
 
-Choosing appropriate features is one of the most important parts of machine learning.
+Imagine watching two people clap.
 
-The obvious choice would be
-
-- absolute frequency
-    
-
-Example
-
-|Time|Frequency (kHz)|
-|---|--:|
-|t₁|5|
-|t₂|14|
-|t₃|10|
-|t₄|7|
-|t₅|10|
-|t₆|14|
-
-However,
-
-different dolphins may whistle at slightly different base frequencies.
-
-The absolute pitch is less important than the **shape** of the whistle.
-
-## Delta Frequency
-
-Instead of storing the frequency itself,
-
-the lecture suggests storing the **change in frequency** between consecutive samples.
-
-Example
-
-|Frequency|Delta Frequency|
-|---|--:|
-|5|—|
-|14|+9|
-|10|−4|
-|7|−3|
-|10|+3|
-|14|+4|
-
-The overall pattern
+Person A
 
 ```text
-+9
+👏 👏 👏 👏
+```
+
+Person B
+
+```text
+👏   👏    👏      👏
+```
+
+The rhythm differs,
+
+but the sequence of events is identical.
+
+Instead of asking
+
+> "Did they clap at exactly the same moment?"
+
+DTW asks
+
+> "Which clap corresponds to which?"
+
+This small change is the entire philosophy behind DTW.
+
+---
+
+# Why Alignment Matters
+
+Suppose two students write the same signature.
+
+Student A writes quickly.
+
+```text
+██████
+```
+
+Student B writes slowly.
+
+```text
+████████████████
+```
+
+Although one signature contains many more sampled points,
+
+both represent the same pen movement.
+
+Comparing point-by-point would incorrectly conclude they are different.
+
+Instead,
+
+we should align
+
+```text
+Beginning
+
 ↓
--4
+
+Middle
+
 ↓
--3
-↑
-+3
-↑
-+4
+
+End
 ```
-
-remains similar even if the whistle starts at a different frequency.
-
-> [!important]  
-> Delta Frequency captures the **shape** of the whistle instead of its absolute pitch.
-
----
-
-# Why Euclidean Distance Fails
-
-Suppose two whistles contain identical patterns but are spoken at different speeds.
-
-```text
-Fast
-
-■■■■■■■■
-
-Slow
-
-■■■■■■■■■■■■■■■■
-```
-
-The two sequences have different lengths.
-
-A simple Euclidean Distance comparison requires observations to align perfectly.
-
-To compare unequal lengths,
-
-one sequence must be padded.
-
-Unfortunately,
-
-this produces large errors even though both whistles represent the same signal.
-
----
-
-```text
-Fast
-
-A B C D
-
-Slow
-
-A A B B C C D D
-```
-
-Humans recognize these as identical.
-
-Euclidean Distance does not.
-
----
-
-> [!warning]  
-> Ordinary distance metrics assume that observations occur at exactly the same time.
-> 
-> Temporal signals rarely satisfy this assumption.
-
----
-
-# Summary
-
-|Concept|Key Idea|
-|---|---|
-|Pattern Recognition Through Time|Studies sequential data|
-|Sequence|Order carries information|
-|Language-like Structure|Small units combine into larger structures|
-|Spectrogram|Visual representation of sound|
-|Signature Whistle|Dolphin identity signal|
-|Delta Frequency|Represents changes rather than absolute pitch|
-|Euclidean Distance|Performs poorly when sequences differ in speed|
-
-
-## See Also
-
-- [[1 - Classification]]
-    
-- [[Distance Metrics]]
-    
-- [[Hidden Markov Models (HMM)]]
-
-# Dynamic Time Warping (DTW)
-
-> [!insight]  
-> **Dynamic Time Warping (DTW)** is an algorithm used to measure the similarity between two sequences that may vary in speed or duration.
-> 
-> Rather than comparing observations at identical time steps, DTW **warps the time axis** so that similar portions of two sequences are aligned before computing their distance.
-> 
-> It is widely used in speech recognition, handwriting recognition, gesture recognition, bioinformatics, financial time series, and many other sequence matching problems.
-
----
-
-# Motivation
-
-Suppose two people say the same word.
-
-Person A speaks slowly.
-
-Person B speaks quickly.
-
-Although both words are identical, the corresponding samples occur at different times.
-
-```text
-Slow
-
-A────B────C────D
-
-Fast
-
-A──B──C──D
-```
-
-Humans immediately recognize both as the same word.
-
-A computer comparing samples one-by-one may conclude they are very different.
-
----
-
-# The Time Warping Problem
-
-Many real-world signals are **not produced at a constant speed**.
-
-Examples include
-
-- Speech
-    
-- Dolphin whistles
-    
-- Handwriting
-    
-- Sign language
-    
-- Walking
-    
-- ECG signals
-    
-
-The important information is usually
-
-> **the shape of the signal**
 
 rather than
 
-> **exact timing of every sample**
-
-
-## Example
-
-Imagine saying your own name.
-
 ```text
-Fast
+Sample 1
 
-Alexa
+↓
 
-████████
-
-Slow
-
-Aaaallllllleeeexxaaaa
-
-██████████████████
+Sample 1
 ```
-
-The pronunciation is identical.
-
-Only the timing changes.
 
 ---
 
-# Why Euclidean Distance Fails
-
-Euclidean Distance assumes
-
-- same number of samples
-    
-- one-to-one alignment
-    
-
-Example
-
-```text
-Signal A
-
-0 2 3 3 2 1
-
-Signal B
-
-0 5 2 0
-```
-
-To compare them,
-
-one sequence is padded
-
-```text
-0 5 2 0 0 0
-```
-
-The Euclidean Distance becomes
-
-$$  
-d(x,y)=\sqrt{\sum_i(x_i-y_i)^2}  
-$$
-
-Even though both signals have similar overall shapes,
-
-the distance becomes unnecessarily large because corresponding features occur at different times.
+> [!important] :lucide-clock-arrow-up:
+> DTW assumes that **important events should align**, even if they occur at different times.
 
 ---
 
-> [!warning]  
-> Euclidean Distance assumes every observation occurs at exactly the same time.
-> 
-> Temporal signals rarely satisfy this assumption.
+# Euclidean Distance vs DTW
+
+Imagine two hikers walking the same trail.
+
+Hiker A walks quickly.
+
+Hiker B stops frequently to take photographs.
+
+Their GPS recordings contain different numbers of points.
+
+Euclidean Distance compares
+
+```text
+Point 1 ↔ Point 1
+
+Point 2 ↔ Point 2
+
+Point 3 ↔ Point 3
+```
+
+DTW instead compares
+
+```text
+Same location
+
+↓
+
+Same location
+
+↓
+
+Same location
+```
+
+regardless of how long each person spent there.
+
+This is why DTW often feels more "human."
 
 ---
 
-# Dynamic Time Warping
+# The Main Idea Behind Warping
 
-Instead of comparing observations directly,
+Rather than stretching the signal itself,
 
-DTW first aligns similar portions of the sequences.
-
-The time axis is allowed to stretch or compress.
+DTW stretches the **time axis**.
 
 ```text
-Signal A
+Original
 
 A B C D
+```
 
-Signal B
+becomes aligned with
 
+```text
 A A B B C C D
 ```
 
-Instead of forcing
+Notice that
 
-```text
-A↔A
-B↔A
-C↔B
-D↔B
-```
+- observations are never reordered,
+- events remain in the same sequence,
+- only their timing changes.
 
-DTW aligns
-
-```text
-A ↔ A A
-
-B ↔ B B
-
-C ↔ C C
-
-D ↔ D
-```
-
-The resulting distance is much smaller.
+This preserves the structure of the signal while allowing different speaking speeds.
 
 ---
 
-# Visual Intuition
+# Visualizing Time Warping
 
-Without DTW
+Without alignment
 
 ```text
-Signal 1
+Signal A
 
 /\____/\_
-
-Signal 2
-
-/ \__________/ \__
-
-↓
-
-Compare point-by-point
-
-❌ Poor alignment
 ```
 
-With DTW
+```text
+Signal B
+
+/ \__________/ \__
+```
+
+Point-by-point comparison
 
 ```text
-Stretch time
+❌ Peaks occur at different times
+```
+
+After warping
+
+```text
+Signal A
 
 /\________/\_
+```
+
+```text
+Signal B
 
 /\________/\_
+```
 
-↓
+Now
 
-Features now align
-
-✔ Good match
+```text
+✔ Peaks align
+✔ Valleys align
+✔ Shape matches
 ```
 
 ---
 
-# Alignment Matrix
+# The Alignment Matrix
 
-DTW compares every point in one sequence with every point in the other.
+To find the best alignment,
+
+DTW compares **every point** in one sequence with **every point** in the other.
+
+Imagine laying the two sequences along the edges of a grid.
 
 ```text
-          Sequence X
+            Sequence X
 
-    ● ● ● ● ●
+        x₁ x₂ x₃ x₄
 
-Y  ●  □ □ □ □ □
+      ┌───────────────
 
-   ●  □ □ □ □ □
+ y₁   │ □ □ □ □
 
-   ●  □ □ □ □ □
+ y₂   │ □ □ □ □
 
-   ●  □ □ □ □ □
+ y₃   │ □ □ □ □
 
-   ●  □ □ □ □ □
+ y₄   │ □ □ □ □
 ```
 
-Each square stores
+Every square answers the question
 
-- local distance
-    
-- cumulative distance
-    
+> "How similar are these two observations?"
 
-The optimal path travels through the matrix.
+This grid is called the **cost matrix**.
 
-## Warping Path
+---
 
-The algorithm searches for the lowest-cost path.
+# Local Cost
+
+Each cell stores a **local distance**.
+
+For example,
+
+if
+
+```text
+x₂ = 10
+
+y₃ = 12
+```
+
+then
+
+```text
+Cost
+
+=
+
+|10−12|
+
+=
+
+2
+```
+
+Small values indicate
+
+```text
+Good match
+```
+
+Large values indicate
+
+```text
+Poor match
+```
+
+At this stage,
+
+every comparison is still completely independent.
+
+---
+
+# Finding the Best Overall Alignment
+
+The cheapest individual matches do not necessarily produce the best sequence.
+
+Instead,
+
+DTW searches for the **best path** through the matrix.
 
 ```text
 Start
 
 ●══════╗
-        ║
-        ╚══╗
-            ║
-            ╚════●
 
-                 Finish
+        ║
+
+        ╚════╗
+
+             ║
+
+             ╚══════●
+
+Finish
 ```
 
-Unlike Euclidean Distance,
-
-the path does **not** have to remain perfectly diagonal.
+Each step extends the alignment while respecting the order of observations.
 
 ---
 
-# DTW Cost Function
+> [!tip] :lucide-route:
+> Think of the path as connecting **corresponding events** in two different timelines.
 
-At every cell,
+---
 
-DTW computes
+# Why Can't the Path Jump Anywhere?
 
-$$  
-DTW(i,j)=d(i,j)+\min  
-\begin{cases}  
-DTW(i-1,j)\  
-DTW(i,j-1)\  
-DTW(i-1,j-1)  
-\end{cases}  
+The path must satisfy several intuitive rules.
+
+## 1. Start Together
+
+The beginning of one sequence should align with the beginning of the other.
+
+```text
+✔ Start → Start
+```
+
+
+## 2. Finish Together
+
+The end should align with the end.
+
+```text
+✔ End → End
+```
+
+
+## 3. Never Go Backwards
+
+Time cannot reverse.
+
+```text
+A → B → C
+```
+
+is valid.
+
+```text
+A → C → B
+```
+
+is impossible.
+
+This keeps the chronological order intact.
+
+---
+
+# Dynamic Programming Appears Again
+
+Exploring every possible alignment would be computationally impossible.
+
+Instead,
+
+DTW uses the same powerful idea we encountered in Value Iteration:
+
+> Solve many small problems instead of one enormous one.
+
+Each cell only depends on previously solved neighboring cells.
+
+---
+
+# The DTW Recurrence
+
+The cumulative alignment cost is
+
+$$
+DTW(i,j)
+=
+d(i,j)
++
+\min
+\begin{cases}
+DTW(i-1,j)\\
+DTW(i,j-1)\\
+DTW(i-1,j-1)
+\end{cases}
 $$
 
-where
+Instead of understanding this as a formula,
 
-- $d(i,j)$ is the local distance
-    
-- the minimum selects the cheapest previous alignment
-    
+think of it as a traveler crossing the grid.
 
-This is a classic **Dynamic Programming** recurrence.
+At every square,
 
----
+the traveler asks
 
-> [!tip]  
-> DTW is called **Dynamic Time Warping** because it uses **Dynamic Programming** to determine the optimal time alignment.
+> "Which previous route was cheapest?"
+
+Then simply adds today's local cost.
 
 ---
 
-# Example
+```mermaid
+flowchart LR
 
-Suppose
+A["Above"]
 
-```text
-Signal A
+B["Left"]
 
-0 0 2 3 3 2 1
+C["Diagonal"]
 
-Signal B
+D["Choose smallest"]
 
-0 5 2 0
+E["Add local distance"]
+
+A-->D
+
+B-->D
+
+C-->D
+
+D-->E
 ```
 
-A direct comparison produces a large Euclidean Distance.
 
-DTW instead matches
-
-```text
-0 ↔ 0
-
-0 ↔ 0
-
-2 ↔ 5
-
-3 ↔ 5
-
-3 ↔ 2
-
-2 ↔ 2
-
-1 ↔ 0
-```
-
-allowing repeated matches where necessary.
-
-The overall distance becomes much smaller.
+> [!note]
+> This recurrence is almost identical in spirit to the Bellman updates from MDPs.
+>
+> Both algorithms repeatedly build optimal solutions from previously solved subproblems.
 
 ---
 
-# Sakoe–Chiba Bounds
+# Why This Is Dynamic Programming
 
-DTW is very flexible.
+Notice what happens.
 
-Sometimes
+To compute
+
+```text
+Current Cell
+```
+
+we never recompute the entire path.
+
+We simply reuse the best answers already computed.
+
+```text
+Past Solutions
+
+↓
+
+Current Solution
+
+↓
+
+Future Solutions
+```
+
+This reuse of previous work is exactly what makes Dynamic Programming efficient.
+
+---
+
+# Over-Warping
+
+DTW is extremely flexible.
+
+Sometimes,
 
 too flexible.
 
-A poor match could still produce an artificially small distance by excessively stretching the alignment.
+Imagine trying to match
 
 ```text
-Without bounds
-
-●══════════════════════╗
-                       ║
-                       ╚══════●
+Cat
 ```
 
-The lecture introduces **Sakoe–Chiba Bounds**.
+with
 
-These restrict how far the alignment may deviate from the main diagonal.
+```text
+Caaaaaaaaaaaaaaaaaat
+```
+
+A very flexible alignment might still claim
+
+```text
+Perfect Match
+```
+
+even though the timing difference is unrealistic.
+
+This phenomenon is called **over-warping**.
+
+---
+
+# Sakoe–Chiba Band
+
+To prevent unrealistic alignments,
+
+DTW often restricts how far the path may wander from the diagonal.
 
 ```text
 Allowed Region
 
-///////////////////
+//////////////////
 
-////██████████////
+////████████////
 
-///////////////////
+//////////////////
 ```
 
-Only paths inside the band are considered.
+The highlighted band represents the only region where the alignment path may travel.
 
-## Why Use Bounds?
+Outside the band,
 
-Advantages
-
-- Prevent unrealistic alignments
-    
-- Reduce computation
-    
-- Improve recognition accuracy
-    
-- Limit excessive time warping
-    
+matching is forbidden.
 
 ---
 
-> [!important]  
-> The optimal width of the Sakoe–Chiba Band is usually chosen empirically using cross-validation.
+# Why Restrict the Path?
+
+Constraining the alignment has several advantages.
+
+✔ Prevents absurd matches
+
+✔ Reduces computation
+
+✔ Produces more realistic alignments
+
+✔ Improves recognition accuracy
+
+Choosing the band width is usually done experimentally using validation data.
 
 ---
 
-# Advantages of DTW
+# Where DTW Excels
 
-✔ Handles sequences with different speeds
+DTW works especially well whenever the **shape** matters more than **timing**.
 
-✔ Matches similar patterns
+Typical applications include
 
-✔ Robust to local stretching
+- 🎤 Speech recognition
+- ✍️ Handwriting recognition
+- 🤟 Sign language
+- 🐬 Dolphin whistles
+- ❤️ ECG analysis
+- 🚶 Human motion
+- 📈 Financial time series
 
-✔ Works well for temporal signals
+The common characteristic is
+
+> Similar events occur at different speeds.
 
 ---
 
 # Limitations
 
-✘ Computationally expensive
+Although DTW is powerful,
 
-✘ Can over-warp unrelated signals
+it is not a complete probabilistic model.
 
-✘ Requires constraints for realistic alignments
+Limitations include
 
-✘ Does not explicitly model temporal states
+- Computationally expensive for very long sequences.
+- Can still over-warp unrelated signals.
+- Requires constraints such as Sakoe–Chiba bands.
+- Measures similarity but **does not model hidden states or sequence generation**.
 
----
+These limitations motivate the next major algorithm in the course:
 
-# Applications
+> **Hidden Markov Models (HMMs).**
 
-Dynamic Time Warping is commonly used in
+Rather than simply comparing sequences,
 
-- Speech Recognition
-    
-- Handwriting Recognition
-    
-- Sign Language Recognition
-    
-- Gesture Recognition
-    
-- Dolphin Whistle Recognition
-    
-- ECG Analysis
-    
-- Financial Time Series
-    
-- Motion Capture Analysis
-    
+HMMs learn **how sequences are generated**.
 
 ---
 
 # DTW vs Euclidean Distance
 
-|Euclidean Distance|Dynamic Time Warping|
-|---|---|
-|One-to-one comparison|Flexible alignment|
-|Same length preferred|Different lengths allowed|
-|No stretching|Time stretching permitted|
-|Fast|More computationally expensive|
-|Sensitive to timing|Robust to timing differences|
+| Euclidean Distance | Dynamic Time Warping |
+|-------------------|----------------------|
+| Fixed alignment | Flexible alignment |
+| Same length preferred | Different lengths handled naturally |
+| Compares timestamps | Compares corresponding events |
+| Fast | More computationally intensive |
+| Sensitive to speed | Robust to different speeds |
+| No Dynamic Programming | Uses Dynamic Programming |
+
+
+# Mental Model
+
+> [!success] 
+>
+> Imagine watching two dancers perform the same choreography.
+>
+> One dancer moves faster.
+>
+> The other pauses longer.
+>
+> Euclidean Distance compares them **frame by frame**.
+>
+> DTW instead aligns
+>
+> - first jump ↔ first jump
+> - first spin ↔ first spin
+> - final pose ↔ final pose
+>
+> regardless of when those movements occurred.
+
+---
+
+# Looking Ahead
+
+DTW solves one important problem:
+
+> **How similar are two sequences?**
+
+The next question is fundamentally different:
+
+> **How can a computer learn the statistical structure that generated those sequences?**
+
+That question leads naturally to
+
+[[Hidden Markov Models (HMM)]]
+
+
+# Key Takeaways
+
+> [!summary]
+>
+> - DTW compares **events**, not timestamps.
+> - Time is allowed to stretch or compress while preserving order.
+> - Similar sequences spoken at different speeds become properly aligned.
+> - The alignment is computed using a Dynamic Programming recurrence.
+> - A cost matrix stores cumulative alignment costs.
+> - The optimal warping path represents the best correspondence between two sequences.
+> - Sakoe–Chiba Bands prevent unrealistic alignments.
+> - DTW measures similarity but does not explain how sequences are generated.
+> - This limitation motivates Hidden Markov Models, which model the underlying stochastic process itself.
+
+# Beyond Dynamic Time Warping: Why Hidden Markov Models?
+
+> [!info] 
+> ## From Matching Sequences to Understanding Them
+>
+> After studying Dynamic Time Warping (DTW), a natural question arises:
+>
+> > **"If DTW works so well, why do we need another algorithm?"**
+>
+> The answer is subtle but important.
+>
+> DTW is an excellent **comparison algorithm**.
+>
+> It tells us **how similar two sequences are**.
+>
+> But it cannot answer deeper questions such as:
+>
+> - *How was this sequence generated?*
+> - *What stage of the process are we currently in?*
+> - *What observation is likely to come next?*
+> - *How can we learn from many examples instead of comparing against a template?*
+>
+> Hidden Markov Models (HMMs) were developed to answer these questions.
+
+
+---
+
+# Two Different Problems
+
+Although DTW and HMMs both work with sequential data, they solve very different problems.
+
+## DTW asks
+
+> "How similar are these two sequences?"
+
+Example
+
+```text
+Unknown whistle
+
+↓
+
+Compare with Template A
+
+↓
+
+Compare with Template B
+
+↓
+
+Compare with Template C
+
+↓
+
+Choose smallest distance
+```
+
+
+## HMM asks
+
+> "What process most likely produced this sequence?"
+
+Instead of comparing against one template,
+
+it tries to understand the **hidden mechanism** generating the observations.
+
+> [!important]
+> DTW compares **finished sequences**.
+>
+> HMMs model the **process that creates those sequences**.
+
+---
+
+# An Analogy: Reading Footprints
+
+Imagine walking along a beach. You discover footprints.
+
+```text
+🐾 🐾 🐾 🐾 🐾
+```
+
+DTW asks
+
+> "Which known animal's footprints look most similar?"
+
+HMM asks
+
+> "What animal was probably walking here, and what path did it take?"
+
+The footprints are visible. The animal is not. The animal represents the **hidden state**.
+
+---
+
+# Why Templates Become a Problem
+
+Suppose we build a speech recognizer.
+
+We record one example of the word
+
+```text
+Hello
+```
+
+Later someone says
+
+```text
+Hello
+```
+
+slightly faster. DTW aligns the sequences. Everything works.
+
+---
+
+Now suppose we have
+
+```text
+50 words
+```
+
+Each spoken by
+
+```text
+100 people
+```
+
+Each at
+
+```text
+5 different speaking speeds
+```
+
+Suddenly we have
+
+```text
+50 × 100 × 5
+
+=
+
+25,000 templates
+```
+
+Searching through all of them quickly becomes expensive.
+
+---
+
+# Humans Don't Memorize Templates
+
+Think about how children learn language.
+
+A child does **not** memorize
+
+```text
+Hello #1
+
+Hello #2
+
+Hello #3
+
+Hello #4
+```
+
+Instead, the child gradually learns
+
+- how sounds change,
+- which sounds commonly follow others,
+- how words are structured.
+
+Humans learn a **model** of speech, not an enormous library of examples. HMMs try to imitate this idea.
+
+---
+
+# Recognizing vs Modeling
+
+These are two different goals.
+
+```mermaid
+flowchart LR
+
+A["Observed Sequence"]
+
+-->B["DTW"]
+
+-->C["Find closest example"]
+```
+
+versus
+
+```mermaid
+flowchart LR
+
+A["Observed Sequence"]
+
+-->B["HMM"]
+
+-->C["Infer hidden process"]
+```
+
+One searches.
+
+The other reasons.
+
+---
+
+# Hidden Structure Exists Everywhere
+
+Many sequential problems have information we cannot observe directly.
+
+For example,
+
+## Speech
+
+We hear
+
+```text
+Sound waves
+```
+
+We do **not** directly observe
+
+```text
+Phonemes
+```
+
+that generated them.
+
+## Handwriting
+
+We observe
+
+```text
+Ink on paper
+```
+
+We do **not** observe
+
+```text
+Pen movements
+```
+
+that produced the writing.
+
+## Human Activity
+
+We observe
+
+```text
+Accelerometer readings
+```
+
+We do **not** directly observe
+
+```text
+Walking
+
+Running
+
+Standing
+```
+
+The hidden process must be inferred.
+
+---
+
+# Visible vs Hidden
+
+This distinction becomes the central idea behind HMMs.
+
+```text
+Hidden World
+
+↓
+
+Unknown internal state
+
+↓
+
+Produces
+
+↓
+
+Visible observations
+```
+
+The observations are easy to measure.  The underlying state is not.
+
+> [!tip] :lucide-eye-off:
+> Many AI problems involve predicting something **we cannot directly observe** from something **we can**.
+
+---
+
+# Another Example: The Ocean
+
+Imagine listening to underwater recordings.
+
+We observe
+
+```text
+🔊 Sound
+```
+
+We cannot directly observe
+
+```text
+🐬 Which dolphin produced it?
+```
+
+or
+
+```text
+🐬 What behavioral state was the dolphin in?
+```
+
+The sound is visible. The behavioral state is hidden. Again, this is exactly the type of reasoning HMMs are designed for.
+
+---
+
+# Thinking Like a Scientist
+
+Imagine a doctor examining a patient. The doctor observes
+
+- temperature,
+- cough,
+- blood pressure,
+- oxygen level.
+
+The doctor cannot directly observe
+
+```text
+Disease
+```
+
+Instead, the doctor infers it.
+
+```text
+Symptoms
+
+↓
+
+Reasoning
+
+↓
+
+Hidden illness
+```
+
+This is almost exactly how an HMM works.
+
+---
+
+# Where Dynamic Programming Returns
+
+One interesting connection with previous lectures is that Dynamic Programming appears again.
+
+Earlier we saw it in
+
+- Value Iteration
+- Dynamic Time Warping
+
+Soon, we will encounter it once more inside HMM algorithms.
+
+Different problem. Same computational philosophy.
+
+```text
+Large problem
+
+↓
+
+Break into smaller subproblems
+
+↓
+
+Reuse previous solutions
+
+↓
+
+Efficient algorithm
+```
+
+This is becoming a recurring pattern throughout AI.
+
+---
+
+# The Historical Perspective
+
+Before deep learning, the typical speech recognition pipeline looked like this.
+
+```text
+Audio
+
+↓
+
+Feature Extraction
+
+↓
+
+Hidden Markov Model
+
+↓
+
+Recognized Words
+```
+
+For nearly two decades,
+
+HMMs were the dominant technology behind commercial speech recognition systems.
+
+Companies like
+
+- IBM
+- Microsoft
+- Nuance
+- Google (early systems)
+
+all relied heavily on HMMs. Although modern systems use Transformers, many of the probabilistic ideas introduced by HMMs remain fundamental.
+
+---
+
+# Comparing the Evolution
+
+It helps to think of Lecture 8 as a progression.
+
+```mermaid
+flowchart LR
+
+A["Static Machine Learning"]
+
+-->B["Temporal Data"]
+
+-->C["DTW"]
+
+-->D["Hidden Markov Models"]
+
+-->E["Modern Deep Learning"]
+```
+
+Each step answers a more sophisticated question.
+
+## Static ML
+
+Can I classify one observation?
+
+## Temporal Recognition
+
+How do I classify sequences?
+
+## DTW
+
+How similar are two sequences?
+
+## HMM
+
+What hidden process generated this sequence?
+
+## Deep Learning
+
+Can a neural network automatically learn the hidden representation?
+
+---
+
+# A Mental Model
+
+Imagine watching a play from behind a curtain.
+
+You cannot see the actors.
+
+You only hear sounds.
+
+```text
+ Behind curtain
+
+↓
+
+Hidden actors
+
+↓
+
+Visible dialogue
+```
+
+Your task is to infer
+
+- who is speaking,
+- what scene is happening,
+- what will probably happen next.
+
+This is exactly the intuition behind Hidden Markov Models.
+
+The hidden actors correspond to
+
+```text
+Hidden States
+```
+
+The dialogue corresponds to
+
+```text
+Observations
+```
+
+---
+
+# Preparing for Hidden Markov Models
+
+Everything we have learned so far now becomes useful.
+
+We already understand
+
+✔ Sequential data
+
+✔ Temporal alignment
+
+✔ Dynamic Programming
+
+✔ Probabilistic reasoning (from MDPs)
+
+The only missing idea is
+
+> **How to represent hidden states probabilistically.**
+
+That is the central topic of the next lecture.
+
+---
+
+# Big Picture
+
+Lecture 8 is really about one gradual shift.
+
+```text
+Static observations
+
+↓
+
+Sequences
+
+↓
+
+Sequence comparison
+
+↓
+
+Sequence generation
+
+↓
+
+Hidden probabilistic structure
+```
+
+Notice how each stage asks a deeper question about the data.
 
 ---
 
 # Summary
 
-|Concept|Description|
-|---|---|
-|Dynamic Time Warping|Aligns temporal sequences before comparison|
-|Warping|Stretches or compresses time|
-|Alignment Matrix|Stores cumulative distances|
-|Warping Path|Lowest-cost alignment|
-|Dynamic Programming|Computes optimal path efficiently|
-|Sakoe–Chiba Bounds|Restrict excessive warping|
+> [!summary] :lucide-list-checks:
+>
+> - DTW solves a **matching** problem, not a **modeling** problem.
+> - Template matching becomes difficult as datasets grow larger and more variable.
+> - Many real-world processes contain **hidden states** that cannot be directly observed.
+> - HMMs explicitly model these hidden states and the observations they produce.
+> - Dynamic Programming appears again because it is a powerful strategy for reasoning efficiently over sequences.
+> - Lecture 8 forms the bridge between **sequence comparison (DTW)** and **probabilistic sequence modeling (HMMs)**.
 
